@@ -5,8 +5,9 @@
 \title{Generate SWAT rainfall or air temperature input files as well as climate input stations file from NASA NEX-GDPP remote sensing climate change data products.}
 \usage{
 NEX_GDPPswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
-  DEM = "LowerMekong_dem.tif", start = "2060-12-1", end = "2060-12-3",
-  model = "IPSL-CM5A-MR", type = "pr", slice = "rcp85")
+  DEM = "LowerMekong_dem.tif", start = "2060-12-1",
+  end = "2060-12-3", model = "IPSL-CM5A-MR", type = "pr",
+  slice = "rcp85")
 }
 \arguments{
 \item{Dir}{A directory name to store gridded rainfall and rain stations files.}

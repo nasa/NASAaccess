@@ -5,7 +5,8 @@
 \title{Generate rainfall input files as well as rain station file from NASA GPM remote sensing products.}
 \usage{
 GPMpolyCentroid(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
-  DEM = "LowerMekong_dem.tif", start = "2015-12-1", end = "2015-12-3")
+  DEM = "LowerMekong_dem.tif", start = "2015-12-1",
+  end = "2015-12-3")
 }
 \arguments{
 \item{Dir}{A directory name to store gridded rainfall and rain stations files.}

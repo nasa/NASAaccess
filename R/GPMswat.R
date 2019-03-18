@@ -1,4 +1,4 @@
-###3/8/19
+###3/11/19
 #' Generate SWAT rainfall input files as well as rain stations file from NASA GPM remote sensing products.
 #'
 #' This function downloads rainfall remote sensing data of \acronym{TRMM} and \acronym{IMERG} from \acronym{NASA} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that \acronym{SWAT} requires for rainfall data input. The function also generates the rainfall stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected grids that fall within the specified watershed.
@@ -113,7 +113,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
       study_area_records_IMERG<-data.frame(ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation)
       sp::coordinates (study_area_records_IMERG)<- ~x+y
       rm(data,IMERG)
-      unlink(x='./temp/', recursive = TRUE)
+      unlink(x='./temp', recursive = TRUE)
     }
 
     # The TRMM data grid information
@@ -156,7 +156,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
       study_area_records_TRMM<-data.frame(TRMM_ID=unlist(cell.no),cell.longlat,cell.rowCol)
       sp::coordinates (study_area_records_TRMM)<- ~x+y
       rm(data,TRMM)
-      unlink(x='./temp/', recursive = TRUE)
+      unlink(x='./temp', recursive = TRUE)
     }
 
 
@@ -243,7 +243,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
             write(x=cell.values[jj],filenameSWAT_TXT[[jj]],append=T,ncolumns = 1)
           }
           #}
-          unlink(x='./temp/', recursive = TRUE)
+          unlink(x='./temp', recursive = TRUE)
         }
       }
 
@@ -291,7 +291,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
             }
 
           }
-          unlink(x='./temp/', recursive = TRUE)
+          unlink(x='./temp', recursive = TRUE)
         }
       }
 
@@ -314,10 +314,11 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
   else
   {
     cat('Sorry!','  \n')
-    cat('Your need to create two files with names of ".netrc" or "_netrc" for Windows users and ".urs_cookies" at your home Directory.','  \n')
+    cat('You need to create one/two file(s) named ".netrc" , "_netrc" and ".urs_cookies" at your home Directory. The "_netrc" file only needed for Windows users.','  \n')
     cat('Instructions on creating the ".netrc" and the ".urs_cookies" files can be accessed at https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget','  \n')
-    cat('Make sure that the ".netrc" file contains the follwoing line with your credentials: ','  \n')
+    cat('For Windows users follow instructions on creating the "_netrc" file at https://github.com/imohamme/NASAaccess/wiki/Curl-installation-on-Windows','  \n')
+    cat('Make sure that the netrc file contain the follwoing line with your credentials: ','  \n')
     cat('machine urs.earthdata.nasa.gov login uid_goes_here password password_goes_here','  \n')
-    cat('Thank you!','  \n')
+    cat('Thank you.','  \n')
   }
 }

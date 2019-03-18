@@ -1,4 +1,4 @@
-###3/8/19
+###3/11/19
 #' Generate rainfall input files as well as rain station file from NASA GPM remote sensing products.
 #'
 #' This function downloads rainfall remote sensing data of \acronym{TRMM} and \acronym{IMERG} from \acronym{NASA} \acronym{GSFC} servers, extracts data from grids falling within a specified sub-basin(s) watershed shapefile and assigns a pseudo rainfall gauge located at the centeroid of the sub-basin(s) watershed a weighted-average daily rainfall data.  The function generates rainfall tables in a format that \acronym{SWAT} or other rainfall-runoff hydrological model requires for rainfall data input. The function also generates the rainfall stations file summary input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those pseudo grids that correspond to the centroids of the watershed sub-basins.
@@ -150,7 +150,7 @@ GPMpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM 
             write(x=cell.values[jj],filenameSWAT_TXT[[jj]],append=T,ncolumns = 1)
           }
 
-          unlink(x='./temp/', recursive = TRUE)
+          unlink(x='./temp', recursive = TRUE)
         }
       }
 
@@ -205,7 +205,7 @@ GPMpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM 
             }
 
           }
-          unlink(x='./temp/', recursive = TRUE)
+          unlink(x='./temp', recursive = TRUE)
         }
       }
 
@@ -229,10 +229,11 @@ GPMpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM 
   else
   {
     cat('Sorry!','  \n')
-    cat('Your need to create two files with names of ".netrc" or "_netrc" for Windows users and ".urs_cookies" at your home Directory.','  \n')
+    cat('You need to create one/two file(s) named ".netrc" , "_netrc" and ".urs_cookies" at your home Directory. The "_netrc" file only needed for Windows users.','  \n')
     cat('Instructions on creating the ".netrc" and the ".urs_cookies" files can be accessed at https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget','  \n')
-    cat('Make sure that the ".netrc" file contains the follwoing line with your credentials: ','  \n')
+    cat('For Windows users follow instructions on creating the "_netrc" file at https://github.com/imohamme/NASAaccess/wiki/Curl-installation-on-Windows','  \n')
+    cat('Make sure that the netrc file contain the follwoing line with your credentials: ','  \n')
     cat('machine urs.earthdata.nasa.gov login uid_goes_here password password_goes_here','  \n')
-    cat('Thank you!','  \n')
+    cat('Thank you.','  \n')
   }
 }

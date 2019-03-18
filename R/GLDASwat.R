@@ -1,4 +1,4 @@
-###3/8/19
+###3/11/19
 #' Generate SWAT air temperature input files as well as air temperature stations file from NASA GLDAS remote sensing products.
 #'
 #' This function downloads remote sensing data of \acronym{GLDAS} from \acronym{NASA} \acronym{GSFC} servers, extracts air temperature data from grids within a specified watershed shapefile, and then generates tables in a format that \acronym{SWAT} requires for minimum and maximum air temperature data input. The function also generates the air temperature stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected grids that fall within the specified watershed.
@@ -100,7 +100,7 @@ GLDASwat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lowe
       study_area_records<-data.frame(ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation)
       #sp::coordinates (study_area_records)<- ~x+y
       rm(data,GLDAS)
-      unlink(x='./temp/', recursive = TRUE)
+      unlink(x='./temp', recursive = TRUE)
 
 
 
@@ -184,7 +184,7 @@ GLDASwat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lowe
       cell.temp.values<-list()
       SubdailyTemp<- list()
       rm(data,GLDAS)
-      unlink(x='./temp/', recursive = TRUE)
+      unlink(x='./temp', recursive = TRUE)
     }
 
 
@@ -204,10 +204,11 @@ GLDASwat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lowe
   else
   {
     cat('Sorry!','  \n')
-    cat('Your need to create two files with names of ".netrc" or "_netrc" for Windows users and ".urs_cookies" at your home Directory.','  \n')
+    cat('You need to create one/two file(s) named ".netrc" , "_netrc" and ".urs_cookies" at your home Directory. The "_netrc" file only needed for Windows users.','  \n')
     cat('Instructions on creating the ".netrc" and the ".urs_cookies" files can be accessed at https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget','  \n')
-    cat('Make sure that the ".netrc" file contains the follwoing line with your credentials: ','  \n')
+    cat('For Windows users follow instructions on creating the "_netrc" file at https://github.com/imohamme/NASAaccess/wiki/Curl-installation-on-Windows','  \n')
+    cat('Make sure that the netrc file contain the follwoing line with your credentials: ','  \n')
     cat('machine urs.earthdata.nasa.gov login uid_goes_here password password_goes_here','  \n')
-    cat('Thank you!','  \n')
+    cat('Thank you.','  \n')
   }
 }

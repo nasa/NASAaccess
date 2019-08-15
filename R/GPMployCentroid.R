@@ -1,7 +1,7 @@
 ###3/11/19
 #' Generate rainfall input files as well as rain station file from NASA GPM remote sensing products.
 #'
-#' This function downloads rainfall remote sensing data of \acronym{TRMM} and \acronym{IMERG} from \acronym{NASA} \acronym{GSFC} servers, extracts data from grids falling within a specified sub-basin(s) watershed shapefile and assigns a pseudo rainfall gauge located at the centeroid of the sub-basin(s) watershed a weighted-average daily rainfall data.  The function generates rainfall tables in a format that \acronym{SWAT} or other rainfall-runoff hydrological model requires for rainfall data input. The function also generates the rainfall stations file summary input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those pseudo grids that correspond to the centroids of the watershed sub-basins.
+#' This function downloads rainfall remote sensing data of \acronym{TRMM} and \acronym{IMERG} from \acronym{NASA} \acronym{GSFC} servers, extracts data from grids falling within a specified sub-basin(s) watershed shapefile and assigns a pseudo rainfall gauge located at the centroid of the sub-basin(s) watershed a weighted-average daily rainfall data.  The function generates rainfall tables in a format that \acronym{SWAT} or other rainfall-runoff hydrological model requires for rainfall data input. The function also generates the rainfall stations file summary input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those pseudo grids that correspond to the centroids of the watershed sub-basins.
 #' @param Dir A directory name to store gridded rainfall and rain stations files.
 #' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
 #' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
@@ -21,8 +21,8 @@
 #' \command{start} should be equal to or greater than 2000-Mar-01.
 #' @author Ibrahim Mohammed, \email{ibrahim.mohammed@@nasa.gov}
 #' @keywords NASA IMERG TRMM Precipitation
-#' @return A table that includes Points ID, Point file name, Lat, Long, and Elevation information formated to be read with \acronym{SWAT} or other hydrological model, and
-#' a scalar of rainfall gridded data values at a pseudo rain grid located at the centeroid of each sub-basin within the study watershed provided in ascii format needed by \acronym{SWAT} model or other hydrological model weather inputs. All rain tables will be stored at \code{Dir}.
+#' @return A table that includes Points ID, Point file name, Lat, Long, and Elevation information formatted to be read with \acronym{SWAT} or other hydrological model, and
+#' a scalar of rainfall gridded data values at a pseudo rain grid located at the centroid of each sub-basin within the study watershed provided in ascii format needed by \acronym{SWAT} model or other hydrological model weather inputs. All rain tables will be stored at \code{Dir}.
 #' @examples
 #' #Lower Mekong basin example
 #' \donttest{GPMpolyCentroid(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",

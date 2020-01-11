@@ -11,7 +11,7 @@
 #' @param type  A flux data type. It's value can be \acronym{'pr'} for precipitation or \acronym{'tas'} for air temperature.
 #' @param slice A scenario from the Representative Concentration Pathways. It's value can be \acronym{'rcp45'} , \acronym{'rcp85'}, or \acronym{'historical'}.
 #'
-#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfuly work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.05/}), and \acronym{NASA} Goddard Space Flight Center server for \acronym{NEX-GDPP} climate change data products at (\url{https://cds.nccs.nasa.gov/nex-gddp/}).  The function uses varible name ('pr') for rainfall in \acronym{NEX-GDPP} data products and variable name ('tas') for \acronym{NEX-GDPP} minimum ('tasmin') and maximum ('tasmax') air temperature data products. The \command{NEX-GDPP} function outputs gridded rainfall data in 'mm' and gridded air temperature (maximum and minimum) data in degrees 'C'.
+#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfuly work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server for \acronym{NEX-GDPP} climate change data products at (\url{https://cds.nccs.nasa.gov/nex-gddp/}).  The function uses varible name ('pr') for rainfall in \acronym{NEX-GDPP} data products and variable name ('tas') for \acronym{NEX-GDPP} minimum ('tasmin') and maximum ('tasmax') air temperature data products. The \command{NEX-GDPP} function outputs gridded rainfall data in 'mm' and gridded air temperature (maximum and minimum) data in degrees 'C'.
 #'
 #' \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} (Taylor et al. 2012) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (Meinshausen et al. 2011). The \acronym{CMIP5} \acronym{GCM} runs were developed in support of the Fifth Assessment Report of the Intergovernmental Panel on Climate Change \acronym{IPCC AR5}. This dataset includes downscaled projections from the 21 models and scenarios for which daily scenarios were produced and distributed under \acronym{CMIP5}.
 #' The Bias-Correction Spatial Disaggregation \acronym{BCSD} method used in generating the \acronym{NEX-GDDP} dataset is a statistical downscaling algorithm specifically developed to address the current limitations of the global \acronym{GCM} outputs (Wood et al. 2002; Wood et al. 2004; Maurer et al. 2008; Thrasher et al. 2012).  The \acronym{NEX-GDPP} climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The \command{NEX_GDPPswat} downscales the \acronym{NEX-GDPP} data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by Mohammed et al. (2018).
@@ -52,10 +52,10 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
   if(file.exists('~/.netrc')==TRUE||file.exists('~/_netrc')==TRUE)
   {
 
-    url.IMERG.input <- 'https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.05/'
+    url.IMERG.input <- 'https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/'
     url.GDDP.input <- 'https://dataserver.nccs.nasa.gov/thredds/ncss/bypass/NEX-GDDP/bcsd/'
     myvarIMERG <- 'precipitationCal'
-    myvarNAME <- 'climate'
+    myvarNAME <- '.climate'
     if(type=='pr'){ftp <- paste(url.GDDP.input,slice,'/','r1i1p1','/',type,'/',model,'.ncml?var=',type,'&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',sep='')}
     if(type=='tas'){ftp_min <- paste(url.GDDP.input,slice,'/','r1i1p1','/',type,'min','/',model,'.ncml?var=',type,'min','&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',sep='');ftp_max <- paste(url.GDDP.input,slice,'/','r1i1p1','/',type,'max','/',model,'.ncml?var=',type,'max','&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',sep='')}
     ####Before getting to work on this function do this check on start and end dates
@@ -69,7 +69,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
       # Reading the study Watershed shapefile
       polys <- rgdal::readOGR(dsn=watershed,verbose = F)
       # SWAT climate master file name
-      filenametableKEY<-paste(Dir,'Grid_Master.txt',sep='')
+      filenametableKEY<-paste(Dir,type, '.Grid_Master.txt',sep='')
       # Creating empty lists
       filenameSWAT     <- list()
       filenameSWAT_TXT <- list()
@@ -169,8 +169,8 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
       #### Get the SWAT file names and then put the first record date
       for(jj in 1:dim(FinalTable)[1])
       {
-        if(dir.exists(Dir)==FALSE){dir.create(Dir)}
-        filenameSWAT[[jj]]<-paste(myvarNAME,FinalTable$ID[jj],sep='')
+        if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
+        filenameSWAT[[jj]]<-paste(type, myvarNAME,FinalTable$ID[jj],sep='')
         filenameSWAT_TXT[[jj]]<-paste(Dir,filenameSWAT[[jj]],'.txt',sep='')
         #write the data begining date once!
         write(x=format(time_period[1],'%Y%m%d'),file=filenameSWAT_TXT[[jj]])
@@ -185,31 +185,44 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         for(kk in 1:length(time_period))
         {
           timestart <- time_period[kk]
-          timeend <- timestart + 1
-          filename <- paste(type,'_day_BCSD_',slice,'_r1i1p1_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
-          myurl <- paste(ftp,as.character(timestart),'T12%3A00%3A00Z&time_end=',as.character(timeend),'T12%3A00%3A00Z&timeStride=1',sep = '')
-          # downloading file
-          if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
-          if(file.exists(paste('./temp/',filename,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl, destfile = paste('./temp/',filename,sep= ''), mode = 'wb', extra = '-L')}
-          # Reading the ncdf file
-          nc <- ncdf4::nc_open( paste('./temp/',filename,sep = '') )
-          data <- ncdf4::ncvar_get(nc,type, start = c(1,1,1) , count = c(-1, -1 ,1))
-          #transpose the data
-          data <- raster::t(data)
-          #reorder the rows
-          data<-data[ nrow(data):1, ]
-          ncdf4::nc_close(nc)
-          ###save the daily climate data values in a raster
-          NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
-          ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units to mm by multiplying with 1000
-          cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*1000
-          cell.values[is.na(cell.values)] <- -99.0 #filling missing data
+          if(format(timestart,"%m-%d") != "02-29")
+          {
+            timeend <- timestart + 1
+            filename <- paste(type,'_day_BCSD_',slice,'_r1i1p1_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
+            myurl <- paste(ftp,as.character(timestart),'T12%3A00%3A00Z&time_duration=P1D','&timeStride=1',sep = '')
+            # downloading file
+            if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
+            if(file.exists(paste('./temp/',filename,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl, destfile = paste('./temp/',filename,sep= ''), mode = 'wb', extra = '-L')}
+            # Reading the ncdf file
+            nc <- ncdf4::nc_open( paste('./temp/',filename,sep = '') )
+            data <- ncdf4::ncvar_get(nc,type, start = c(1,1,1) , count = c(-1, -1 ,1))
+            #transpose the data
+            data <- raster::t(data)
+            #reorder the rows
+            data<-data[ nrow(data):1, ]
+            ncdf4::nc_close(nc)
+            ###save the daily climate data values in a raster
+            NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+            ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units to mm by multiplying with 1000
+            cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*1000
+            cell.values[is.na(cell.values)] <- -99.0 #filling missing data
+          }
+          
+          else
+          {
+            ###the date is Feb 29th and NEX-GDPP has no value for it
+            cell.values <- rep(-99.0,dim(FinalTable)[1])
+            
+          }
+            
           ### Looping through the NEX points and writing out the daily climate data in SWAT format
           for(jj in 1:dim(FinalTable)[1])
           {
             write(x=cell.values[jj],filenameSWAT_TXT[[jj]],append=T,ncolumns = 1)
           }
-          rm(data,NEX)
+          
+          #empty memory and getting ready for the next day!
+          cell.values<-list();unlink(x='./temp', recursive = TRUE)
         }
       }
       else
@@ -217,39 +230,49 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         for(jj in 1:length(time_period))
         {
           timestart <- time_period[jj]
-          timeend <- timestart + 1
-          typemin <- paste(type,'min',sep='')
-          typemax <- paste(type,'max',sep='')
-          filename_min <- paste(typemin,'_day_BCSD_',slice,'_r1i1p1_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
-          filename_max <- paste(typemax,'_day_BCSD_',slice,'_r1i1p1_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
-          myurl_min <- paste(ftp_min,as.character(timestart),'T12%3A00%3A00Z&time_end=',as.character(timeend),'T12%3A00%3A00Z&timeStride=1',sep = '')
-          myurl_max <- paste(ftp_max,as.character(timestart),'T12%3A00%3A00Z&time_end=',as.character(timeend),'T12%3A00%3A00Z&timeStride=1',sep = '')
-          # downloading file
-          if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
-          if(file.exists(paste('./temp/',filename_min,sep= ''))==FALSE|file.exists(paste('./temp/',filename_max,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl_min, destfile = paste('./temp/',filename_min,sep= ''), mode = 'wb', extra = '-L');utils::download.file(quiet = T, method = 'curl', url = myurl_max, destfile = paste('./temp/',filename_max,sep= ''), mode = 'wb', extra = '-L')}
-          # Reading the ncdf file
-          nc_min <- ncdf4::nc_open( paste('./temp/',filename_min,sep = '') )
-          data_min <- ncdf4::ncvar_get(nc_min,typemin, start = c(1,1,1) , count = c(-1, -1 ,1))
-          #transpose the data
-          data_min <- raster::t(data_min)
-          #reorder the rows
-          data_min<-data_min[ nrow(data_min):1, ]
-          ncdf4::nc_close(nc_min)
-          nc_max <- ncdf4::nc_open( paste('./temp/',filename_max,sep = '') )
-          data_max <- ncdf4::ncvar_get(nc_max,typemax, start = c(1,1,1) , count = c(-1, -1 ,1))
-          #transpose the data
-          data_max <- raster::t(data_max)
-          #reorder the rows
-          data_max<-data_max[ nrow(data_max):1, ]
-          ncdf4::nc_close(nc_max)
-          ###save the daily climate data values in a raster
-          NEX_min<-raster::raster(x=as.matrix(data_min),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
-          NEX_max<-raster::raster(x=as.matrix(data_max),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
-          ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units to C by substracting 273.16
-          cell.values_min<-as.vector(NEX_min)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
-          cell.values_max<-as.vector(NEX_max)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
-          cell.values_min[is.na(cell.values_min)] <- -99.0 #filling missing data
-          cell.values_max[is.na(cell.values_max)] <- -99.0 #filling missing data
+          if(format(timestart,"%m-%d") != "02-29")
+          {
+            timeend <- timestart + 1
+            typemin <- paste(type,'min',sep='')
+            typemax <- paste(type,'max',sep='')
+            filename_min <- paste(typemin,'_day_BCSD_',slice,'_r1i1p1_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
+            filename_max <- paste(typemax,'_day_BCSD_',slice,'_r1i1p1_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
+            myurl_min <- paste(ftp_min,as.character(timestart),'T12%3A00%3A00Z&time_duration=P1D','&timeStride=1',sep = '')
+            myurl_max <- paste(ftp_max,as.character(timestart),'T12%3A00%3A00Z&time_duration=P1D','&timeStride=1',sep = '')
+            # downloading file
+            if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
+            if(file.exists(paste('./temp/',filename_min,sep= ''))==FALSE|file.exists(paste('./temp/',filename_max,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl_min, destfile = paste('./temp/',filename_min,sep= ''), mode = 'wb', extra = '-L');utils::download.file(quiet = T, method = 'curl', url = myurl_max, destfile = paste('./temp/',filename_max,sep= ''), mode = 'wb', extra = '-L')}
+            # Reading the ncdf file
+            nc_min <- ncdf4::nc_open( paste('./temp/',filename_min,sep = '') )
+            data_min <- ncdf4::ncvar_get(nc_min,typemin, start = c(1,1,1) , count = c(-1, -1 ,1))
+            #transpose the data
+            data_min <- raster::t(data_min)
+            #reorder the rows
+            data_min<-data_min[ nrow(data_min):1, ]
+            ncdf4::nc_close(nc_min)
+            nc_max <- ncdf4::nc_open( paste('./temp/',filename_max,sep = '') )
+            data_max <- ncdf4::ncvar_get(nc_max,typemax, start = c(1,1,1) , count = c(-1, -1 ,1))
+            #transpose the data
+            data_max <- raster::t(data_max)
+            #reorder the rows
+            data_max<-data_max[ nrow(data_max):1, ]
+            ncdf4::nc_close(nc_max)
+            ###save the daily climate data values in a raster
+            NEX_min<-raster::raster(x=as.matrix(data_min),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+            NEX_max<-raster::raster(x=as.matrix(data_max),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+            ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units to C by substracting 273.16
+            cell.values_min<-as.vector(NEX_min)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
+            cell.values_max<-as.vector(NEX_max)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
+            cell.values_min[is.na(cell.values_min)] <- -99.0 #filling missing data
+            cell.values_max[is.na(cell.values_max)] <- -99.0 #filling missing data
+          }
+          else
+          {
+            ###the date is Feb 29th and NEX-GDPP has no value for it
+            cell.values_min <- rep(-99.0, dim(FinalTable)[1]) #filling missing data
+            cell.values_max <- rep(-99.0, dim(FinalTable)[1]) #filling missing data
+            
+          }
           ### Looping through the NEX points and writing out the daily climate data in SWAT format
           for(k in 1:dim(FinalTable)[1])
           {
@@ -257,7 +280,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             write(x=cell.temp.values[[k]],filenameSWAT_TXT[[k]],append=T,ncolumns = 1)
           }
           #empty memory and getting ready for the next day!
-          cell.temp.values<-list();rm(NEX_min,NEX_max)
+          cell.temp.values<-list();unlink(x='./temp', recursive = TRUE)
         }
 
       }

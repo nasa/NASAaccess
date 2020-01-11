@@ -4,10 +4,16 @@
 \alias{NEX_GDPPswat}
 \title{Generate SWAT rainfall or air temperature input files as well as climate input stations file from NASA NEX-GDPP remote sensing climate change data products.}
 \usage{
-NEX_GDPPswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
-  DEM = "LowerMekong_dem.tif", start = "2060-12-1",
-  end = "2060-12-3", model = "IPSL-CM5A-MR", type = "pr",
-  slice = "rcp85")
+NEX_GDPPswat(
+  Dir = "./SWAT_INPUT/",
+  watershed = "LowerMekong.shp",
+  DEM = "LowerMekong_dem.tif",
+  start = "2060-12-1",
+  end = "2060-12-3",
+  model = "IPSL-CM5A-MR",
+  type = "pr",
+  slice = "rcp85"
+)
 }
 \arguments{
 \item{Dir}{A directory name to store gridded rainfall and rain stations files.}
@@ -34,7 +40,7 @@ a scalar of climate change gridded data values at each point within the study wa
 This function downloads climate change data of rainfall and air temperature from \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that \acronym{SWAT} requires for rainfall or air temperature data input. The function also generates the climate stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected climatological grids that fall within the specified watershed. The \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (rcp45, rcp85).
 }
 \details{
-A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfuly work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.05/}), and \acronym{NASA} Goddard Space Flight Center server for \acronym{NEX-GDPP} climate change data products at (\url{https://cds.nccs.nasa.gov/nex-gddp/}).  The function uses varible name ('pr') for rainfall in \acronym{NEX-GDPP} data products and variable name ('tas') for \acronym{NEX-GDPP} minimum ('tasmin') and maximum ('tasmax') air temperature data products. The \command{NEX-GDPP} function outputs gridded rainfall data in 'mm' and gridded air temperature (maximum and minimum) data in degrees 'C'.
+A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfuly work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server for \acronym{NEX-GDPP} climate change data products at (\url{https://cds.nccs.nasa.gov/nex-gddp/}).  The function uses varible name ('pr') for rainfall in \acronym{NEX-GDPP} data products and variable name ('tas') for \acronym{NEX-GDPP} minimum ('tasmin') and maximum ('tasmax') air temperature data products. The \command{NEX-GDPP} function outputs gridded rainfall data in 'mm' and gridded air temperature (maximum and minimum) data in degrees 'C'.
 
 \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} (Taylor et al. 2012) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (Meinshausen et al. 2011). The \acronym{CMIP5} \acronym{GCM} runs were developed in support of the Fifth Assessment Report of the Intergovernmental Panel on Climate Change \acronym{IPCC AR5}. This dataset includes downscaled projections from the 21 models and scenarios for which daily scenarios were produced and distributed under \acronym{CMIP5}.
 The Bias-Correction Spatial Disaggregation \acronym{BCSD} method used in generating the \acronym{NEX-GDDP} dataset is a statistical downscaling algorithm specifically developed to address the current limitations of the global \acronym{GCM} outputs (Wood et al. 2002; Wood et al. 2004; Maurer et al. 2008; Thrasher et al. 2012).  The \acronym{NEX-GDPP} climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The \command{NEX_GDPPswat} downscales the \acronym{NEX-GDPP} data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by Mohammed et al. (2018).

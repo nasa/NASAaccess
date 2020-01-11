@@ -4,9 +4,13 @@
 \alias{GLDASwat}
 \title{Generate SWAT air temperature input files as well as air temperature stations file from NASA GLDAS remote sensing products.}
 \usage{
-GLDASwat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
-  DEM = "LowerMekong_dem.tif", start = "2015-12-1",
-  end = "2015-12-3")
+GLDASwat(
+  Dir = "./SWAT_INPUT/",
+  watershed = "LowerMekong.shp",
+  DEM = "LowerMekong_dem.tif",
+  start = "2015-12-1",
+  end = "2015-12-3"
+)
 }
 \arguments{
 \item{Dir}{A directory name to store gridded air temperature and air temperature stations files.}

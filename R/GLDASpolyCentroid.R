@@ -74,7 +74,7 @@ GLDASpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DE
     #### Get the SWAT file names and then put the first record date
     for(jj in 1:dim(polys@data)[1])
     {
-      if(dir.exists(Dir)==FALSE){dir.create(Dir)}
+      if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
       filenameSWAT[[jj]]<-paste('temp',as.character(polys@data[jj,1]),sep='')
       filenameSWAT_TXT[[jj]]<-paste(Dir,filenameSWAT[[jj]],'.txt',sep='')
       write(x=format(time_period[1],'%Y%m%d'),file=filenameSWAT_TXT[[jj]])

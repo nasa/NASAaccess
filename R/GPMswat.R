@@ -13,7 +13,7 @@
 #'
 #' \acronym{TRMM} dataset is a daily 0.25 x 0.25 deg accumulated precipitation product that is generated from the Near Real-Time 3-hourly TMPA (3B42RT). It is produced at the NASA GES DISC, as a value added product. Simple summation of valid retrievals in a grid cell is applied for the data day. The result is given in (mm) \url{https://pmm.nasa.gov/data-access/downloads/trmm}.
 #'
-#' Since \acronym{IMERG} data products are only available from 2014-March-12 to present, then this function uses \acronym{TRMM} data products for time periods earlier than 2014-March-12. Keep in mind that \acronym{TRMM} data products that are compatible with \acronym{IMERG} data products are only available from 2000-March-01.
+#' Since \acronym{IMERG} data products are only available from 2000-June-1 to present, then this function uses \acronym{TRMM} data products for time periods earlier than 2000-June-1. Keep in mind that \acronym{TRMM} data products that are compatible with \acronym{IMERG} data products are only available from 2000-March-01.
 #' The function outputs table and gridded data files that match grid points resolution of \acronym{IMERG} data products (i.e., resolution of 0.1 deg). Since \acronym{TRMM} and \acronym{IMERG} data products do not have a similar spatial resolution (i.e., 0.25 and 0.1 deg respectively), the function assigns the nearest \acronym{TRMM} grid point to any missing \acronym{IMERG} data point as an approximate (i.e. during 2000-March-01 to 2014-March-11 time period).
 #'
 #' The \command{GPMswat} function relies on 'curl' tool to transfer data from \acronym{NASA} servers to a user machine, using HTTPS supported protocol.  The 'curl' command embedded in this function to fetch precipitation \acronym{IMERG}/\acronym{TRMM} netcdf daily global files is designed to work seamlessly given that appropriate logging information are stored in the ".netrc" file and the cookies file ".urs_cookies" as explained in registering with the Earth Observing System Data and Information System. It is imperative to say here that a user machine should have 'curl' installed as a prerequisite to run \command{GPMswat}.
@@ -180,7 +180,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
     #### Get the SWAT file names and then put the first record date
     for(jj in 1:dim(FinalTable)[1])
     {
-      if(dir.exists(Dir)==FALSE){dir.create(Dir)}
+      if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
       filenameSWAT[[jj]]<-paste(myvarTRMM,FinalTable$ID[jj],sep='')
       filenameSWAT_TXT[[jj]]<-paste(Dir,filenameSWAT[[jj]],'.txt',sep='')
       #write the data begining date once!
@@ -205,8 +205,8 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
       year <- format(time_period[kk],format='%Y')
 
       #Decide here whether to use TRMM or IMERG based on data availability
-      #Begin with TRMM first which means days before 2014-March-12
-      if (time_period[kk] < as.Date('2014-03-12'))
+      #Begin with TRMM first which means days before 2000-June-1
+      if (time_period[kk] < as.Date('2000-06-01'))
       {
         myurl = paste(paste(url.TRMM.input,year,mon,sep = '/'),'/',sep = '')
         r <- httr::GET(myurl)
@@ -248,7 +248,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
       }
 
 
-      else ## Now for dates equal to or greater than 2014 March 12
+      else ## Now for dates equal to or greater than 2000 June 1
       {
         myurl = paste(paste(url.IMERG.input,year,mon,sep = '/'),'/',sep = '')
         if(httr::status_code(GET(myurl))==200)

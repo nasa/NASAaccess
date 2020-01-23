@@ -114,7 +114,7 @@ GLDASwat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lowe
     #### Get the SWAT file names and then put the first record date
     for(jj in 1:dim(study_area_records)[1])
     {
-      if(dir.exists(Dir)==FALSE){dir.create(Dir)}
+      if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
       filenameSWAT[[jj]]<-paste('temp',study_area_records$ID[jj],sep='')
       filenameSWAT_TXT[[jj]]<-paste(Dir,filenameSWAT[[jj]],'.txt',sep='')
       #write the data begining date once!

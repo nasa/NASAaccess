@@ -69,7 +69,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
       # Reading the study Watershed shapefile
       polys <- rgdal::readOGR(dsn=watershed,verbose = F)
       # SWAT climate master file name
-      filenametableKEY<-paste(Dir,type, '.Grid_Master.txt',sep='')
+      filenametableKEY<-paste(Dir,type, 'Grid_Master.txt',sep='')
       # Creating empty lists
       filenameSWAT     <- list()
       filenameSWAT_TXT <- list()
@@ -207,20 +207,20 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*1000
             cell.values[is.na(cell.values)] <- -99.0 #filling missing data
           }
-          
+
           else
           {
             ###the date is Feb 29th and NEX-GDPP has no value for it
             cell.values <- rep(-99.0,dim(FinalTable)[1])
-            
+
           }
-            
+
           ### Looping through the NEX points and writing out the daily climate data in SWAT format
           for(jj in 1:dim(FinalTable)[1])
           {
             write(x=cell.values[jj],filenameSWAT_TXT[[jj]],append=T,ncolumns = 1)
           }
-          
+
           #empty memory and getting ready for the next day!
           cell.values<-list();unlink(x='./temp', recursive = TRUE)
         }
@@ -271,7 +271,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             ###the date is Feb 29th and NEX-GDPP has no value for it
             cell.values_min <- rep(-99.0, dim(FinalTable)[1]) #filling missing data
             cell.values_max <- rep(-99.0, dim(FinalTable)[1]) #filling missing data
-            
+
           }
           ### Looping through the NEX points and writing out the daily climate data in SWAT format
           for(k in 1:dim(FinalTable)[1])

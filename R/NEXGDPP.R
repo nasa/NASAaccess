@@ -55,7 +55,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
     url.IMERG.input <- 'https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/'
     url.GDDP.input <- 'https://dataserver.nccs.nasa.gov/thredds/ncss/bypass/NEX-GDDP/bcsd/'
     myvarIMERG <- 'precipitationCal'
-    myvarNAME <- '.climate'
+    myvarNAME <- 'climate'
     if(type=='pr'){ftp <- paste(url.GDDP.input,slice,'/','r1i1p1','/',type,'/',model,'.ncml?var=',type,'&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',sep='')}
     if(type=='tas'){ftp_min <- paste(url.GDDP.input,slice,'/','r1i1p1','/',type,'min','/',model,'.ncml?var=',type,'min','&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',sep='');ftp_max <- paste(url.GDDP.input,slice,'/','r1i1p1','/',type,'max','/',model,'.ncml?var=',type,'max','&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',sep='')}
     ####Before getting to work on this function do this check on start and end dates

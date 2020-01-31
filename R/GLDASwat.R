@@ -168,11 +168,11 @@ GLDASwat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lowe
       ###obtain minimum daily data over the 3 hrs records
       mindailytemp<-apply(dailytemp,1,min)
       mindailytemp<-mindailytemp - 273.16 #convert to degree C
-      mindailytemp[is.na(mindailytemp)] <- -99.0 #filling missing data
+      mindailytemp[is.na(mindailytemp)] <- '-99.0' #filling missing data
       ###same for maximum daily
       maxdailytemp<-apply(dailytemp,1,max)
       maxdailytemp<-maxdailytemp - 273.16 #convert to degree C
-      maxdailytemp[is.na(maxdailytemp)] <- -99.0 #filing missing data
+      maxdailytemp[is.na(maxdailytemp)] <- '-99.0' #filing missing data
       ### Looping through the GLDAS points and writing out the daily climate data in SWAT format
       for(k in 1:dim(study_area_records)[1])
       {

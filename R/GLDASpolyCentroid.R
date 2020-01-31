@@ -140,16 +140,16 @@ GLDASpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DE
       ### Obtaining subdaily climate values at centroid grids by averaging GLDAS grids data with weights within each subbasin as explained earlier
       ###daily records for each point
       dailytemp<-suppressWarnings(raster::extract(cropGLDAS, polys, weights=TRUE, fun=mean))
-      #dailytemp[is.na(dailytemp)] <- -99.0 #filling missing data
+      #dailytemp[is.na(dailytemp)] <- '-99.0' #filling missing data
 
       ###obtain minimum daily data over the 3 hrs records
       mindailytemp<-apply(dailytemp,1,min)
       mindailytemp<-mindailytemp - 273.16 #convert to degree C
-      mindailytemp[is.na(mindailytemp)] <- -99.0 #filling missing data
+      mindailytemp[is.na(mindailytemp)] <- '-99.0' #filling missing data
       ###same for maximum daily
       maxdailytemp<-apply(dailytemp,1,max)
       maxdailytemp<-maxdailytemp - 273.16 #convert to degree C
-      maxdailytemp[is.na(maxdailytemp)] <- -99.0 #filing missing data
+      maxdailytemp[is.na(maxdailytemp)] <- '-99.0' #filing missing data
       ### Looping through the GLDAS points and writing out the daily climate data in SWAT format
       for(k in 1:dim(polys@data)[1])
       {

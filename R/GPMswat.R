@@ -236,7 +236,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
           TRMM<-raster::raster(x=as.matrix(data),xmn=nc.long.TRMM[1],xmx=nc.long.TRMM[NROW(nc.long.TRMM)],ymn=nc.lat.TRMM[1],ymx=nc.lat.TRMM[NROW(nc.lat.TRMM)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
           ### Obtaining daily climate values at TRMM grids near the IMERG grids that has been defined and explained earlier
           cell.values<-as.vector(TRMM)[FinalTable$CloseTRMMIndex]
-          cell.values[is.na(cell.values)] <- -99.0 #filling missing data
+          cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
           ### Looping through the TRMM points and writing out the daily climate data in SWAT format
           for(jj in 1:dim(FinalTable)[1])
           {
@@ -279,7 +279,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
 
             #obtain daily climate values at cells bounded with the study watershed (extract values from a raster)
             cell.values<-as.vector(IMERG)[FinalTable$ID]
-            cell.values[is.na(cell.values)] <- -99.0 #filling missing data
+            cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
 
             #This will get me the mean precipiation averaged over the watershed (this is not a weighted mean)
             #v <- extract(IMERG, polys,weights=T,cellnumbers=T,df=T,normalizeWeights=T,sp=T,fun='mean')

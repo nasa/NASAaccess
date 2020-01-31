@@ -205,13 +205,13 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
             ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units to mm by multiplying with 1000
             cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*1000
-            cell.values[is.na(cell.values)] <- -99.0 #filling missing data
+            cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
           }
 
           else
           {
             ###the date is Feb 29th and NEX-GDPP has no value for it
-            cell.values <- rep(-99.0,dim(FinalTable)[1])
+            cell.values <- rep('-99.0',dim(FinalTable)[1])
 
           }
 
@@ -263,14 +263,14 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units to C by substracting 273.16
             cell.values_min<-as.vector(NEX_min)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
             cell.values_max<-as.vector(NEX_max)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
-            cell.values_min[is.na(cell.values_min)] <- -99.0 #filling missing data
-            cell.values_max[is.na(cell.values_max)] <- -99.0 #filling missing data
+            cell.values_min[is.na(cell.values_min)] <- '-99.0' #filling missing data
+            cell.values_max[is.na(cell.values_max)] <- '-99.0' #filling missing data
           }
           else
           {
             ###the date is Feb 29th and NEX-GDPP has no value for it
-            cell.values_min <- rep(-99.0, dim(FinalTable)[1]) #filling missing data
-            cell.values_max <- rep(-99.0, dim(FinalTable)[1]) #filling missing data
+            cell.values_min <- rep('-99.0', dim(FinalTable)[1]) #filling missing data
+            cell.values_max <- rep('-99.0', dim(FinalTable)[1]) #filling missing data
 
           }
           ### Looping through the NEX points and writing out the daily climate data in SWAT format

@@ -143,7 +143,7 @@ GPMpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM 
           cropTRMM<-raster::crop(x=TRMM,y=watershed.elevation)
           ### Obtaining daily climate values at centroid grids by averaging TRMM grids data with weights within each subbasin as explained earlier
           cell.values<-suppressWarnings(raster::extract(cropTRMM, polys, weights=TRUE, fun=mean))
-          cell.values[is.na(cell.values)] <- -99.0 #filling missing data
+          cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
           ### Looping through the TRMM points and writing out the daily climate data in SWAT format
           for(jj in 1:dim(polys@data)[1])
           {
@@ -196,7 +196,7 @@ GPMpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM 
             cropIMERG<-raster::crop(x=IMERG,y=watershed.elevation)
             #Obtaining daily climate values at centroid grids by averaging IMERG grids data with weights within each subbasin as explained earlier
             cell.values<-suppressWarnings(raster::extract(cropIMERG, polys, weights=TRUE, fun=mean))
-            cell.values[is.na(cell.values)] <- -99.0 #filling missing data
+            cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
 
             #loop through the grid points to write out the daily climate data in a SWAT format
             for(jj in 1:dim(polys@data)[1])

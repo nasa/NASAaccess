@@ -203,8 +203,8 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             ncdf4::nc_close(nc)
             ###save the daily climate data values in a raster
             NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
-            ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units to mm by multiplying with 1000
-            cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*1000
+            ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units from kg m^-2 s^-1 to mm day^-1 by multiplying with (60*60*24) 86400
+            cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*86400
             cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
           }
 

@@ -127,8 +127,8 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         nc<-ncdf4::nc_open( paste('./temp/','tasmax_day_BCSD_rcp85_r1i1p1_ACCESS1-0_2014.nc',sep = '') )
         #since geographic info for all NEX files are the same
         ###evaluate these values at one time!
-        ###getting the x values (longitudes in degrees east, 0 to +360 so it needed to be converted to -180 to 180)
-        nc.long.NEXGDPP<-ncdf4::ncvar_get(nc,nc$dim[[3]])-180
+        ###getting the x values (longitudes in degrees east, 0 to +360) so it needed to be converted to -180 to 180)
+        nc.long.NEXGDPP<-ncdf4::ncvar_get(nc,nc$dim[[3]])
         ####getting the y values (latitudes in degrees north, -90 to +90)
         nc.lat.NEXGDPP<-ncdf4::ncvar_get(nc,nc$dim[[2]])
         #getting the climate data
@@ -140,12 +140,13 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         ncdf4::nc_close(nc)
         ###save the daily climate data values in a raster
         NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
-        #obtain cell numbers within the TRMM raster
+        ###rotate the raster to obtain the longitudes extent -180 to 180
+        NEX<-raster::rotate(NEX)
+        #obtain cell numbers within the NEX-GDPP raster
         cell.no<-raster::cellFromPolygon(NEX, polys)
         #obtain lat/long values corresponding to watershed cells
         cell.longlat<-raster::xyFromCell(NEX,unlist(cell.no))
         cell.rowCol <- raster::rowColFromCell(NEX,unlist(cell.no))
-        cell.values<-as.vector(NEX)[unlist(cell.no)]
         study_area_records_NEX<-data.frame(NEX_ID=unlist(cell.no),cell.longlat,cell.rowCol)
         sp::coordinates (study_area_records_NEX)<- ~x+y
         rm(data,NEX)
@@ -203,7 +204,9 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             ncdf4::nc_close(nc)
             ###save the daily climate data values in a raster
             NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
-            ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units from kg m^-2 s^-1 to mm day^-1 by multiplying with (60*60*24) 86400
+            ###rotate to obtain the longitudes in -180 to 180
+            NEX<-raster::rotate(NEX)
+            ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units from kg m^-2 s^-1 to mm day^-1 by multiplying with 86400 (60*60*24)
             cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*86400
             cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
           }
@@ -260,6 +263,9 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             ###save the daily climate data values in a raster
             NEX_min<-raster::raster(x=as.matrix(data_min),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
             NEX_max<-raster::raster(x=as.matrix(data_max),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+            ###rotate to obtain the longitudes in -180 to 180
+            NEX_min<-raster::rotate(NEX_min)
+            NEX_max<-raster::rotate(NEX_max)
             ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units to C by substracting 273.16
             cell.values_min<-as.vector(NEX_min)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
             cell.values_max<-as.vector(NEX_max)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C

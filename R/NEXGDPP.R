@@ -1,4 +1,4 @@
-###3/15/19
+###6/4/20
 #' Generate SWAT rainfall or air temperature input files as well as climate input stations file from NASA NEX-GDPP remote sensing climate change data products.
 #'
 #' This function downloads climate change data of rainfall and air temperature from \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that \acronym{SWAT} requires for rainfall or air temperature data input. The function also generates the climate stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected climatological grids that fall within the specified watershed. The \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (rcp45, rcp85).
@@ -144,6 +144,11 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         NEX<-raster::rotate(NEX)
         #obtain cell numbers within the NEX-GDPP raster
         cell.no<-raster::cellFromPolygon(NEX, polys)
+        ##check cell.no to address small watershed
+        if(length(unlist(cell.no))==0)
+          {
+          cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1]
+          }
         #obtain lat/long values corresponding to watershed cells
         cell.longlat<-raster::xyFromCell(NEX,unlist(cell.no))
         cell.rowCol <- raster::rowColFromCell(NEX,unlist(cell.no))

@@ -1,8 +1,8 @@
 Package: NASAaccess
 Type: Package
-Date: 2020-March-11
+Date: 2020-June-4
 Title: Downloading and reformatting tool for NASA Earth observation data products
-Version: 2.3
+Version: 2.3.1
 Authors@R: c(person("Ibrahim", "Mohammed", role = c("aut", "cre"),
                      email = "ibrahim.mohammed@nasa.gov"))
 Author: Ibrahim Mohammed [aut,cre]
@@ -10,7 +10,7 @@ Maintainer: Ibrahim Mohammed <ibrahim.mohammed@nasa.gov>
 Description: This package generates gridded ascii tables and station files needed by SWAT or any other hydrological model weather inputs. The package assumes that users have already set up a registration account(s) with Earthdata login as well as authorizing NASA GESDISC data access. Please refer to  https://disc.gsfc.nasa.gov/data-access for further details. The package relies on 'curl' (https://curl.haxx.se/) commands and library to access NASA remote sensing servers.  Users should make sure that their local machines have 'curl' installed properly.  Instructions on creating the ".netrc" and ".urs_cookies" files can be accessed at https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget. Creating the ".netrc" file at the user machine 'Home' directory and storing the NASA GESDISC user logging information in it is needed to execute the package commands.   
 Depends: R (>= 3.4.4)
 Imports: ncdf4, stats, shapefiles, rgeos, maptools, httr, stringr, rgdal, XML, sp, utils, raster, methods
-License: file LICENSE
+License: GPL (>= 3.0)
 Keywords: NASA,
           GPM,
           TRMM,
@@ -25,4 +25,4 @@ Keywords: NASA,
           CIMP5
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

@@ -18,9 +18,9 @@ NEX_GDPPswat(
 \arguments{
 \item{Dir}{A directory name to store gridded rainfall and rain stations files.}
 
-\item{watershed}{A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').}
+\item{watershed}{A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').}
 
-\item{DEM}{A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').}
+\item{DEM}{A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').}
 
 \item{start}{Begining date for gridded rainfall data.}
 

@@ -3,8 +3,8 @@
 #'
 #' This function downloads climate change data of rainfall and air temperature from \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that \acronym{SWAT} requires for rainfall or air temperature data input. The function also generates the climate stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected climatological grids that fall within the specified watershed. The \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (rcp45, rcp85).
 #' @param Dir A directory name to store gridded rainfall and rain stations files.
-#' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
-#' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
+#' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
+#' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
 #' @param start Begining date for gridded rainfall data.
 #' @param end Ending date for gridded rainfall data.
 #' @param model A climate modeling center and name from the the World Climate Research Programme \acronym{WCRP} global climate projections through the Coupled Model Intercomparison Project 5 \acronym{CMIP5} (e.g., \acronym{IPSL-CM5A-MR} which is Institut Pierre-Simon Laplace \acronym{CM5A-MR} model).
@@ -68,6 +68,8 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
       watershed.elevation <- raster::raster(DEM)
       # Reading the study Watershed shapefile
       polys <- rgdal::readOGR(dsn=watershed,verbose = F)
+      # To address missing parameters in projection strings
+      polys <- sp::spTransform(polys,CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
       # SWAT climate master file name
       filenametableKEY<-paste(Dir,type, 'Grid_Master.txt',sep='')
       # Creating empty lists
@@ -107,9 +109,10 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         data<-data[ nrow(data):1, ]
         ncdf4::nc_close(nc)
         ###save the daily climate data values in a raster
-        IMERG<-raster::raster(x=as.matrix(data),xmn=nc.long.IMERG[1],xmx=nc.long.IMERG[NROW(nc.long.IMERG)],ymn=nc.lat.IMERG[1],ymx=nc.lat.IMERG[NROW(nc.lat.IMERG)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+        IMERG<-raster::raster(x=as.matrix(data),xmn=nc.long.IMERG[1],xmx=nc.long.IMERG[NROW(nc.long.IMERG)],ymn=nc.lat.IMERG[1],ymx=nc.lat.IMERG[NROW(nc.lat.IMERG)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
         #obtain cell numbers within the IMERG raster
-        cell.no<-raster::cellFromPolygon(IMERG, polys)
+        #cell.no<-raster::cellFromPolygon(IMERG, polys)
+        suppressWarnings(cell.no<-raster::cellFromPolygon(IMERG, polys))
         #obtain lat/long values corresponding to watershed cells
         cell.longlat<-raster::xyFromCell(IMERG,unlist(cell.no))
         cell.rowCol <- raster::rowColFromCell(IMERG,unlist(cell.no))
@@ -139,15 +142,17 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         data<-data[ nrow(data):1, ]
         ncdf4::nc_close(nc)
         ###save the daily climate data values in a raster
-        NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+        NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
         ###rotate the raster to obtain the longitudes extent -180 to 180
         NEX<-raster::rotate(NEX)
         #obtain cell numbers within the NEX-GDPP raster
-        cell.no<-raster::cellFromPolygon(NEX, polys)
+        #cell.no<-raster::cellFromPolygon(NEX, polys)
+        suppressWarnings(cell.no<-raster::cellFromPolygon(NEX, polys))
         ##check cell.no to address small watershed
         if(length(unlist(cell.no))==0)
           {
-          cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1]
+          #cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1]
+          suppressWarnings(cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1])
           }
         #obtain lat/long values corresponding to watershed cells
         cell.longlat<-raster::xyFromCell(NEX,unlist(cell.no))
@@ -208,7 +213,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             data<-data[ nrow(data):1, ]
             ncdf4::nc_close(nc)
             ###save the daily climate data values in a raster
-            NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+            NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
             ###rotate to obtain the longitudes in -180 to 180
             NEX<-raster::rotate(NEX)
             ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units from kg m^-2 s^-1 to mm day^-1 by multiplying with 86400 (60*60*24)
@@ -266,8 +271,8 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             data_max<-data_max[ nrow(data_max):1, ]
             ncdf4::nc_close(nc_max)
             ###save the daily climate data values in a raster
-            NEX_min<-raster::raster(x=as.matrix(data_min),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
-            NEX_max<-raster::raster(x=as.matrix(data_max),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+            NEX_min<-raster::raster(x=as.matrix(data_min),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+            NEX_max<-raster::raster(x=as.matrix(data_max),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
             ###rotate to obtain the longitudes in -180 to 180
             NEX_min<-raster::rotate(NEX_min)
             NEX_max<-raster::rotate(NEX_max)

@@ -81,9 +81,9 @@ GLDASwat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lowe
       #since geographic info for all files are the same (assuming we are working with the same data product)
       ###evaluate these values one time!
       ###getting the y values (longitudes in degrees east)
-      nc.long<-ncdf4::ncvar_get(nc,nc$dim[[1]])
+      nc.long<-ncdf4::ncvar_get(nc,nc$dim[[3]])
       ####getting the x values (latitudes in degrees north)
-      nc.lat<-ncdf4::ncvar_get(nc,nc$dim[[2]])
+      nc.lat<-ncdf4::ncvar_get(nc,nc$dim[[4]])
       #extract data
       data<-matrix(as.vector(ncdf4::ncvar_get(nc,nc$var[[33]])),nrow=length(nc.lat),ncol=length(nc.long),byrow=T)
       #reorder the rows

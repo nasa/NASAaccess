@@ -53,7 +53,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
   {
 
     url.IMERG.input <- 'https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/'
-    url.GDDP.input <- 'https://dataserver.nccs.nasa.gov/thredds/ncss/bypass/NEX-GDDP/bcsd/'
+    url.GDDP.input <- 'https://ds.nccs.nasa.gov/thredds/ncss/bypass/NEX-GDDP/bcsd/'
     myvarIMERG <- 'precipitationCal'
     myvarNAME <- 'climate'
     if(type=='pr'){ftp <- paste(url.GDDP.input,slice,'/','r1i1p1','/',type,'/',model,'.ncml?var=',type,'&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',sep='')}
@@ -125,7 +125,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         # Using dummy date and file info for a file in the NEX-GDPP dataset
         # downloading one file
         if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
-        utils::download.file(quiet = T, method = 'curl', url = 'https://dataserver.nccs.nasa.gov/thredds/ncss/bypass/NEX-GDDP/bcsd/rcp85/r1i1p1/tasmax/ACCESS1-0.ncml?var=tasmax&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=2014-09-01T12%3A00%3A00Z&time_end=2014-09-02T12%3A00%3A00Z&timeStride=1', destfile = paste('./temp/','tasmax_day_BCSD_rcp85_r1i1p1_ACCESS1-0_2014.nc',sep= ''), mode = 'wb', extra = '-L')
+        utils::download.file(quiet = T, method = 'curl', url = 'https://ds.nccs.nasa.gov/thredds/ncss/bypass/NEX-GDDP/bcsd/rcp85/r1i1p1/tasmax/ACCESS1-0.ncml?var=tasmax&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=2014-09-01T12%3A00%3A00Z&time_end=2014-09-02T12%3A00%3A00Z&timeStride=1', destfile = paste('./temp/','tasmax_day_BCSD_rcp85_r1i1p1_ACCESS1-0_2014.nc',sep= ''), mode = 'wb', extra = '-L')
         #reading ncdf file
         nc<-ncdf4::nc_open( paste('./temp/','tasmax_day_BCSD_rcp85_r1i1p1_ACCESS1-0_2014.nc',sep = '') )
         #since geographic info for all NEX files are the same

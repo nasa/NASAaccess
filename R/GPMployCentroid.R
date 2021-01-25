@@ -59,6 +59,10 @@ GPMpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM 
     # Reading the study Watershed shapefile
     polys <- rgdal::readOGR(dsn=watershed,verbose = F)
 
+    # Adding a generic column "GRIDCODE"
+    polys@data$GRIDCODE <- seq(1:dim(polys@data)[1])
+
+
     # SWAT climate 'precipitation' master file name
     filenametableKEY<-paste(Dir,myvarTRMM,'Master.txt',sep='')
 

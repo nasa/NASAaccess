@@ -1,8 +1,8 @@
 Package: NASAaccess
 Type: Package
-Date: 2021-January-25
+Date: 2021-July-12
 Title: Downloading and reformatting tool for NASA Earth observation data products
-Version: 2.4
+Version: 2.5
 Authors@R: c(person("Ibrahim", "Mohammed", role = c("aut", "cre"),
                      email = "ibrahim.mohammed@nasa.gov"))
 Author: Ibrahim Mohammed [aut,cre]

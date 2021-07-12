@@ -109,12 +109,16 @@ GLDASpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DE
         # Reading the ncdf file
         nc<-ncdf4::nc_open( paste('./temp/',filenames[ll],sep = '') )
         ###evaluate these values one time!
+        ###to accommodate dimension name order changes noticed in 2021
+        gg<-attributes(nc$dim)$names
+        lon.dim.number<-(1:length(gg))[gg=='lon']
+        lat.dim.number<-(1:length(gg))[gg=='lat']
         if(ll==1)
         {
           ###getting the y values (longitudes in degrees east)
-          nc.long<-ncdf4::ncvar_get(nc,nc$dim[[3]])
+          nc.long<-ncdf4::ncvar_get(nc,nc$dim[[lon.dim.number]])
           ####getting the x values (latitudes in degrees north)
-          nc.lat<-ncdf4::ncvar_get(nc,nc$dim[[4]])
+          nc.lat<-ncdf4::ncvar_get(nc,nc$dim[[lat.dim.number]])
           data<-array(NA,dim=c(length(nc.lat),length(nc.long),length(filenames)))
         }
 

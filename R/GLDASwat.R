@@ -80,10 +80,14 @@ GLDASwat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lowe
       nc<-ncdf4::nc_open( paste('./temp/',filenames[1],sep = '') )
       #since geographic info for all files are the same (assuming we are working with the same data product)
       ###evaluate these values one time!
+      ###to accommodate dimension name order changes noticed in 2021
+      gg<-attributes(nc$dim)$names
+      lon.dim.number<-(1:length(gg))[gg=='lon']
+      lat.dim.number<-(1:length(gg))[gg=='lat']
       ###getting the y values (longitudes in degrees east)
-      nc.long<-ncdf4::ncvar_get(nc,nc$dim[[3]])
+      nc.long<-ncdf4::ncvar_get(nc,nc$dim[[lon.dim.number]])
       ####getting the x values (latitudes in degrees north)
-      nc.lat<-ncdf4::ncvar_get(nc,nc$dim[[4]])
+      nc.lat<-ncdf4::ncvar_get(nc,nc$dim[[lat.dim.number]])
       #extract data
       data<-matrix(as.vector(ncdf4::ncvar_get(nc,nc$var[[33]])),nrow=length(nc.lat),ncol=length(nc.long),byrow=T)
       #reorder the rows

@@ -1,3 +1,3 @@
 # NASAaccess 2.5
 
-* Added a `NEWS.md` file to track changes to the package.
+* Released on 2021-July-12. Handling of GLDAS dimension order change for 2021 data products.

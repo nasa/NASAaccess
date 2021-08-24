@@ -47,7 +47,7 @@ The \command{GPMpolyCentroid} function relies on 'curl' tool to transfer data fr
 }
 \examples{
 #Lower Mekong basin example
-\donttest{GPMpolyCentroid(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
+\dontrun{GPMpolyCentroid(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
 DEM = "LowerMekong_dem.tif", start = "2015-12-1", end = "2015-12-3")}
 }
 \author{

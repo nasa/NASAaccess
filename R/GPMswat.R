@@ -25,7 +25,7 @@
 #' a scalar of rainfall gridded data values at each point within the study watershed in ascii format needed by \acronym{SWAT} model weather inputs will be stored at \code{Dir}.
 #' @examples
 #' #Lower Mekong basin example
-#' \donttest{GPMswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
+#' \dontrun{GPMswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
 #' DEM = "LowerMekong_dem.tif", start = "2015-12-1", end = "2015-12-3")}
 #' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods
 #' @importFrom stats na.exclude

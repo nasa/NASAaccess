@@ -36,8 +36,9 @@
 #'
 #' @examples
 #' #Lower Mekong basin example
-#' \donttest{NEX_GDPPswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
-#' DEM = "LowerMekong_dem.tif", start = "2060-12-1", end = "2060-12-3", model = 'IPSL-CM5A-MR', type = 'pr', slice = 'rcp85')}
+#' \dontrun{NEX_GDPPswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
+#' DEM = "LowerMekong_dem.tif", start = "2060-12-1", end = "2060-12-3",
+#' model = 'IPSL-CM5A-MR', type = 'pr', slice = 'rcp85')}
 #' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods
 #' @importFrom stats na.exclude
 #' @importFrom raster raster cellFromPolygon xyFromCell rowColFromCell extract

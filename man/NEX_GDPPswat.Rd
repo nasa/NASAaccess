@@ -54,8 +54,9 @@ The \command{NEX_GDPPswat} function relies on 'curl' tool to transfer data from 
 }
 \examples{
 #Lower Mekong basin example
-\donttest{NEX_GDPPswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
-DEM = "LowerMekong_dem.tif", start = "2060-12-1", end = "2060-12-3", model = 'IPSL-CM5A-MR', type = 'pr', slice = 'rcp85')}
+\dontrun{NEX_GDPPswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
+DEM = "LowerMekong_dem.tif", start = "2060-12-1", end = "2060-12-3",
+model = 'IPSL-CM5A-MR', type = 'pr', slice = 'rcp85')}
 }
 \references{
 Maurer, E. P. and Hidalgo, H. G., 2008: Utility of daily vs. monthly large-scale climate data: an intercomparison of two statistical downscaling methods. Hydrology and Earth System Sciences, 12, 551-563, doi:10.5194/hess-12-551-2008.
@@ -75,7 +76,7 @@ Wood, A.W., L.R. Leung, V. Sridhar, and D.P. Lettenmaier, 2004: Hydrologic impli
 \author{
 Ibrahim Mohammed, \email{ibrahim.mohammed@nasa.gov}
 }
-\keyword{CIMP5}
+\keyword{CMIP5}
 \keyword{Change}
 \keyword{Climate}
 \keyword{NASA}

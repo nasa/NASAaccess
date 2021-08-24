@@ -44,11 +44,12 @@ The \acronym{GLDAS} V2.1 simulation started on January 1, 2000 using the conditi
 }
 \examples{
 #Lower Mekong basin example
-\donttest{GLDASpolyCentroid(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
+\dontrun{GLDASpolyCentroid(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
 DEM = "LowerMekong_dem.tif", start = "2015-12-1", end = "2015-12-3")}
 }
 \references{
-Derber, J. C., D. F. Parrish, and S. J. Lord (1991), The New Global Operational Analysis System at the National Meteorological Center, Weather Forecast, 6, 538-547, doi:10.1175/1520-0434(1991)006<0538:tngoas>2.0.co;2.
+Derber, J. C., D. F. Parrish, and S. J. Lord (1991), The New Global Operational Analysis System at the National Meteorological Center, Weather Forecast, 6, 538-547, \cr
+doi:10.1175/1520-0434(1991)006<0538:tngoas>2.0.co;2.
 
 Adler, R. F., G. J. Huffman, A. Chang, R. Ferraro, P.-P. Xie, J. Janowiak, B. Rudolf, U. Schneider, S. Curtis, D. Bolvin, A. Gruber, J. Susskind, P. Arkin, and E. Nelkin (2003), The Version-2 Global Precipitation Climatology Project (GPCP) Monthly Precipitation Analysis (1979–Present), J. Hydrometeorol., 4, 1147-1167, doi:10.1175/1525-7541(2003)004<1147:tvgpcp>2.0.co;2.
 

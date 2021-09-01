@@ -95,7 +95,7 @@ local machine:
 
     -   `library(devtools)`
 
-    -   `install_github("nasa/NASAaccess")`
+    -   `install_github("nasa/NASAaccess", build_manual = TRUE, build_vignettes = TRUE)`
 
     -   `library(NASAaccess)`
 

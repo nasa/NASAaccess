@@ -1,0 +1,161 @@
+---
+title: "Getting started with GPM data"
+author: "Ibrahim N. Mohammed"
+date: '`r Sys.Date()`'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with GPM data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.height=4, 
+  fig.width=7,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+_NASAaccess_ package has multiple functions such as `GPMpolyCentroid` and `GPMswat` that download, extract, and reformat rainfall remote sensing data of [TRMM](https://gpm.nasa.gov/missions/trmm) and [IMERG](https://gpm.nasa.gov/data/imerg) from [NASA servers](https://gpm.nasa.gov/data/directory) for grids within a specified watershed shapefile.
+
+Let's explore `GPMpolyCentroid` and `GPMswat` functions.
+## Basic use
+
+Let's look at an example watershed that we want to examine near Houston, TX:
+```{r}
+library(ggmap)
+library(raster)
+library(sf)
+library(ggplot2)
+#Reading input data
+dem_path <- system.file('extdata', 'DEM_TX.tif', package = 'NASAaccess')
+shape_path <- system.file("extdata", "basin.shp", package = "NASAaccess")
+
+
+dem <- raster(dem_path)
+shape <- st_read(shape_path)
+
+
+#plot the watershed data
+myMap <- get_stamenmap(bbox = c(left = -96,
+                                bottom = 29.7,
+                                right = -95.2,
+                                top = 30),
+                                            maptype = "terrain", 
+                                            crop = TRUE,
+                                             zoom = 10)
+
+
+ggmap(myMap) + 
+  geom_sf(data = shape, 
+          fill = NA, 
+          colour = 'red', 
+          inherit.aes = FALSE) 
+
+```
+
+
+The geographic layout of the White Oak Bayou watershed example used in this demonstration is depicted above. Whiteoak Bayou is a tributary for the Buffalo Bayou River (Harris County, Texas). In order to use _NASAaccess_ we also need a digital elevation model (DEM) raster layer. Let's see the White Oak Bayou watershed DEM and a more closer look at the study watershed example.
+
+
+```{r}
+# create a plot of our DEM raster along with watershed
+image(dem, main="White Oak Bayou Watershed with Digital Elevation Model (DEM)", 
+      col=rev(bpy.colors()), 
+      xlab='lon', 
+      ylab='lat')
+
+plot(shape$geometry,add=TRUE)
+
+```
+
+
+Now, let's examine `GPMswat`:
+
+```{r}
+#
+library(NASAaccess)
+GPMswat(Dir = "./GPMswat/",
+                  watershed = shape_path,
+                  DEM = dem_path,
+                  start = "2020-08-1",
+                  end = "2020-08-3"
+                                    )
+#examine the rainfall station file
+
+GPMswat.table<-read.csv('./GPMswat/precipitationMaster.txt')
+
+head(GPMswat.table)
+
+dim(GPMswat.table)
+```
+
+`GPMswat` generated ascii table for each available grid located within the study watershed. There are 11 grids within the study watershed and that means 11 tables have been generated. `GPMswat` also generated the rainfall stations file input shown above *GPMswat.table* (table with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected grids that fall within the specified watershed.
+
+
+Now, let's see the location of these generated grid points:
+
+```{r}
+ggplot() + 
+  geom_sf(data = shape, 
+          fill = NA, 
+          colour = 'red') +
+  geom_point(data=GPMswat.table,aes(x=LONG,y=LAT,fill=ELEVATION), shape=21, size = 4) +
+  scale_fill_gradientn(colours = terrain.colors(7))
+
+```
+
+
+We note here that `GPMswat` has given us all the [GPM](https://gpm.nasa.gov/data/imerg) data grids that fall within the boundaries of the White Oak Bayou study watershed.
+
+The time series rainfall data stored in the data tables (i.e., 11 tables) can be viewed also.
+
+```{r}
+#looking at reformatted data from the first grid point as listed in the rainfall station file
+read.csv('./GPMswat/precipitation2160842.txt')
+
+
+```
+
+The `GPMswat` has generated a ready format ascii tables that can be ingested easily to the Soil and Water Assessment Tool [SWAT](https://swat.tamu.edu/) model or any other hydrological model of choice.
+
+
+
+Now, let's examine `GPMpolyCentroid`.
+
+
+
+```{r}
+
+#single shape example
+GPMpolyCentroid(Dir = "./GPMpolyCentroid/",
+                  watershed = shape_path,
+                  DEM = dem_path,
+                  start = "2019-08-1",
+                  end = "2019-08-3")
+
+#examine the rainfall station file
+
+GPMpolyCentroid.1.table<-read.csv('./GPMpolyCentroid/precipitationMaster.txt')
+
+#plot
+ggplot() + 
+  geom_sf(data = shape, 
+          fill = NA, 
+          colour = 'red') +
+  geom_point(data=GPMpolyCentroid.1.table,aes(x=LONG,y=LAT))
+```
+
+
+We note here that `GPMpolyCentroid` has given us the [GPM](https://gpm.nasa.gov/data/imerg) data grid that falls within a specified watershed and assigns a pseudo rainfall gauge located at the centroid of the watershed a weighted-average daily rainfall data. 
+
+
+## Built with
+
+```{r}
+sessionInfo()
+
+
+```

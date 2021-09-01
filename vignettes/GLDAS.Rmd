@@ -1,0 +1,133 @@
+---
+title: "Getting started with GLDAS data"
+author: "Ibrahim N. Mohammed"
+date: '`r Sys.Date()`'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started with GLDAS data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  fig.width = 7, 
+  fig.height = 4,
+  collapse = TRUE,
+  echo = TRUE,
+  comment = "#>"
+)
+
+
+
+library(raster)
+library(sf)
+library(ggplot2)
+#Reading input data
+dem_path <- system.file("extdata", "DEM_TX.tif", package = "NASAaccess")
+shape_path <- system.file("extdata", "basin.shp", package = "NASAaccess")
+
+
+
+dem <- raster(dem_path)
+shape <- st_read(shape_path)
+
+
+```
+
+
+_NASAaccess_ package has multiple functions such as `GLDASwat` and `GLDASpolyCentroid` that download, extract, and reformat air temperature data ('Tair_f_inst') of [GLDAS](https://hydro1.gesdisc.eosdis.nasa.gov/dods/) from [NASA servers](https://gpm.nasa.gov/data/directory) for grids within a specified watershed shapefile. The `GLDASpolyCentroid` and `GLDASswat` find the minimum and maximum air temperatures for each day at each grid within the study watershed by searching for minima and maxima over the three hours air temperature data values available for each day and grid. The `GLDASwat` and `GLDASpolyCentroid` functions output gridded air temperature (maximum and minimum) data in degrees 'C'.
+
+Let's explore `GLDASpolyCentroid` and `GLDASswat` functions.
+
+## Basic use
+
+Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.html) functions for more information.
+
+```{r }
+library(NASAaccess)
+
+GLDASwat(Dir = "./GLDASwat/",
+                  watershed = shape_path,
+                  DEM = dem_path,
+                  start = "2020-08-1",
+                  end = "2020-08-3"
+                                    )
+#examine the air temperature station file
+
+GLDASwat.table<-read.csv('./GLDASwat/temp_Master.txt')
+
+head(GLDASwat.table)
+
+dim(GLDASwat.table)
+```
+
+`GLDASwat` generated ascii table for each available grid located within the study watershed. `GLDASwat` also generated the air temperature stations file input shown above *GLDASwat.table* (table with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected grids that fall within the specified watershed. The [GLDAS](https://hydro1.gesdisc.eosdis.nasa.gov/dods/) dataset used here is the [GLDAS Noah Land Surface Model L4 3 hourly 0.25 x 0.25 degree V2.1](https://disc.gsfc.nasa.gov/datasets/GLDAS_NOAH025_3H_2.1/summary).
+
+
+Now, let's see the location of the `GLDASwat` generated grid points
+
+```{r}
+
+ggplot() + 
+  geom_sf(data = shape, 
+          fill = NA, 
+          colour = 'red') +
+  geom_point(data=GLDASwat.table,aes(x=LONG,y=LAT))
+
+
+```
+
+
+We note here that `GLDASwat` has given us all the [GLDAS](https://disc.gsfc.nasa.gov/datasets/GLDAS_NOAH025_3H_2.1/summary) data grids that fall within the boundaries of the White Oak Bayou study watershed.
+
+The time series air temperature data stored in the data tables (i.e., 2 tables) can be viewed also.
+looking at air temperature reformatted data from the first grid point as listed in the air temperature station file is by
+
+```{r}
+
+read.csv('./GLDASwat/temp345937.txt')
+
+
+```
+
+
+The time series air temperature data has been written in a format that gives daily maximum and minimum air temperature in degrees 'C'.
+
+
+
+Now, let's examine `GPMpolyCentroid`.
+
+Using the watershed example:
+```{r}
+
+GLDASpolyCentroid(Dir = "./GLDASpolyCentroid/",
+                  watershed = shape_path,
+                  DEM = dem_path,
+                  start = "2018-08-1",
+                  end = "2018-08-3")
+
+GLDASpolyCentroid.table<-read.csv('./GLDASpolyCentroid/temp_Master.txt')
+
+#plot
+ggplot() + 
+  geom_sf(data = shape, 
+          fill = NA, 
+          colour = 'red') +
+  geom_point(data=GLDASpolyCentroid.table,aes(x=LONG,y=LAT)) +
+  coord_sf(xlim=c(-96,-95.2),ylim=c(29.7,30))
+
+```
+
+
+We note here that `GLDASpolyCentroid` has given us the [GLDAS](https://disc.gsfc.nasa.gov/datasets/GLDAS_NOAH025_3H_2.1/summary) data grid that fall within our specified watershed and assigns a pseudo air temperature gauge located at the centroid of the watershed a weighted-average daily maximum and minimum air temperature data. 
+
+
+
+## Built with
+
+```{r}
+sessionInfo()
+
+
+```

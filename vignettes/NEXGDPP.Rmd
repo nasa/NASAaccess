@@ -42,7 +42,7 @@ The Bias-Correction Spatial Disaggregation BCSD method used in generating the [N
 
 Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.html) functions for more information.
 
-```{r}
+```{r, eval=FALSE, echo=TRUE}
 library(NASAaccess)
 
 NEX_GDPPswat(Dir = "./NEX_GDPPswat/", 
@@ -53,11 +53,15 @@ NEX_GDPPswat(Dir = "./NEX_GDPPswat/",
               model = 'IPSL-CM5A-MR', 
              type = 'pr', 
              slice = 'rcp85')
+```
 
+Let's examine the precipitation station file
+```{r}
+NEX_GDPP.precipitationMaster <- system.file('extdata/NEX_GDPPswat',
+                                         'prGrid_Master.txt', 
+                                         package = 'NASAaccess')
 
-#examine the precipitation station file
-
-NEX_GDPPswat.table<-read.csv('./NEX_GDPPswat/prGrid_Master.txt')
+NEX_GDPPswat.table<-read.csv(NEX_GDPP.precipitationMaster)
 
 head(NEX_GDPPswat.table)
 

@@ -39,7 +39,7 @@ On a local machine the user should have installed the following programs as well
 
   + Installing R software — https://cloud.r-project.org/
   
-  +	Installing Rstudio software — https://rstudio.com/ (OPTIONAL)
+  +	Installing Rstudio software — https://www.rstudio.com/ (OPTIONAL)
   
   + *NASAaccess* R package needs a user registration access with [Earthdata](https://earthdata.nasa.gov/). Users should set up a registration account(s) with [Earthdata](https://earthdata.nasa.gov/) login as well as well as authorizing [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) data access.  Please refer to https://disc.gsfc.nasa.gov/data-access for further details.
   
@@ -49,9 +49,9 @@ On a local machine the user should have installed the following programs as well
       
       - For Windows users the [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) logging information should be saved in a file **\_netrc** beside the **.netrc** file explained above.
 
-  + Installing [*curl*](https://curl.haxx.se/) software .  Since Mac users have [*curl*](https://curl.haxx.se/) as part of macOS build, Windows users should make sure that their local machines build have [*curl*](https://curl.haxx.se/) installed properly.
+  + Installing [*curl*](https://curl.se/) software .  Since Mac users have [*curl*](https://curl.se/) as part of macOS build, Windows users should make sure that their local machines build have [*curl*](https://curl.se/) installed properly.
   
-  + Checking if you can run [*curl*](https://curl.haxx.se/) from your command prompt.  Type `curl --help` and you should see the help pages for the [*curl*](https://curl.haxx.se/) program once everything is defined correctly.
+  + Checking if you can run [*curl*](https://curl.se/) from your command prompt.  Type `curl --help` and you should see the help pages for the [*curl*](https://curl.se/) program once everything is defined correctly.
   
   + Within Rstudio or R terminal run the following commands to install *NASAaccess*:
       - `library(devtools)`

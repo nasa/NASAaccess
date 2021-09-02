@@ -44,18 +44,24 @@ Let's explore `GLDASpolyCentroid` and `GLDASswat` functions.
 
 Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.html) functions for more information.
 
-```{r }
+```{r, eval=FALSE, echo=TRUE}
 library(NASAaccess)
 
 GLDASwat(Dir = "./GLDASwat/",
                   watershed = shape_path,
                   DEM = dem_path,
                   start = "2020-08-1",
-                  end = "2020-08-3"
-                                    )
-#examine the air temperature station file
+                  end = "2020-08-3")
+```
 
-GLDASwat.table<-read.csv('./GLDASwat/temp_Master.txt')
+Let's examine the air temperature station file
+
+```{r}
+GLDASwat.tempMaster <- system.file('extdata/GLDASwat',
+                                         'temp_Master.txt', 
+                                         package = 'NASAaccess')
+
+GLDASwat.table<-read.csv(GLDASwat.tempMaster)
 
 head(GLDASwat.table)
 
@@ -86,7 +92,11 @@ looking at air temperature reformatted data from the first grid point as listed 
 
 ```{r}
 
-read.csv('./GLDASwat/temp345937.txt')
+GLDASwat.point.data <- system.file('extdata/GLDASwat',
+                              'temp345937.txt', 
+                              package = 'NASAaccess')
+#Reading data records
+read.csv(GLDASwat.point.data)
 
 
 ```
@@ -99,7 +109,7 @@ The time series air temperature data has been written in a format that gives dai
 Now, let's examine `GPMpolyCentroid`.
 
 Using the watershed example:
-```{r}
+```{r, eval=F, echo=T}
 
 GLDASpolyCentroid(Dir = "./GLDASpolyCentroid/",
                   watershed = shape_path,
@@ -107,14 +117,24 @@ GLDASpolyCentroid(Dir = "./GLDASpolyCentroid/",
                   start = "2018-08-1",
                   end = "2018-08-3")
 
-GLDASpolyCentroid.table<-read.csv('./GLDASpolyCentroid/temp_Master.txt')
+```
+
+Now let's examine the `GLDASpolyCentroid` generated outputs
+
+```{r}
+GLDASpolyCentroid.tempMaster <- system.file('extdata/GLDASpolyCentroid',
+                              'temp_Master.txt', 
+                                package = 'NASAaccess')
+
+GLDASpolyCentroid.table<-read.csv(GLDASpolyCentroid.tempMaster)
 
 #plot
 ggplot() + 
   geom_sf(data = shape, 
           fill = NA, 
           colour = 'red') +
-  geom_point(data=GLDASpolyCentroid.table,aes(x=LONG,y=LAT)) +
+  geom_point(data=GLDASpolyCentroid.table,
+             aes(x=LONG,y=LAT)) +
   coord_sf(xlim=c(-96,-95.2),ylim=c(29.7,30))
 
 ```

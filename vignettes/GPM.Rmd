@@ -27,18 +27,28 @@ Let's look at an example watershed that we want to examine near Houston, TX:
 ```{r}
 library(ggmap)
 library(raster)
-library(sf)
 library(ggplot2)
+library(rgdal)
 
 #Reading input data
-dem_path <- system.file('extdata', 'DEM_TX.tif', 
-                        package = 'NASAaccess')
-shape_path <- system.file("extdata", "basin.shp", 
+dem_path <- system.file("extdata", 
+                        "DEM_TX.tif", 
+                        package = "NASAaccess")
+
+shape_path <- system.file("extdata", 
+                          "basin.shp", 
                           package = "NASAaccess")
 
 
 dem <- raster(dem_path)
-shape <- st_read(shape_path)
+
+
+
+shape <- readOGR(shape_path)
+shape.df <- ggplot2::fortify(shape)
+
+
+
 
 
 #plot the watershed data
@@ -51,11 +61,10 @@ myMap <- get_stamenmap(bbox = c(left = -96,
                                              zoom = 10)
 
 
-ggmap(myMap) + 
-  geom_sf(data = shape, 
-          fill = NA, 
-          colour = 'red', 
-          inherit.aes = FALSE) 
+ggmap(myMap) +
+  geom_polygon(data = shape.df, 
+               aes(x = long, y = lat, group = group), 
+               fill = NA, size = 0.5, color = 'red')
 
 ```
 
@@ -65,13 +74,20 @@ The geographic layout of the White Oak Bayou watershed example used in this demo
 
 ```{r}
 # create a plot of our DEM raster along with watershed
-image(dem, 
-      main="White Oak Bayou Watershed with Digital Elevation Model (DEM)", 
+
+plot(dem,
+     main="White Oak Bayou Watershed with Digital Elevation Model (DEM)", 
       col=rev(bpy.colors()), 
       xlab='lon', 
-      ylab='lat')
+      ylab='lat',
+      legend  = T,
+      legend.args=list(text='Elevation (m)', 
+                       side=4, 
+                       font=2, 
+                       line=2.5, 
+                       cex=0.8))
 
-plot(shape$geometry,add=TRUE)
+plot(shape , add = TRUE)
 
 ```
 
@@ -112,7 +128,8 @@ Now, let's see the location of these generated grid points:
 
 ```{r}
 ggplot() + 
-  geom_sf(data = shape, 
+  geom_polygon(data = shape.df,
+          aes(x = long, y = lat, group = group),
           fill = NA, 
           colour = 'red') +
   geom_point(data=GPMswat.table,
@@ -169,9 +186,10 @@ GPMpolyCentroid.precipitation.table <- read.csv(GPMpolyCentroid.precipitationMas
 
 #plotting
 ggplot() + 
-  geom_sf(data = shape, 
-          fill = NA, 
-          colour = 'red') +
+  geom_polygon(data = shape.df, 
+               aes(x = long, y = lat, group = group),
+               fill = NA, 
+               colour = 'red') +
   geom_point(data=GPMpolyCentroid.precipitation.table,
              aes(x=LONG,y=LAT))
 ```

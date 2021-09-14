@@ -8,4 +8,4 @@ bibentry(bibtype = "Manual",
          institution = "National Aeronautics and Space Administration, Goddard Space Flight Center",
 	       address = "Greenbelt, Maryland",
 	       note = note,
-         url = "https://CRAN.R-project.org/package=NASAaccess")
+         url = "https://github.com/nasa/NASAaccess")

@@ -16,7 +16,7 @@ Imports: ncdf4, stats, shapefiles, rgeos, maptools, httr, stringr, rgdal, XML, s
 License: file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     markdown,
     rmarkdown,

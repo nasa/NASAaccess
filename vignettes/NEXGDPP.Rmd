@@ -1,12 +1,12 @@
 ---
-title: "NEXGDPP"
+title: "Getting started with NEXGDPP data"
 author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
 output: rmarkdown::html_vignette
 bibliography: "./bibliography/references.bib"
 biblio-style: "apalike"
 vignette: >
-  %\VignetteIndexEntry{NEXGDPP}
+  %\VignetteIndexEntry{Getting started with NEXGDPP data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

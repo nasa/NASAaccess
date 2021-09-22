@@ -4,7 +4,7 @@ author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction}
+  %\VignetteIndexEntry{About}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -24,9 +24,9 @@ Note: for Windows users the [NASA GES DISC](https://disc.gsfc.nasa.gov/) logging
 
 ## Index
 
-* [GPM](.\GPM.html)
-* [GLDAS](.\GLDAS.html)
-* [CMIP5 Climate](.\NEXGDPP.html)
+* [GPM](GPM.html)
+* [GLDAS](GLDAS.html)
+* [CMIP5 Climate](NEXGDPP.html)
 
 ## Built with
 

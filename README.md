@@ -14,7 +14,8 @@ Mohammed*](https://science.gsfc.nasa.gov/sed/bio/ibrahim.mohammed "Ibrahim N. Mo
 *NASAaccess* is a software application in the form of a
 [R](https://www.r-project.org/about.html) package and a web application.
 *NASAaccess* software can generate gridded ascii tables of climate
-[CMIP5](https://pcmdi.llnl.gov/mips/cmip5/ "Coupled Model Intercomparison Project Phase 5")
+[CMIP5](https://pcmdi.llnl.gov/mips/cmip5/ "Coupled Model Intercomparison Project Phase 5"),
+[CMIP6](https://pcmdi.llnl.gov/CMIP6/ "Coupled Model Intercomparison Project Phase 6"),
 and weather data
 ([GPM](https://gpm.nasa.gov/data/directory "Global Precipitation Measurement"),
 [TRMM](https://gpm.nasa.gov/missions/trmm "Tropical Rainfall Measuring Mission"),
@@ -102,6 +103,14 @@ local machine:
 Within the Rstudio help tab the user can verify that the package has
 been installed and browse the help pages of the various functions of
 *NASAaccess*.
+
+## **Is there a walkthrough examples for NASAaccess software?**
+
+*Yes!*
+
+Software users are encouraged to visit
+(<https://imohamme.github.io/NASAaccess/>) to learn more on *NASAaccess*
+functionality and capabilities.
 
 ## **How to cite the NASAaccess software?**
 

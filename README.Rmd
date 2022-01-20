@@ -16,6 +16,9 @@ knitr::opts_chunk$set(
 # NASAaccess
 
 <!-- badges: start -->
+[![NASA Open Source Agreement](https://img.shields.io/badge/license-NASA_Open_Source_Agreement-informational.svg?style=plastic&logo=appveyor)](https://ti.arc.nasa.gov/opensource/nosa/)
+![lifecycle](https://img.shields.io/badge/lifecycle-stable-sucess.svg?style=plastic&logo=appveyor)
+<!-- ![GitHub Downloads](https://img.shields.io/github/downloads/nasa/NASAaccess/total?style=plastic) -->
 <!-- badges: end -->
 
 [*Ibrahim N. Mohammed*](https://science.gsfc.nasa.gov/sed/bio/ibrahim.mohammed "Ibrahim N. Mohammed")
@@ -64,7 +67,7 @@ On a local machine the user should have installed the following programs as well
 
 ## **Is there a walkthrough examples for NASAaccess software?**
 
-*Yes!* 
+Yes! 
 
 Software users are encouraged to visit (https://imohamme.github.io/NASAaccess/) to learn more on *NASAaccess* functionality and capabilities.
 

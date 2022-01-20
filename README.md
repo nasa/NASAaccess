@@ -4,6 +4,11 @@
 # NASAaccess
 
 <!-- badges: start -->
+
+[![NASA Open Source
+Agreement](https://img.shields.io/badge/license-NASA_Open_Source_Agreement-informational.svg?style=plastic&logo=appveyor)](https://ti.arc.nasa.gov/opensource/nosa/)
+![lifecycle](https://img.shields.io/badge/lifecycle-stable-sucess.svg?style=plastic&logo=appveyor)
+<!-- ![GitHub Downloads](https://img.shields.io/github/downloads/nasa/NASAaccess/total?style=plastic) -->
 <!-- badges: end -->
 
 [*Ibrahim N.
@@ -106,7 +111,7 @@ been installed and browse the help pages of the various functions of
 
 ## **Is there a walkthrough examples for NASAaccess software?**
 
-*Yes!*
+Yes!
 
 Software users are encouraged to visit
 (<https://imohamme.github.io/NASAaccess/>) to learn more on *NASAaccess*

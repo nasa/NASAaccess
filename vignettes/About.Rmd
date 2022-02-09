@@ -4,7 +4,7 @@ author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{About}
+  %\VignetteIndexEntry{Introduction}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

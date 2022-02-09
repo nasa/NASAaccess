@@ -6,7 +6,7 @@ output: rmarkdown::html_vignette
 bibliography: "./bibliography/references.bib"
 biblio-style: "apalike"
 vignette: >
-  %\VignetteIndexEntry{NEXGDDP-CMIP6}
+  %\VignetteIndexEntry{Getting started with NEXGDDP-CMIP6 data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -5,9 +5,13 @@
 
 <!-- badges: start -->
 
-![lifecycle](https://img.shields.io/badge/lifecycle-stable-sucess.svg?style=plastic&logo=appveyor)
+[![Anaconda-Server
+Badge](https://anaconda.org/imohamme/r-nasaaccess/badges/installer/conda.svg)](https://conda.anaconda.org/imohamme)
+[![Anaconda-Server
+Badge](https://anaconda.org/imohamme/r-nasaaccess/badges/version.svg)](https://anaconda.org/imohamme/r-nasaaccess)
 [![](https://img.shields.io/readthedocs/nasaaccess?style=social)](https://nasaaccess.readthedocs.io/en/latest/index.html)
 [![](https://img.shields.io/github/stars/nasa/nasaaccess?style=social)](https://github.com/nasa/NASAaccess)
+<!-- ![lifecycle](https://img.shields.io/badge/lifecycle-stable-sucess.svg?style=plastic&logo=appveyor)
 <!-- ![GitHub Downloads](https://img.shields.io/github/downloads/nasa/NASAaccess/total?style=plastic)
 <!-- [![NASA Open Source Agreement](https://img.shields.io/badge/license-NASA_Open_Source_Agreement-informational.svg?style=plastic&logo=appveyor)](https://ti.arc.nasa.gov/opensource/nosa/)
 <!-- badges: end -->
@@ -18,8 +22,10 @@ Mohammed*](https://science.gsfc.nasa.gov/sed/bio/ibrahim.mohammed "Ibrahim N. Mo
 ## **What is NASAaccess?**
 
 *NASAaccess* is a software application in the form of a
-[R](https://www.r-project.org/about.html) package and a web application.
-*NASAaccess* software can generate gridded ascii tables of climate
+[R](https://www.r-project.org/about.html) package, a
+[conda](https://docs.conda.io/en/latest/) package, and a web
+application. *NASAaccess* software can generate gridded ascii tables of
+climate
 [CMIP5](https://pcmdi.llnl.gov/mips/cmip5/ "Coupled Model Intercomparison Project Phase 5"),
 [CMIP6](https://pcmdi.llnl.gov/CMIP6/ "Coupled Model Intercomparison Project Phase 6"),
 and weather data

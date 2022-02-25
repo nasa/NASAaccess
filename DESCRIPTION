@@ -13,7 +13,7 @@ Description: A tool to generate gridded ascii tables and station files needed by
               Creating the ".netrc" file at the user machine 'Home' directory and storing the NASA GES DISC user logging information in it is needed to execute the package commands.   
 URL: https://github.com/nasa/NASAaccess
 Imports: ncdf4, stats, shapefiles, rgeos, maptools, httr, stringr, rgdal, XML, sp, utils, raster, methods, sf, ggmap, ggplot2
-License: file LICENSE
+License: NASA-1.3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2

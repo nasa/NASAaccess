@@ -52,8 +52,8 @@ centers. Full details on installing the web-based version of
 *NASAaccess* at local servers can be found at
 [Here](https://github.com/BYU-Hydroinformatics/SWATOnline/blob/master/Documentation/nasaaccess%20-%20Installation%20Guide.pdf).
 
-*NASAaccess* conda package can be installed directly from
-[Anaconda](https://anaconda.org/imohamme/r-nasaaccess)
+*NASAaccess* conda package can be installed directly from *Anaconda* by
+searching for `r-nasaaccess`.
 
 ## **What is needed to install the NASAaccess software on my local machine?**
 

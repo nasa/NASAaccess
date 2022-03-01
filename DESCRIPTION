@@ -1,6 +1,6 @@
 Package: NASAaccess
 Version: 3.0.0
-Date: 2022-01-13
+Date: 2022-02-28
 Type: Package
 Title: Downloading and Reformatting Tool for NASA Earth Observation Data Products
 Authors@R: c(person("Ibrahim", "Mohammed", role = c("aut", "cre"), 
@@ -12,8 +12,9 @@ Description: A tool to generate gridded ascii tables and station files needed by
               Users should make sure that their local machines have 'curl' installed properly.  Instructions on creating the ".netrc" and ".urs_cookies" files can be accessed at <https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget>. 
               Creating the ".netrc" file at the user machine 'Home' directory and storing the NASA GES DISC user logging information in it is needed to execute the package commands.   
 URL: https://github.com/nasa/NASAaccess
+BugReports: https://github.com/nasa/NASAaccess/issues
 Imports: ncdf4, stats, shapefiles, rgeos, maptools, httr, stringr, rgdal, XML, sp, utils, raster, methods, sf, ggmap, ggplot2
-License: NASA-1.3
+License: NASA-1.3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2

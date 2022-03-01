@@ -1,6 +1,6 @@
 # NASAaccess 3.0.0
 
-* Released on 2022-January-13. Adding CMIP6 access function.
+* Released on 2022-February-28. Adding CMIP6 access functio & Submission to CRAN.
 
 
 # NASAaccess 2.5.1

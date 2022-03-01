@@ -52,6 +52,9 @@ centers. Full details on installing the web-based version of
 *NASAaccess* at local servers can be found at
 [Here](https://github.com/BYU-Hydroinformatics/SWATOnline/blob/master/Documentation/nasaaccess%20-%20Installation%20Guide.pdf).
 
+*NASAaccess* conda package can be installed directly from
+[Anaconda](https://anaconda.org/imohamme/r-nasaaccess)
+
 ## **What is needed to install the NASAaccess software on my local machine?**
 
 On a local machine the user should have installed the following programs
@@ -59,9 +62,9 @@ as well as setting up a user account. The list below gives a summary of
 what is needed to be done prior to work with NASAaccess software on any
 local machine:
 
--   Installing R software — <https://cloud.r-project.org/>
+-   [Installing R software](https://www.r-project.org/)
 
--   Installing Rstudio software — <https://www.rstudio.com/> (OPTIONAL)
+-   [Installing Rstudio software](https://www.rstudio.com/) (OPTIONAL)
 
 -   *NASAaccess* R package needs a user registration access with
     [Earthdata](https://earthdata.nasa.gov/). Users should set up a

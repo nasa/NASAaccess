@@ -5,20 +5,20 @@
 #' @param Dir A directory name to store gridded air temperature and air temperature stations files.
 #' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
 #' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
-#' @param start Begining date for gridded air temperature data.
+#' @param start Beginning date for gridded air temperature data.
 #' @param end Ending date for gridded air temperature data.
-#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfuly work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{GLDAS} remote sensing data products at (\url{https://hydro1.gesdisc.eosdis.nasa.gov/data/GLDAS/GLDAS_NOAH025_3H.2.1/}).  The function uses varible name ('Tair_f_inst') for air temperature in \acronym{GLDAS} data products. Units for gridded air temperature data are degrees in 'K'. The \command{GLDASwat} function outputs gridded air temperature (maximum and minimum) data in degrees 'C'.
+#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{GLDAS} remote sensing data products at (\url{https://hydro1.gesdisc.eosdis.nasa.gov/data/GLDAS/GLDAS_NOAH025_3H.2.1/}).  The function uses variable name ('Tair_f_inst') for air temperature in \acronym{GLDAS} data products. Units for gridded air temperature data are degrees in 'K'. The \command{GLDASwat} function outputs gridded air temperature (maximum and minimum) data in degrees 'C'.
 #'
-#' The goal of the Global Land Data Assimilation System \acronym{GLDAS} is to ingest satellite and ground-based observational data products, using advanced land surface modeling and data assimilation techniques, in order to generate optimal fields of land surface states and fluxes (Rodell et al., 2004). \acronym{GLDAS} dataset used in this function is the \acronym{GLDAS} Noah Land Surface Model L4 3 hourly 0.25 x 0.25 degree V2.1. The full suite of \acronym{GLDAS} datasets is avaliable at \url{https://hydro1.gesdisc.eosdis.nasa.gov/dods/}.  The \command{GLDASwat} finds the minimum and maximum air temperatures for each day at each grid within the study watershed by searching for minima and maxima over the three hours air temperature data values available for each day and grid.
+#' The goal of the Global Land Data Assimilation System \acronym{GLDAS} is to ingest satellite and ground-based observational data products, using advanced land surface modeling and data assimilation techniques, in order to generate optimal fields of land surface states and fluxes (Rodell et al., 2004). \acronym{GLDAS} dataset used in this function is the \acronym{GLDAS} Noah Land Surface Model L4 3 hourly 0.25 x 0.25 degree V2.1. The full suite of \acronym{GLDAS} datasets is available at \url{https://hydro1.gesdisc.eosdis.nasa.gov/dods/}.  The \command{GLDASwat} finds the minimum and maximum air temperatures for each day at each grid within the study watershed by searching for minima and maxima over the three hours air temperature data values available for each day and grid.
 #'
 #' The \command{GLDASwat} function relies on 'curl' tool to transfer data from \acronym{NASA} servers to a user machine, using HTTPS supported protocol.  The 'curl' command embedded in this function to fetch \acronym{GLDAS} netcdf daily global files is designed to work seamlessly given that appropriate logging information are stored in the ".netrc" file and the cookies file ".urs_cookies" as explained in registering with the Earth Observing System Data and Information System. It is imperative to say here that a user machine should have 'curl' installed as a prerequisite to run \command{GLDASwat}.
 #'
-#' The \acronym{GLDAS} V2.1 simulation started on January 1, 2000 using the conditions from the \acronym{GLDAS} V2.0 simulation. The \acronym{GLDAS} V2.1 simulation was forced with National Oceanic and Atmospheric Administration \acronym{NOAA}, Global Data Assimilation System \acronym{GDAS} atmospheric analysis fields (Derber et al., 1991), the disaggregated Global Precipitation Climatology Project \acronym{GPCP} precipitation fields (Adler et al., 2003), and the Air Force Weather Agency’s AGRicultural METeorological modeling system \acronym{AGRMET} radiation fields which became available for March 1, 2001 onwards.
+#' The \acronym{GLDAS} V2.1 simulation started on January 1, 2000 using the conditions from the \acronym{GLDAS} V2.0 simulation. The \acronym{GLDAS} V2.1 simulation was forced with National Oceanic and Atmospheric Administration \acronym{NOAA}, Global Data Assimilation System \acronym{GDAS} atmospheric analysis fields (Derber et al., 1991), the disaggregated Global Precipitation Climatology Project \acronym{GPCP} precipitation fields (Adler et al., 2003), and the Air Force Weather Agency’s AGRicultural METeorological modeling system \acronym{AGRMET} radiation fields which became available for March 1, 2001 onward.
 #' @note
 #' \command{start} should be equal to or greater than 2000-Jan-01.
 #' @author Ibrahim Mohammed, \email{ibrahim.mohammed@@nasa.gov}
 #' @keywords NASA GLDAS Air Temperature
-#' @return A table that includes points ID, Point file name, Lat, Long, and Elevation information formated to be read with \acronym{SWAT}, and
+#' @return A table that includes points ID, Point file name, Lat, Long, and Elevation information formatted to be read with \acronym{SWAT}, and
 #' a scalar of maximum and minimum air temperature gridded data values at each point within the study watershed in ascii format needed by \acronym{SWAT} model weather inputs will be stored at \code{Dir}.
 #' @references Derber, J. C., D. F. Parrish, and S. J. Lord (1991), The New Global Operational Analysis System at the National Meteorological Center, Weather Forecast, 6, 538-547, \cr
 #' doi:10.1175/1520-0434(1991)006<0538:tngoas>2.0.co;2.
@@ -122,7 +122,7 @@ GLDASwat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lowe
       if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
       filenameSWAT[[jj]]<-paste('temp',study_area_records$ID[jj],sep='')
       filenameSWAT_TXT[[jj]]<-paste(Dir,filenameSWAT[[jj]],'.txt',sep='')
-      #write the data begining date once!
+      #write the data beginning date once!
       write(x=format(time_period[1],'%Y%m%d'),file=filenameSWAT_TXT[[jj]])
     }
 

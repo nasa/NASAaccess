@@ -43,14 +43,14 @@ needed to drive various hydrological models (e.g.,
 The *NASAaccess* R package is an open source software package under
 [NASA Open Source Agreement
 v1.3](https://opensource.org/licenses/NASA-1.3) and can be downloaded
-from Github at <https://github.com/nasa/NASAaccess>.
+from GitHub at <https://github.com/nasa/NASAaccess>.
 
 *NASAaccess* is also available as a
 [Tethys](https://www.tethysplatform.org/) web-based application that can
 be installed on servers for multiple usage suited for agencies and
 centers. Full details on installing the web-based version of
 *NASAaccess* at local servers can be found at
-[Here](https://github.com/BYU-Hydroinformatics/SWATOnline/blob/master/Documentation/nasaaccess%20-%20Installation%20Guide.pdf).
+[Here](https://nasaaccess.readthedocs.io/en/latest/nasaaccess_tethys.html).
 
 *NASAaccess* conda package can be installed directly from *Anaconda* by
 searching for `r-nasaaccess`.
@@ -119,7 +119,7 @@ Within the Rstudio help tab the user can verify that the package has
 been installed and browse the help pages of the various functions of
 *NASAaccess*.
 
-## **Is there a walkthrough examples for NASAaccess software?**
+## **Is there a walk through examples for NASAaccess software?**
 
 Yes!
 

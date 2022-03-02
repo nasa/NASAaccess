@@ -5,9 +5,9 @@
 #' @param Dir A directory name to store gridded rainfall and rain stations files.
 #' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
 #' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
-#' @param start Begining date for gridded rainfall data.
+#' @param start Beginning date for gridded rainfall data.
 #' @param end Ending date for gridded rainfall data.
-#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfuly work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server address for \acronym{TRMM} remote sensing data products (\url{https://disc2.gesdisc.eosdis.nasa.gov/data/TRMM_RT/TRMM_3B42RT_Daily.7/}).  The function uses varible name ('precipitationCal') for rainfall in \acronym{IMERG} data products and variable name ('precipitation') for \acronym{TRMM} rainfall data products. Units for gridded rainfall data are 'mm'.
+#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server address for \acronym{TRMM} remote sensing data products (\url{https://disc2.gesdisc.eosdis.nasa.gov/data/TRMM_RT/TRMM_3B42RT_Daily.7/}).  The function uses variable name ('precipitationCal') for rainfall in \acronym{IMERG} data products and variable name ('precipitation') for \acronym{TRMM} rainfall data products. Units for gridded rainfall data are 'mm'.
 #'
 #' \acronym{IMERG} dataset is the GPM Level 3 \acronym{IMERG} *Final* Daily 0.1 x 0.1 deg (GPM_3IMERGDF) derived from the half-hourly GPM_3IMERGHH. The derived result represents the final estimate of the daily accumulated precipitation. The dataset is produced at the \acronym{NASA} Goddard Earth Sciences (GES) Data and Information Services Center (DISC) by simply summing the valid precipitation retrievals for the day in GPM_3IMERGHH and giving the result in (mm) \url{https://gpm.nasa.gov/data/directory}.
 #'
@@ -21,7 +21,7 @@
 #' \command{start} should be equal to or greater than 2000-Mar-01.
 #' @author Ibrahim Mohammed, \email{ibrahim.mohammed@@nasa.gov}
 #' @keywords NASA IMERG TRMM Precipitation
-#' @return A table that includes points ID, Point file name, Lat, Long, and Elevation information formated to be read with \acronym{SWAT}, and
+#' @return A table that includes points ID, Point file name, Lat, Long, and Elevation information formatted to be read with \acronym{SWAT}, and
 #' a scalar of rainfall gridded data values at each point within the study watershed in ascii format needed by \acronym{SWAT} model weather inputs will be stored at \code{Dir}.
 #' @examples
 #' #Lower Mekong basin example
@@ -183,7 +183,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
       if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
       filenameSWAT[[jj]]<-paste(myvarTRMM,FinalTable$ID[jj],sep='')
       filenameSWAT_TXT[[jj]]<-paste(Dir,filenameSWAT[[jj]],'.txt',sep='')
-      #write the data begining date once!
+      #write the data beginning date once!
       write(x=format(time_period[1],'%Y%m%d'),file=filenameSWAT_TXT[[jj]])
     }
 

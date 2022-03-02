@@ -5,13 +5,13 @@
 #' @param Dir A directory name to store gridded rainfall and rain stations files.
 #' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
 #' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
-#' @param start Begining date for gridded rainfall data.
+#' @param start Beginning date for gridded rainfall data.
 #' @param end Ending date for gridded rainfall data.
 #' @param model A climate modeling center and name from the the World Climate Research Programme \acronym{WCRP} global climate projections through the Coupled Model Intercomparison Project 5 \acronym{CMIP5} (e.g., \acronym{IPSL-CM5A-MR} which is Institut Pierre-Simon Laplace \acronym{CM5A-MR} model).
 #' @param type  A flux data type. It's value can be \acronym{'pr'} for precipitation or \acronym{'tas'} for air temperature.
 #' @param slice A scenario from the Representative Concentration Pathways. It's value can be \acronym{'rcp45'} , \acronym{'rcp85'}, or \acronym{'historical'}.
 #'
-#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfuly work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server for \acronym{NEX-GDPP} climate change data products at (\url{https://www.nccs.nasa.gov/services/climate-data-services}).  The function uses varible name ('pr') for rainfall in \acronym{NEX-GDPP} data products and variable name ('tas') for \acronym{NEX-GDPP} minimum ('tasmin') and maximum ('tasmax') air temperature data products. The \command{NEX-GDPP} function outputs gridded rainfall data in 'mm' and gridded air temperature (maximum and minimum) data in degrees 'C'.
+#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server for \acronym{NEX-GDPP} climate change data products at (\url{https://www.nccs.nasa.gov/services/climate-data-services}).  The function uses variable name ('pr') for rainfall in \acronym{NEX-GDPP} data products and variable name ('tas') for \acronym{NEX-GDPP} minimum ('tasmin') and maximum ('tasmax') air temperature data products. The \command{NEX-GDPP} function outputs gridded rainfall data in 'mm' and gridded air temperature (maximum and minimum) data in degrees 'C'.
 #'
 #' \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} (Taylor et al. 2012) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (Meinshausen et al. 2011). The \acronym{CMIP5} \acronym{GCM} runs were developed in support of the Fifth Assessment Report of the Intergovernmental Panel on Climate Change \acronym{IPCC AR5}. This dataset includes downscaled projections from the 21 models and scenarios for which daily scenarios were produced and distributed under \acronym{CMIP5}.
 #' The Bias-Correction Spatial Disaggregation \acronym{BCSD} method used in generating the \acronym{NEX-GDDP} dataset is a statistical downscaling algorithm specifically developed to address the current limitations of the global \acronym{GCM} outputs (Wood et al. 2002; Wood et al. 2004; Maurer et al. 2008; Thrasher et al. 2012).  The \acronym{NEX-GDPP} climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The \command{NEX_GDPPswat} downscales the \acronym{NEX-GDPP} data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by Mohammed et al. (2018).
@@ -24,7 +24,7 @@
 #' @author Ibrahim Mohammed, \email{ibrahim.mohammed@@nasa.gov}
 #'
 #' @keywords NASA NEX-GDPP Climate Change CMIP5
-#' @return A table that includes points ID, Point file name, Lat, Long, and Elevation information formated to be read with \acronym{SWAT}, and
+#' @return A table that includes points ID, Point file name, Lat, Long, and Elevation information formatted to be read with \acronym{SWAT}, and
 #' a scalar of climate change gridded data values at each point within the study watershed in ascii format needed by \acronym{SWAT} model weather inputs will be stored at \code{Dir}.
 #' @references Maurer, E. P. and Hidalgo, H. G., 2008: Utility of daily vs. monthly large-scale climate data: an intercomparison of two statistical downscaling methods. Hydrology and Earth System Sciences, 12, 551-563, doi:10.5194/hess-12-551-2008.
 #' @references Meinshausen, M. S.J. Smith, K. Calvin, J.S. Daniel, M.L.T. Kainuma, and et al., 2011: The RCP greenhouse gas concentrations and their extensions from 1765 to 2300. Climatic Change, 109, 213-241, doi:10.1007/s10584-011-0156-z.
@@ -184,7 +184,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
         filenameSWAT[[jj]]<-paste(type, myvarNAME,FinalTable$ID[jj],sep='')
         filenameSWAT_TXT[[jj]]<-paste(Dir,filenameSWAT[[jj]],'.txt',sep='')
-        #write the data begining date once!
+        #write the data beginning date once!
         write(x=format(time_period[1],'%Y%m%d'),file=filenameSWAT_TXT[[jj]])
       }
       #### Write out the SWAT grid information master table

@@ -1,6 +1,6 @@
-# NASAaccess 3.0.1
+# NASAaccess 3.0.3
 
-* Submission to CRAN.
+* Released on March-2022. Submission to CRAN.
 
 
 # NASAaccess 3.0.0

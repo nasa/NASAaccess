@@ -1,0 +1,11 @@
+pandoc: 2.17.1.1
+pkgdown: 2.0.2
+pkgdown_sha: ~
+articles:
+  About: About.html
+  GLDAS: GLDAS.html
+  GPM: GPM.html
+  NEXGDDP-CMIP6: NEXGDDP-CMIP6.html
+  NEXGDPP: NEXGDPP.html
+last_built: 2022-03-03T18:51Z
+

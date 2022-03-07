@@ -2,7 +2,7 @@
 title: "Introduction"
 author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Introduction}
   %\VignetteEngine{knitr::rmarkdown}
@@ -24,10 +24,10 @@ Note: for Windows users the [NASA GES DISC](https://disc.gsfc.nasa.gov/) logging
 
 ## Index
 
-* [GPM](GPM.html)
-* [GLDAS](GLDAS.html)
-* [CMIP5 Climate](NEXGDPP.html)
-* [CMIP6 Climate](NEXGDPP-CMIP6.html)
+* [GPM](GPM.pdf)
+* [GLDAS](GLDAS.pdf)
+* [CMIP5 Climate](NEXGDPP.pdf)
+* [CMIP6 Climate](NEXGDPP-CMIP6.pdf)
 
 
 ## Built with

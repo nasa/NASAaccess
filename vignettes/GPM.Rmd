@@ -2,7 +2,7 @@
 title: "Getting started with GPM data"
 author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Getting started with GPM data}
   %\VignetteEngine{knitr::rmarkdown}
@@ -21,7 +21,10 @@ knitr::opts_chunk$set(
 _NASAaccess_ package has multiple functions such as `GPMpolyCentroid` and `GPMswat` that download, extract, and reformat rainfall remote sensing data of [TRMM](https://gpm.nasa.gov/missions/trmm) and [IMERG](https://gpm.nasa.gov/data/imerg) from [NASA servers](https://gpm.nasa.gov/data/directory) for grids within a specified watershed shapefile.
 
 Let's explore `GPMpolyCentroid` and `GPMswat` functions.
+
+
 ## Basic use
+
 
 Let's look at an example watershed that we want to examine near Houston, TX:
 ```{r}
@@ -196,6 +199,33 @@ ggplot() +
 
 
 We note here that `GPMpolyCentroid` has given us the [GPM](https://gpm.nasa.gov/data/imerg) data grid that falls within a specified watershed and assigns a pseudo rainfall gauge located at the centroid of the watershed a weighted-average daily rainfall data. 
+
+Let's examine the precipitation data just obtained by `GPMpolyCentroid` over the White Oak Bayou study watershed.
+
+```{r}
+
+GPMpolyCentroid.precipitation.record <- system.file('extdata/GPMpolyCentroid',
+                                                    'precipitation1.txt', 
+                                                    package = 'NASAaccess')
+
+GPMpolyCentroid.precipitation.data <- read.csv(GPMpolyCentroid.precipitation.record)
+
+#since data started on 2019-08-01
+
+days <- seq.Date(from = as.Date('2019-08-01'), 
+                 length.out = dim(GPMpolyCentroid.precipitation.data)[1], by = 'day')
+
+#plotting the precipitation time series
+
+plot(days, GPMpolyCentroid.precipitation.data [,1], 
+                                    pch = 19, ylab= '(mm)', 
+                                    xlab = '', 
+                                    type = 'b',
+     main="White Oak Bayou Watershed precipitation (GPM)")
+```
+
+
+The time series plot above gives the rainfall amounts in (mm) at the centroid of the White Oak Bayou watershed during 2019-August-01 to 2019-August-03.
 
 
 ## Built with

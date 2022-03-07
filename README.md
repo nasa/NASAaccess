@@ -4,11 +4,9 @@
 # NASAaccess
 
 <!-- badges: start -->
+<!--[![Anaconda-Server Badge](https://anaconda.org/imohamme/r-nasaaccess/badges/installer/conda.svg)](https://conda.anaconda.org/imohamme)
+[![Anaconda-Server Badge](https://anaconda.org/imohamme/r-nasaaccess/badges/version.svg)](https://anaconda.org/imohamme/r-nasaaccess)-->
 
-[![Anaconda-Server
-Badge](https://anaconda.org/imohamme/r-nasaaccess/badges/installer/conda.svg)](https://conda.anaconda.org/imohamme)
-[![Anaconda-Server
-Badge](https://anaconda.org/imohamme/r-nasaaccess/badges/version.svg)](https://anaconda.org/imohamme/r-nasaaccess)
 [![](https://img.shields.io/readthedocs/nasaaccess?style=social)](https://nasaaccess.readthedocs.io/en/latest/index.html)
 [![](https://img.shields.io/github/stars/nasa/nasaaccess?style=social)](https://github.com/nasa/NASAaccess)
 <!-- ![lifecycle](https://img.shields.io/badge/lifecycle-stable-sucess.svg?style=plastic&logo=appveyor)

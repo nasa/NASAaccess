@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^.*\.yml$
-^inst/doc/*\.html$
 ^README\.Rmd$
+^CRAN-SUBMISSION$
 ^docs$

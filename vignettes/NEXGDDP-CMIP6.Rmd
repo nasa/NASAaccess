@@ -2,7 +2,7 @@
 title: "Getting started with NEXGDDP-CMIP6 data"
 author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 bibliography: "./bibliography/references.bib"
 biblio-style: "apalike"
 vignette: >
@@ -38,9 +38,10 @@ _NASAaccess_ has a handy tool to access, extract, and reformat climate change da
 
 The Bias-Correction Spatial Disaggregation BCSD method used in generating the [NEX-GDDP-CMIP6 dataset](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) is a statistical downscaling algorithm specifically developed to address the current limitations of the global GCM outputs [@RN1282;@RN736;@RN1393;@RN1283]. The NEX-GDPP-CMIP6 climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The NEX_GDPP_CMIP6 downscales the NEX-GDPP-CMIP6 data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by @RN1207.
 
+
 ## Basic use
 
-Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.html) functions for more information.
+Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.pdf) functions for more information.
 
 ```{r, eval=FALSE, echo=TRUE}
 library(NASAaccess)

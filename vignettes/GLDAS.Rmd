@@ -2,7 +2,7 @@
 title: "Getting started with GLDAS data"
 author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{Getting started with GLDAS data}
   %\VignetteEngine{knitr::rmarkdown}
@@ -40,9 +40,10 @@ _NASAaccess_ package has multiple functions such as `GLDASwat` and `GLDASpolyCen
 
 Let's explore `GLDASpolyCentroid` and `GLDASswat` functions.
 
+
 ## Basic use
 
-Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.html) functions for more information.
+Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.pdf) functions for more information.
 
 ```{r, eval=FALSE, echo=TRUE}
 library(NASAaccess)

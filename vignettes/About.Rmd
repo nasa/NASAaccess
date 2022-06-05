@@ -26,8 +26,8 @@ Note: for Windows users the [NASA GES DISC](https://disc.gsfc.nasa.gov/) logging
 
 * [GPM](GPM.pdf)
 * [GLDAS](GLDAS.pdf)
-* [CMIP5 Climate](NEXGDPP.pdf)
-* [CMIP6 Climate](NEXGDPP-CMIP6.pdf)
+* [CMIP5 Climate](NEXGDDP.pdf)
+* [CMIP6 Climate](NEXGDDP-CMIP6.pdf)
 
 
 ## Built with

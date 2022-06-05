@@ -1,7 +1,7 @@
 ###6/4/20
-#' Generate rainfall or air temperature as well as climate input stations file from NASA NEX-GDPP remote sensing climate change data products needed to drive various hydrological models.
+#' Generate rainfall or air temperature as well as climate input stations file from NASA NEX-GDDP remote sensing climate change data products needed to drive various hydrological models.
 #'
-#' This function downloads climate change data of rainfall and air temperature from \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that \acronym{SWAT} requires for rainfall or air temperature data input. The function also generates the climate stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected climatological grids that fall within the specified watershed. The \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (rcp45, rcp85).
+#' This function downloads climate change data of rainfall and air temperature from \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that any hydrological model requires for rainfall or air temperature data input. The function also generates the climate stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected climatological grids that fall within the specified watershed. The \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (rcp45, rcp85).
 #' @param Dir A directory name to store gridded rainfall and rain stations files.
 #' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
 #' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
@@ -11,21 +11,21 @@
 #' @param type  A flux data type. It's value can be \acronym{'pr'} for precipitation or \acronym{'tas'} for air temperature.
 #' @param slice A scenario from the Representative Concentration Pathways. It's value can be \acronym{'rcp45'} , \acronym{'rcp85'}, or \acronym{'historical'}.
 #'
-#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server for \acronym{NEX-GDPP} climate change data products at (\url{https://www.nccs.nasa.gov/services/climate-data-services}).  The function uses variable name ('pr') for rainfall in \acronym{NEX-GDPP} data products and variable name ('tas') for \acronym{NEX-GDPP} minimum ('tasmin') and maximum ('tasmax') air temperature data products. The \command{NEX-GDPP} function outputs gridded rainfall data in 'mm' and gridded air temperature (maximum and minimum) data in degrees 'C'.
+#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server for \acronym{NEX-GDDP} climate change data products at (\url{https://www.nccs.nasa.gov/services/climate-data-services}).  The function uses variable name ('pr') for rainfall in \acronym{NEX-GDDP} data products and variable name ('tas') for \acronym{NEX-GDDP} minimum ('tasmin') and maximum ('tasmax') air temperature data products. The \command{NEX-GDDP} function outputs gridded rainfall data in 'mm' and gridded air temperature (maximum and minimum) data in degrees 'C'.
 #'
 #' \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} (Taylor et al. 2012) and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (Meinshausen et al. 2011). The \acronym{CMIP5} \acronym{GCM} runs were developed in support of the Fifth Assessment Report of the Intergovernmental Panel on Climate Change \acronym{IPCC AR5}. This dataset includes downscaled projections from the 21 models and scenarios for which daily scenarios were produced and distributed under \acronym{CMIP5}.
-#' The Bias-Correction Spatial Disaggregation \acronym{BCSD} method used in generating the \acronym{NEX-GDDP} dataset is a statistical downscaling algorithm specifically developed to address the current limitations of the global \acronym{GCM} outputs (Wood et al. 2002; Wood et al. 2004; Maurer et al. 2008; Thrasher et al. 2012).  The \acronym{NEX-GDPP} climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The \command{NEX_GDPPswat} downscales the \acronym{NEX-GDPP} data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by Mohammed et al. (2018).
+#' The Bias-Correction Spatial Disaggregation \acronym{BCSD} method used in generating the \acronym{NEX-GDDP} dataset is a statistical downscaling algorithm specifically developed to address the current limitations of the global \acronym{GCM} outputs (Wood et al. 2002; Wood et al. 2004; Maurer et al. 2008; Thrasher et al. 2012).  The \acronym{NEX-GDDP} climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The \command{NEX_GDDP_CMIP5} downscales the \acronym{NEX-GDDP} data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by Mohammed et al. (2018).
 #'
-#' The \command{NEX_GDPPswat} function relies on 'curl' tool to transfer data from \acronym{NASA} servers to a user machine, using HTTPS supported protocol.  The 'curl' command embedded in this function to fetch precipitation/air temperature \acronym{NEX-GDPP}/ netcdf annual global files is designed to work seamlessly by appending appropriate logging information to the ".netrc" file and the cookies file ".urs_cookies". The ".netrc" and ".urs_cookies" files need to be stored at local directory before running any function in this package. Instructions on creating the ".netrc" and ".urs_cookies" files can be accessed at \url{https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget}. It is imperative to say here that a user machine should have 'curl' installed as a prerequisite to run \command{NEX_GDPPswat} or any other function part of the this package (\acronym{NASAaccess}).
+#' The \command{NEX_GDDP_CMIP5} function relies on 'curl' tool to transfer data from \acronym{NASA} servers to a user machine, using HTTPS supported protocol.  The 'curl' command embedded in this function to fetch precipitation/air temperature \acronym{NEX-GDDP}/ netcdf annual global files is designed to work seamlessly by appending appropriate logging information to the ".netrc" file and the cookies file ".urs_cookies". The ".netrc" and ".urs_cookies" files need to be stored at local directory before running any function in this package. Instructions on creating the ".netrc" and ".urs_cookies" files can be accessed at \url{https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget}. It is imperative to say here that a user machine should have 'curl' installed as a prerequisite to run \command{NEX_GDDP_CMIP5} or any other function part of the this package (\acronym{NASAaccess}).
 #' @note
 #' \code{start} should be equal to or greater than 2006-Jan-01 for \acronym{'rcp45'} or \acronym{'rcp85'} \acronym{RCP} climate scenario.
 #'
 #' \code{start} should be equal to or greater than 1950-Jan-01 and \code{end} should be equal to or less than 2005-Dec-31 for the \acronym{'historical'} \acronym{GCM} retrospective climate data.
 #' @author Ibrahim Mohammed, \email{ibrahim.mohammed@@nasa.gov}
 #'
-#' @keywords NASA NEX-GDPP Climate Change CMIP5
-#' @return A table that includes points ID, Point file name, Lat, Long, and Elevation information formatted to be read with \acronym{SWAT}, and
-#' a scalar of climate change gridded data values at each point within the study watershed in ascii format needed by \acronym{SWAT} model weather inputs will be stored at \code{Dir}.
+#' @keywords NASA NEX-GDDP Climate Change CMIP5
+#' @return A table that includes points ID, Point file name, Lat, Long, and Elevation information, and
+#' a scalar of climate change gridded data values at each point within the study watershed in ascii format stored at \code{Dir}.
 #' @references Maurer, E. P. and Hidalgo, H. G., 2008: Utility of daily vs. monthly large-scale climate data: an intercomparison of two statistical downscaling methods. Hydrology and Earth System Sciences, 12, 551-563, doi:10.5194/hess-12-551-2008.
 #' @references Meinshausen, M. S.J. Smith, K. Calvin, J.S. Daniel, M.L.T. Kainuma, and et al., 2011: The RCP greenhouse gas concentrations and their extensions from 1765 to 2300. Climatic Change, 109, 213-241, doi:10.1007/s10584-011-0156-z.
 #' @references Mohammed, I.N., J. Bolten, R. Srinivasan, and V. Lakshmi, 2018: Improved Hydrological Decision Support System for the Lower Mekong River Basin Using Satellite-Based Earth Observations. Remote Sensing, 10, 885, doi:10.3390/rs10060885.
@@ -36,7 +36,7 @@
 #'
 #' @examples
 #' #Lower Mekong basin example
-#' \dontrun{NEX_GDPPswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
+#' \dontrun{NEX_GDDP_CMIP5(Dir = "./INPUT/", watershed = "LowerMekong.shp",
 #' DEM = "LowerMekong_dem.tif", start = "2060-12-1", end = "2060-12-3",
 #' model = 'IPSL-CM5A-MR', type = 'pr', slice = 'rcp85')}
 #' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods
@@ -46,10 +46,10 @@
 
 
 
-NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'LowerMekong_dem.tif', start = '2060-12-1', end = '2060-12-3', model = 'IPSL-CM5A-MR', type = 'pr',slice = 'rcp85')
+NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'LowerMekong_dem.tif', start = '2060-12-1', end = '2060-12-3', model = 'IPSL-CM5A-MR', type = 'pr',slice = 'rcp85')
 {
 
-  #if there is no logging information then update the netrc file with NEX-GDPP info
+  #if there is no logging information then update the netrc file with NEX-GDDP info
   if(file.exists('~/.netrc')==TRUE||file.exists('~/_netrc')==TRUE)
   {
 
@@ -71,7 +71,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
       polys <- rgdal::readOGR(dsn=watershed,verbose = F)
       # To address missing parameters in projection strings
       polys <- sp::spTransform(polys,CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
-      # SWAT climate master file name
+      # Grid climate master file name
       filenametableKEY<-paste(Dir,type, 'Grid_Master.txt',sep='')
       # Creating empty lists
       filenameSWAT     <- list()
@@ -121,9 +121,9 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         study_area_records_IMERG<-data.frame(ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation)
         sp::coordinates (study_area_records_IMERG)<- ~x+y
         rm(data,IMERG)
-        # The NEX-GDPP data grid information
-        # Use the same dummy date defined above since NEX-GDPP has data from 1950 to 2100.
-        # Using dummy date and file info for a file in the NEX-GDPP dataset
+        # The NEX-GDDP data grid information
+        # Use the same dummy date defined above since NEX-GDDP has data from 1950 to 2100.
+        # Using dummy date and file info for a file in the NEX-GDDP dataset
         # downloading one file
         if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
         utils::download.file(quiet = T, method = 'curl', url = 'https://ds.nccs.nasa.gov/thredds/ncss/bypass/NEX-GDDP/bcsd/rcp85/r1i1p1/tasmax/ACCESS1-0.ncml?var=tasmax&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=2014-09-01T12%3A00%3A00Z&time_end=2014-09-02T12%3A00%3A00Z&timeStride=1', destfile = paste('./temp/','tasmax_day_BCSD_rcp85_r1i1p1_ACCESS1-0_2014.nc',sep= ''), mode = 'wb', extra = '-L')
@@ -132,9 +132,9 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         #since geographic info for all NEX files are the same
         ###evaluate these values at one time!
         ###getting the x values (longitudes in degrees east, 0 to +360) so it needed to be converted to -180 to 180)
-        nc.long.NEXGDPP<-ncdf4::ncvar_get(nc,nc$dim[[3]])
+        nc.long.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[3]])
         ####getting the y values (latitudes in degrees north, -90 to +90)
-        nc.lat.NEXGDPP<-ncdf4::ncvar_get(nc,nc$dim[[2]])
+        nc.lat.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[2]])
         #getting the climate data
         data<-ncdf4::ncvar_get(nc,'tasmax', start = c(1,1,1) , count = c(-1, -1 ,1))
         #transpose the data
@@ -143,10 +143,10 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         data<-data[ nrow(data):1, ]
         ncdf4::nc_close(nc)
         ###save the daily climate data values in a raster
-        NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+        NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
         ###rotate the raster to obtain the longitudes extent -180 to 180
         NEX<-raster::rotate(NEX)
-        #obtain cell numbers within the NEX-GDPP raster
+        #obtain cell numbers within the NEX-GDDP raster
         #cell.no<-raster::cellFromPolygon(NEX, polys)
         suppressWarnings(cell.no<-raster::cellFromPolygon(NEX, polys))
         ##check cell.no to address small watershed
@@ -177,8 +177,8 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
       PointsAssignRow <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$row,'numeric')
       FinalTable = data.frame(sp::coordinates(study_area_records_IMERG),ID=study_area_records_IMERG$ID,row=study_area_records_IMERG$row,col=study_area_records_IMERG$col,Elevation=study_area_records_IMERG$Elevation,
                               CloseNEXIndex=PointAssignIDs,Distance=unlist(minDistVec),NEXCol=PointsAssignCol,NEXRow=PointsAssignRow)
-      #### Begin writing SWAT climate input tables
-      #### Get the SWAT file names and then put the first record date
+      #### Begin writing climate input tables
+      #### Get the climate file names and then put the first record date
       for(jj in 1:dim(FinalTable)[1])
       {
         if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
@@ -187,11 +187,11 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
         #write the data beginning date once!
         write(x=format(time_period[1],'%Y%m%d'),file=filenameSWAT_TXT[[jj]])
       }
-      #### Write out the SWAT grid information master table
-      OutSWAT<-data.frame(ID=FinalTable$ID,NAME=unlist(filenameSWAT),LAT=FinalTable$y,LONG=FinalTable$x,ELEVATION=FinalTable$Elevation)
-      utils::write.csv(OutSWAT,filenametableKEY,row.names = F,quote = F)
+      #### Write out the climate grid information master table
+      Out<-data.frame(ID=FinalTable$ID,NAME=unlist(filenameSWAT),LAT=FinalTable$y,LONG=FinalTable$x,ELEVATION=FinalTable$Elevation)
+      utils::write.csv(Out,filenametableKEY,row.names = F,quote = F)
       #### Start doing the work!
-      #### iterate over days to extract record from NEX-GDPP at IMERG grid locations estabished in the 'FinalTable' dataframe
+      #### iterate over days to extract record from NEX-GDDP at IMERG grid locations estabished in the 'FinalTable' dataframe
       if(type == 'pr')
       {
         for(kk in 1:length(time_period))
@@ -214,7 +214,7 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             data<-data[ nrow(data):1, ]
             ncdf4::nc_close(nc)
             ###save the daily climate data values in a raster
-            NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+            NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
             ###rotate to obtain the longitudes in -180 to 180
             NEX<-raster::rotate(NEX)
             ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units from kg m^-2 s^-1 to mm day^-1 by multiplying with 86400 (60*60*24)
@@ -224,12 +224,12 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
 
           else
           {
-            ###the date is Feb 29th and NEX-GDPP has no value for it
+            ###the date is Feb 29th and NEX-GDDP has no value for it
             cell.values <- rep('-99.0',dim(FinalTable)[1])
 
           }
 
-          ### Looping through the NEX points and writing out the daily climate data in SWAT format
+          ### Looping through the NEX points and writing out the daily climate data
           for(jj in 1:dim(FinalTable)[1])
           {
             write(x=cell.values[jj],filenameSWAT_TXT[[jj]],append=T,ncolumns = 1)
@@ -272,8 +272,8 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
             data_max<-data_max[ nrow(data_max):1, ]
             ncdf4::nc_close(nc_max)
             ###save the daily climate data values in a raster
-            NEX_min<-raster::raster(x=as.matrix(data_min),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
-            NEX_max<-raster::raster(x=as.matrix(data_max),xmn=nc.long.NEXGDPP[1],xmx=nc.long.NEXGDPP[NROW(nc.long.NEXGDPP)],ymn=nc.lat.NEXGDPP[1],ymx=nc.lat.NEXGDPP[NROW(nc.lat.NEXGDPP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+            NEX_min<-raster::raster(x=as.matrix(data_min),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+            NEX_max<-raster::raster(x=as.matrix(data_max),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
             ###rotate to obtain the longitudes in -180 to 180
             NEX_min<-raster::rotate(NEX_min)
             NEX_max<-raster::rotate(NEX_max)
@@ -285,12 +285,12 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
           }
           else
           {
-            ###the date is Feb 29th and NEX-GDPP has no value for it
+            ###the date is Feb 29th and NEX-GDDP has no value for it
             cell.values_min <- rep('-99.0', dim(FinalTable)[1]) #filling missing data
             cell.values_max <- rep('-99.0', dim(FinalTable)[1]) #filling missing data
 
           }
-          ### Looping through the NEX points and writing out the daily climate data in SWAT format
+          ### Looping through the NEX points and writing out the daily climate data
           for(k in 1:dim(FinalTable)[1])
           {
             cell.temp.values[[k]]<-paste(cell.values_max[k],cell.values_min[k],sep=',')
@@ -308,8 +308,8 @@ NEX_GDPPswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = '
 
     else
     {
-      cat('Sorry!',paste(format(as.Date(start),'%b'),format(as.Date(start),'%Y'),sep=','),'is out of coverage for the NEX-GDPP data products.','  \n')
-      cat('Please pick start and end dates following notes described at the function notes to access the NEX-GDPP data products.','  \n')
+      cat('Sorry!',paste(format(as.Date(start),'%b'),format(as.Date(start),'%Y'),sep=','),'is out of coverage for the NEX-GDDP data products.','  \n')
+      cat('Please pick start and end dates following notes described at the function notes to access the NEX-GDDP data products.','  \n')
       cat('Thank you!','  \n')
     }
 

@@ -36,8 +36,7 @@ _NASAaccess_ has a handy tool to access, extract, and reformat climate change da
 
 [NEX-GDDP-CMIP6](https://www.nccs.nasa.gov/sites/default/files/NEX-GDDP-CMIP6-Tech_Note.pdf) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model GCM runs conducted under the Coupled Model Intercomparison Project Phase 6 CMIP6 [@RN1450] and across two of the four "Tier 1" greenhouse gas emissions scenarios known as Shared Socioeconomic Pathways (SSPs) [@RN1451; @RN1452]. The CMIP6 GCM runs were developed in support of the Sixth Assessment Report of the Intergovernmental Panel on Climate Change IPCC AR6. This dataset includes downscaled projections from the [35 models and scenarios](https://pcmdi.llnl.gov/CMIP6/) for which daily scenarios were produced and distributed under CMIP6. 
 
-The Bias-Correction Spatial Disaggregation BCSD method used in generating the [NEX-GDDP-CMIP6 dataset](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) is a statistical downscaling algorithm specifically developed to address the current limitations of the global GCM outputs [@RN1282;@RN736;@RN1393;@RN1283]. The NEX-GDPP-CMIP6 climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The NEX_GDPP_CMIP6 downscales the NEX-GDPP-CMIP6 data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by @RN1207.
-
+The Bias-Correction Spatial Disaggregation BCSD method used in generating the [NEX-GDDP-CMIP6 dataset](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) is a statistical downscaling algorithm specifically developed to address the current limitations of the global GCM outputs [@RN1282;@RN736;@RN1393;@RN1283]. The NEX-GDDP-CMIP6 climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The NEX_GDDP_CMIP6 downscales the NEX-GDDP-CMIP6 data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by @RN1207.
 
 ## Basic use
 
@@ -46,12 +45,12 @@ Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyC
 ```{r, eval=FALSE, echo=TRUE}
 library(NASAaccess)
 
-NEX_GDPP_CMIP6(Dir = "./NEX_GDPP_CMIP6/", 
+NEX_GDDP_CMIP6(Dir = "./NEX_GDDP_CMIP6/", 
                watershed = shape_path,
               dem_path,  
               start = "2060-12-1", 
               end = "2060-12-3",
-              model = 'IPSL-CM6A-LR', 
+              model = 'ACCESS-CM2', 
               type = 'tas', 
               slice = 'ssp245')
 ```
@@ -59,15 +58,15 @@ NEX_GDPP_CMIP6(Dir = "./NEX_GDPP_CMIP6/",
 Let's examine the air temperature station file
 
 ```{r}
-NEX_GDPP_CMIP6.temperature.Master <- system.file('extdata/NEX_GDPP_CMIP6',
+NEX_GDDP_CMIP6.temperature.Master <- system.file('extdata/NEX_GDDP_CMIP6',
                                          'tasGrid_Master.txt', 
                                          package = 'NASAaccess')
 
-NEX_GDPP_CMIP6.table<-read.csv(NEX_GDPP_CMIP6.temperature.Master)
+NEX_GDDP_CMIP6.table<-read.csv(NEX_GDDP_CMIP6.temperature.Master)
 
-head(NEX_GDPP_CMIP6.table)
+head(NEX_GDDP_CMIP6.table)
 
-dim(NEX_GDPP_CMIP6.table)
+dim(NEX_GDDP_CMIP6.table)
 ```
 
 

@@ -1,12 +1,12 @@
 ---
-title: "Getting started with NEXGDPP data"
+title: "Getting started with NEXGDDP-CMIP5 data"
 author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
 output: rmarkdown::pdf_document
 bibliography: "./bibliography/references.bib"
 biblio-style: "apalike"
 vignette: >
-  %\VignetteIndexEntry{Getting started with NEXGDPP data}
+  %\VignetteIndexEntry{Getting started with NEXGDDP-CMIP5 data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -36,8 +36,7 @@ _NASAaccess_ has a handy tool to access, extract, and reformat climate change da
 
 [NEX-GDDP](https://www.nccs.nasa.gov/services/climate-data-services) dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model GCM runs conducted under the Coupled Model Intercomparison Project Phase 5 CMIP5 [@RN824] and across two (RCP45 & RCP85) of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways RCPs [@RN1281]. The CMIP5 GCM runs were developed in support of the Fifth Assessment Report of the Intergovernmental Panel on Climate Change IPCC AR5. This dataset includes downscaled projections from the 21 models and scenarios for which daily scenarios were produced and distributed under CMIP5. 
 
-The Bias-Correction Spatial Disaggregation BCSD method used in generating the [NEX-GDDP dataset](https://www.nccs.nasa.gov/services/climate-data-services) is a statistical downscaling algorithm specifically developed to address the current limitations of the global GCM outputs [@RN1282;@RN736;@RN1393;@RN1283]. The NEX-GDPP climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The NEX_GDPPswat downscales the NEX-GDPP data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by @RN1207.
-
+The Bias-Correction Spatial Disaggregation BCSD method used in generating the [NEX-GDDP dataset](https://www.nccs.nasa.gov/services/climate-data-services) is a statistical downscaling algorithm specifically developed to address the current limitations of the global GCM outputs [@RN1282;@RN736;@RN1393;@RN1283]. The NEX-GDDP climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km). The NEX_GDDP_CMIP5 downscales the NEX-GDDP data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by @RN1207.
 
 ## Basic use
 
@@ -46,7 +45,7 @@ Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyC
 ```{r, eval=FALSE, echo=TRUE}
 library(NASAaccess)
 
-NEX_GDPPswat(Dir = "./NEX_GDPPswat/", 
+NEX_GDDP_CMIP5(Dir = "./NEX_GDDP_CMIP5/", 
              watershed = shape_path,
               dem_path, 
               start = "2060-12-1", 
@@ -58,20 +57,20 @@ NEX_GDPPswat(Dir = "./NEX_GDPPswat/",
 
 Let's examine the precipitation station file
 ```{r}
-NEX_GDPP.precipitationMaster <- system.file('extdata/NEX_GDPPswat',
+NEX_GDDP.precipitationMaster <- system.file('extdata/NEX_GDDP_CMIP5',
                                          'prGrid_Master.txt', 
                                          package = 'NASAaccess')
 
-NEX_GDPPswat.table<-read.csv(NEX_GDPP.precipitationMaster)
+NEX_GDDP_CMIP5.table<-read.csv(NEX_GDDP.precipitationMaster)
 
-head(NEX_GDPPswat.table)
+head(NEX_GDDP_CMIP5.table)
 
-dim(NEX_GDPPswat.table)
+dim(NEX_GDDP_CMIP5.table)
 ```
 
 Here we processed precipitation data from [Institut Pierre Simon Laplace Model CM5A-MR](https://www.ipsl.fr/en/home-en/) under the Representative Concentration Pathways (RCP85) for our example watershed during the December 2060 (1st to 3rd).
 
-Changing `type` parameter in the `NEX_GDPPswat` function from `pr` to `tas` gives us minimum and maximum air temperatures.
+Changing `type` parameter in the `NEX_GDDP_CMIP5` function from `pr` to `tas` gives us minimum and maximum air temperatures.
 
 
 

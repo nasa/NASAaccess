@@ -1,3 +1,7 @@
+# NASAaccess 3.1.0
+
+* fixing CMIP5 and CMIP6 server access.
+
 # NASAaccess 3.0.3
 
 * Released on March-2022. Submission to CRAN.

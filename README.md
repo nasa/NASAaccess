@@ -65,18 +65,18 @@ local machine:
 -   [Installing Rstudio software](https://www.rstudio.com/) (OPTIONAL)
 
 -   *NASAaccess* R package needs a user registration access with
-    [Earthdata](https://earthdata.nasa.gov/). Users should set up a
+    [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a
     registration account(s) with
-    [Earthdata](https://earthdata.nasa.gov/) login as well as well as
-    authorizing
+    [Earthdata](https://www.earthdata.nasa.gov/) login as well as well
+    as authorizing
     [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
     [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to
     <https://disc.gsfc.nasa.gov/data-access> for further details.
 
--   After registration with [Earthdata](https://earthdata.nasa.gov/)
+-   After registration with [Earthdata](https://www.earthdata.nasa.gov/)
     *NASAaccess* software package users should create a reference file
-    (*netrc*) with [Earthdata](https://earthdata.nasa.gov/) credentials
-    stored in it to streamline the retrieval access to
+    (*netrc*) with [Earthdata](https://www.earthdata.nasa.gov/)
+    credentials stored in it to streamline the retrieval access to
     [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
     servers.
 

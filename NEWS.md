@@ -1,3 +1,7 @@
+# NASAaccess 3.2.0
+
+* Adding Near Real Time GPM function with latency as one day. Fixing CMIP5 and CMIP6 server access.
+
 # NASAaccess 3.1.0
 
 * fixing CMIP5 and CMIP6 server access.

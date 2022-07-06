@@ -2,6 +2,7 @@
 
 export(GLDASpolyCentroid)
 export(GLDASwat)
+export(GPM_NRT)
 export(GPMpolyCentroid)
 export(GPMswat)
 export(NEX_GDDP_CMIP5)

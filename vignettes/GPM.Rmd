@@ -18,13 +18,10 @@ knitr::opts_chunk$set(
 )
 ```
 
-_NASAaccess_ package has multiple functions such as `GPMpolyCentroid` and `GPMswat` that download, extract, and reformat rainfall remote sensing data of [TRMM](https://gpm.nasa.gov/missions/trmm) and [IMERG](https://gpm.nasa.gov/data/imerg) from [NASA servers](https://gpm.nasa.gov/data/directory) for grids within a specified watershed shapefile.
+_NASAaccess_ package has multiple functions such as `GPM_NRT`, `GPMpolyCentroid` and `GPMswat` that download, extract, and reformat rainfall remote sensing data of [TRMM](https://gpm.nasa.gov/missions/trmm) and [IMERG](https://gpm.nasa.gov/data/imerg) from [NASA servers](https://gpm.nasa.gov/data/directory) for grids within a specified watershed shapefile. The difference between `GPM_NRT` and `GPMswat` functions is the latency period. The `GPMswat` function retrieves the [IMERG](https://gpm.nasa.gov/data/imerg) Final Run data which is intended for research quality global multi-satellite precipitation estimates with quasi-Lagrangian time interpolation, gauge data, and climatological adjustment. On the other hand, the `GPM_NRT` function retrieves the [IMERG](https://gpm.nasa.gov/data/imerg) near real-time low-latency gridded global multi-satellite precipitation estimates.
 
 Let's explore `GPMpolyCentroid` and `GPMswat` functions.
-
-
 ## Basic use
-
 
 Let's look at an example watershed that we want to examine near Houston, TX:
 ```{r}
@@ -226,6 +223,37 @@ plot(days, GPMpolyCentroid.precipitation.data [,1],
 
 
 The time series plot above gives the rainfall amounts in (mm) at the centroid of the White Oak Bayou watershed during 2019-August-01 to 2019-August-03.
+
+
+
+Last but not least, let's examine the near real time precipitation data obtained by `GPM_NRT` over the White Oak Bayou study watershed. Remember that the minimum latency for `GPM_NRT` is one day. You can experiment this function with yesterday data, nice! 
+```{r,eval=FALSE, echo=TRUE}
+
+GPM_NRT(Dir = "./GPMswat/",
+                  watershed = shape_path,
+                  DEM = dem_path,
+                  start = "2022-07-1",
+                  end = "2022-07-3")
+
+```
+
+
+
+Let's see one point data record. See that the data starts on July 1, 2022 and ends on July 3rd, 2022 (It was raining near Houston, TX few days ago!!!)
+
+```{r}
+GPM_NRT.point.data <- system.file('extdata/GPM_NRT',
+                              'precipitation2160845.txt', 
+                              package = 'NASAaccess')
+
+#Reading data records
+read.csv(GPM_NRT.point.data)
+
+
+```
+
+
+
 
 
 ## Built with

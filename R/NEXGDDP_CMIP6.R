@@ -1,4 +1,4 @@
-###1/11/22
+###11/11/22
 #' Generate rainfall or air temperature as well as climate input stations file from NASA NEX-GDDP-CMIP6 remote sensing climate change data products needed to drive various hydrological models.
 #'
 #' This function downloads climate change data of rainfall and air temperature from \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP-CMIP6} \acronym{AMES} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that any hydrological model requires for rainfall or air temperature data input. The function also generates the climate stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected climatological grids that fall within the specified watershed. The \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP-CMIP6} data set is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 6 \acronym{CMIP6} and across two of the four "Tier 1" greenhouse gas emissions scenarios known as Shared Socioeconomic Pathways \acronym{SSPs}.
@@ -18,7 +18,7 @@
 #'
 #' \acronym{NEX-GDDP-CMIP6} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 6 \acronym{CMIP6} (Eyring et al. 2016)
 #' and across the four "Tier 1" greenhouse gas emissions scenarios known as Shared Socioeconomic Pathways \acronym{SSPs} (O'Neil et al. 2016; Meinshausen et al. 2020). The \acronym{CMIP6} \acronym{GCM} runs were developed in support of the Sixth Assessment Report
-#' of the Intergovernmental Panel on Climate Change \acronym{IPCC AR6}. This data set includes downscaled projections from the 35 models and scenarios for which daily scenarios were produced and distributed under \acronym{CMIP6}. Please visit \acronym{NCCS} Dataportal - Datashare \url{https://portal.nccs.nasa.gov/datashare/nexgddp_cmip6/} to ensure that the requested model and greenhouse gas emissions scenario (\acronym{SSPs}) is available on the server before you execute your run.
+#' of the Intergovernmental Panel on Climate Change \acronym{IPCC AR6}. This data set includes downscaled projections from the 35 models and scenarios for which daily scenarios were produced and distributed under \acronym{CMIP6}. Please visit \acronym{NCCS} Dataportal - Datashare \url{https://ds.nccs.nasa.gov/thredds2/catalog/AMES/NEX/GDDP-CMIP6/catalog.html} to ensure that the requested model and greenhouse gas emissions scenario (\acronym{SSPs}) is available on the server before you execute your run.
 #' The Bias-Correction Spatial Disaggregation \acronym{BCSD} method used in generating the \acronym{NEX-GDDP-CMIP6} data set is a statistical downscaling algorithm specifically developed to address the current limitations of the global \acronym{GCM} outputs
 #' (Wood et al. 2002; Wood et al. 2004; Maurer et al. 2008; Thrasher et al. 2012).  The \acronym{NEX-GDDP-CMIP6} climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km).
 #' The \command{NEX_GDDP_CMIP6} downscales the \acronym{NEX-GDDP-CMIP6} data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by Mohammed et al. (2018).
@@ -62,179 +62,176 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
   {
 
     url.IMERG.input <- 'https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/'
-    url.GDDP.input <- 'https://portal.nccs.nasa.gov/datashare/nexgddp_cmip6/'
+    url.GDDP.input <- 'https://ds.nccs.nasa.gov/thredds2/ncss/AMES/NEX/GDDP-CMIP6/'
+    url.catalog.input <- paste('https://ds.nccs.nasa.gov/thredds2/catalog/AMES/NEX/GDDP-CMIP6/',model,slice,'catalog.html',sep="/")
     myvarIMERG <- 'precipitationCal'
     myvarNAME <- 'climate'
-      #check the DATASHARE NEX-GDDP availability
-        if(httr::status_code(GET(url.GDDP.input))==200)
-            {
-              #let's get the Variant (e.g., r1i1p1f1)
-              rr <- readLines(paste(url.GDDP.input,model,slice,sep="/"))
-              dump.address <- "/icons/alt_icons/folder.gif" ; my.pattern <- "[[:alnum:]]{8}"
-              folderlines <- grep(dump.address,rr,value=TRUE)
-              Variant<- unique(as.vector(str_match_all(folderlines,my.pattern)[[1]]))
-              if(type=='pr'){ftp <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'/', sep = '')}
-              if(type=='tas'){ftp_min <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'min','/', sep=''); ftp_max <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'max','/', sep='')}
-              ####Before getting to work on this function do this check on start and end dates
-                  if (as.Date(start) >= as.Date('1950-01-01') &  as.Date(end) <= as.Date('2100-12-31') & slice == 'ssp126' | slice == 'ssp245' | slice == 'ssp370' | slice == 'ssp585' | slice == 'historical')
-                      {
-        
-        # Constructing time series based on start and end input days!
-        time_period <- seq.Date(from = as.Date(start), to = as.Date(end), by = 'day')
-        # Reading cell elevation data (DEM should be in geographic projection)
-        watershed.elevation <- raster::raster(DEM)
-        # Reading the study Watershed shapefile
-        polys <- rgdal::readOGR(dsn=watershed,verbose = F)
-        # To address missing parameters in projection strings
-        polys <- sp::spTransform(polys,CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
-        # Hydrological model climate master file name
-        filenametableKEY<-paste(Dir,type, 'Grid_Master.txt',sep='')
-        # Creating empty lists
-        filenameSWAT     <- list()
-        filenameSWAT_TXT <- list()
-        closestSiteVec   <- list()
-        minDistVec       <- list()
-        cell.temp.values <- list()
-        # The IMERG data grid information
-        # Read a dummy day to extract spatial information and assign elevation data to the grids within the study watersheds
-        DUMMY_DATE <- as.Date('2016-09-01')
-        mon  <- format(DUMMY_DATE,format='%m')
-        year <- format(DUMMY_DATE,format='%Y')
-        myurl = paste(paste(url.IMERG.input,year,mon,sep = '/'),'/',sep = '')
-        if(httr::status_code(GET(myurl))==200)
-        {
-          r <- httr::GET(myurl)
-          filenames <- httr::content(r, "text")
-          filenames <- XML::readHTMLTable(XML::htmlParse(filenames))[[1]]#getting the daily files at each monthly URL
-          filenames <- unique(stats::na.exclude(stringr::str_extract(as.character(filenames$Name),'3B-DAY.+(.nc4)')))
-          # Extract the IMERG nc4 files for the specific month
-          # trying here the first day since I am only interested on grid locations
-          # downloading one file
-          if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
-          utils::download.file(quiet = T,method='curl',url=paste(myurl,filenames[1],sep = ''),destfile = paste('./temp/',filenames[1],sep = ''), mode = 'wb', extra = '-n -c ~/.urs_cookies -b ~/.urs_cookies -L')
-          test1<-file.info(paste('./temp/',filenames[1],sep= ''))$size
-          stopifnot('The GPM IMERG server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test1 > 3.5e6)
-          #reading ncdf file
-          nc<-ncdf4::nc_open( paste('./temp/',filenames[1],sep = '') )
-          #since geographic info for all files are the same (assuming we are working with the same data product)
-          ###evaluate these values one time!
-          ###getting the y values (longitudes in degrees east)
-          nc.long.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[1]])
-          ####getting the x values (latitudes in degrees north)
-          nc.lat.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[2]])
-          #extract data
-          data<-ncdf4::ncvar_get(nc,myvarIMERG)
-          #reorder the rows
-          data<-data[ nrow(data):1, ]
-          ncdf4::nc_close(nc)
-          ###save the daily climate data values in a raster
-          IMERG<-raster::raster(x=as.matrix(data),xmn=nc.long.IMERG[1],xmx=nc.long.IMERG[NROW(nc.long.IMERG)],ymn=nc.lat.IMERG[1],ymx=nc.lat.IMERG[NROW(nc.lat.IMERG)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
-          #obtain cell numbers within the IMERG raster
-          #cell.no<-raster::cellFromPolygon(IMERG, polys)
-          suppressWarnings(cell.no<-raster::cellFromPolygon(IMERG, polys))
-          #obtain lat/long values corresponding to watershed cells
-          cell.longlat<-raster::xyFromCell(IMERG,unlist(cell.no))
-          cell.rowCol <- raster::rowColFromCell(IMERG,unlist(cell.no))
-          points_elevation<-raster::extract(x=watershed.elevation,y=cell.longlat,method='simple')
-          study_area_records_IMERG<-data.frame(ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation)
-          sp::coordinates (study_area_records_IMERG)<- ~x+y
-          rm(data,IMERG)
-          # The NEX-GDDP-CMIP6 data grid information
-          # Use the same dummy date defined above since NEX-GDDP-CMIP6 has data from 1950 to 2100.
-          # Using dummy date and file info for a file in the NEX-GDDP-CMIP6 dataset
-          # downloading one file
-          if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
-          type.start<-ifelse(isTRUE(type=="pr")==TRUE,type,paste(type,'min',sep=''))
-          filename.start <- paste(paste(type.start,'day',model,slice,Variant,'gn',format(time_period[1],"%Y"),sep = '_'),'.nc',sep="")
-          myurl <- paste(ifelse(isTRUE(type=="pr")==TRUE,ftp,ftp_min),filename.start,sep = '')
-          # downloading the first date NEX_GDDF file
-          utils::download.file(quiet = T, method = 'curl', url = myurl, destfile = paste('./temp/',filename.start,sep= ''), mode = 'wb', extra = '-L')
-          
-          test2<-file.info(paste('./temp/',filename.start,sep= ''))$size
-          stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test2 > 7.0e6)
-          #reading ncdf file
-          nc<-ncdf4::nc_open( paste('./temp/',filename.start,sep= '') )
-          #since geographic info for all NEX files are the same
-          ###evaluate these values at one time!
-          ###getting the x values (longitudes in degrees east, 0 to +360) so it needed to be converted to -180 to 180)
-          nc.long.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[3]])
-          ####getting the y values (latitudes in degrees north, -90 to +90)
-          nc.lat.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[2]])
-          #getting the climate data
-          catch <- ifelse(isTRUE(type=="pr")==TRUE,type,paste(type,'min',sep=""))
-          data<-ncdf4::ncvar_get(nc,catch, start = c(1,1,1) , count = c(-1, -1 ,1))
-          #transpose the data
-          data <- raster::t(data)
-          #reorder the rows
-          data<-data[ nrow(data):1, ]
-          ncdf4::nc_close(nc)
-          ###save the daily climate data values in a raster
-          NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
-          ###rotate the raster to obtain the longitudes extent -180 to 180
-          NEX<-raster::rotate(NEX)
-          #obtain cell numbers within the NEX-GDDP raster
-          #cell.no<-raster::cellFromPolygon(NEX, polys)
-          suppressWarnings(cell.no<-raster::cellFromPolygon(NEX, polys))
-          ##check cell.no to address small watershed
-          if(length(unlist(cell.no))==0)
+    #check the DATASHARE NEX-GDDP availability
+    if(httr::status_code(GET(url.catalog.input))==200)
+    {
+      #let's get the Variant (e.g., r1i1p1f1)
+      rr <- readLines(url.catalog.input)
+      dump.address <- "/thredds2/folder.gif" ; my.pattern <- "[[:alnum:]]{8}"
+      folderlines <- grep(dump.address,rr,value=TRUE)
+      Variant<- unique(as.vector(stringr::str_match_all(folderlines,my.pattern)[[2]]))[2]
+      rm(dump.address,folderlines,my.pattern,rr)
+      if(type=='pr'){ftp <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'/',type,'_','day','_',model,'_',slice,'_',Variant,'_','gn','_',sep='')}
+      if(type=='tas'){ftp_min <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'min','/',type,'min','_','day','_',model,'_',slice,'_',Variant,'_','gn','_',sep='');ftp_max <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'max','/',type,'max','_','day','_',model,'_',slice,'_',Variant,'_','gn','_',sep='')}
+      ####Before getting to work on this function do this check on start and end dates
+       if (as.Date(start) >= as.Date('1950-01-01') &  as.Date(end) <= as.Date('2100-12-31') & slice == 'ssp126' | slice == 'ssp245' | slice == 'ssp370' | slice == 'ssp585' | slice == 'historical')
           {
-            #cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1]
-            suppressWarnings(cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1])
+
+      # Constructing time series based on start and end input days!
+      time_period <- seq.Date(from = as.Date(start), to = as.Date(end), by = 'day')
+      # Reading cell elevation data (DEM should be in geographic projection)
+      watershed.elevation <- raster::raster(DEM)
+      # Reading the study Watershed shapefile
+      polys <- rgdal::readOGR(dsn=watershed,verbose = F)
+      # To address missing parameters in projection strings
+      polys <- sp::spTransform(polys,CRSobj = c('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+      # Hydrological model climate master file name
+      filenametableKEY<-paste(Dir,type, 'Grid_Master.txt',sep='')
+      # Creating empty lists
+      filenameSWAT     <- list()
+      filenameSWAT_TXT <- list()
+      closestSiteVec   <- list()
+      minDistVec       <- list()
+      cell.temp.values <- list()
+      # The IMERG data grid information
+      # Read a dummy day to extract spatial information and assign elevation data to the grids within the study watersheds
+      DUMMY_DATE <- as.Date('2016-09-01')
+      mon  <- format(DUMMY_DATE,format='%m')
+      year <- format(DUMMY_DATE,format='%Y')
+      myurl = paste(paste(url.IMERG.input,year,mon,sep = '/'),'/',sep = '')
+      if(httr::status_code(GET(myurl))==200)
+      {
+        r <- httr::GET(myurl)
+        filenames <- httr::content(r, "text")
+        filenames <- XML::readHTMLTable(XML::htmlParse(filenames))[[1]]#getting the daily files at each monthly URL
+        filenames <- unique(stats::na.exclude(stringr::str_extract(as.character(filenames$Name),'3B-DAY.+(.nc4)')))
+        # Extract the IMERG nc4 files for the specific month
+        # trying here the first day since I am only interested on grid locations
+        # downloading one file
+        if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
+        utils::download.file(quiet = T,method='curl',url=paste(myurl,filenames[1],sep = ''),destfile = paste('./temp/',filenames[1],sep = ''), mode = 'wb', extra = '-n -c ~/.urs_cookies -b ~/.urs_cookies -L')
+        test1<-file.info(paste('./temp/',filenames[1],sep= ''))$size
+        stopifnot('The GPM IMERG server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test1 > 3.5e6)
+        #reading ncdf file
+        nc<-ncdf4::nc_open( paste('./temp/',filenames[1],sep = '') )
+        #since geographic info for all files are the same (assuming we are working with the same data product)
+        ###evaluate these values one time!
+        ###getting the y values (longitudes in degrees east)
+        nc.long.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[1]])
+        ####getting the x values (latitudes in degrees north)
+        nc.lat.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[2]])
+        #extract data
+        data<-ncdf4::ncvar_get(nc,myvarIMERG)
+        #reorder the rows
+        data<-data[ nrow(data):1, ]
+        ncdf4::nc_close(nc)
+        ###save the daily climate data values in a raster
+        IMERG<-raster::raster(x=as.matrix(data),xmn=nc.long.IMERG[1],xmx=nc.long.IMERG[NROW(nc.long.IMERG)],ymn=nc.lat.IMERG[1],ymx=nc.lat.IMERG[NROW(nc.lat.IMERG)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+        #obtain cell numbers within the IMERG raster
+        #cell.no<-raster::cellFromPolygon(IMERG, polys)
+        suppressWarnings(cell.no<-raster::cellFromPolygon(IMERG, polys))
+        #obtain lat/long values corresponding to watershed cells
+        cell.longlat<-raster::xyFromCell(IMERG,unlist(cell.no))
+        cell.rowCol <- raster::rowColFromCell(IMERG,unlist(cell.no))
+        points_elevation<-raster::extract(x=watershed.elevation,y=cell.longlat,method='simple')
+        study_area_records_IMERG<-data.frame(ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation)
+        sp::coordinates (study_area_records_IMERG)<- ~x+y
+        rm(data,IMERG)
+        # The NEX-GDDP-CMIP6 data grid information
+        # Use the same dummy date defined above since NEX-GDDP-CMIP6 has data from 1950 to 2100.
+        # Using dummy date and file info for a file in the NEX-GDDP-CMIP6 dataset
+        # downloading one file
+        if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
+	      utils::download.file(quiet = T, method = 'curl', url = 'https://ds.nccs.nasa.gov/thredds2/ncss/AMES/NEX/GDDP-CMIP6/ACCESS-CM2/ssp585/r1i1p1f1/tasmax/tasmax_day_ACCESS-CM2_ssp585_r1i1p1f1_gn_2015.nc?var=tasmax&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=2015-09-01T12%3A00%3A00Z&time_end=2015-09-02T12%3A00%3A00Z&timeStride=1', destfile = paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep= ''), mode = 'wb', extra = '-L')
+        test2<-file.info(paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep= ''))$size
+        stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test2 > 6.0e6)
+        #reading ncdf file
+        nc<-ncdf4::nc_open( paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep = '') )
+        #since geographic info for all NEX files are the same
+        ###evaluate these values at one time!
+        ###getting the x values (longitudes in degrees east, 0 to +360) so it needed to be converted to -180 to 180)
+        nc.long.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[3]])
+        ####getting the y values (latitudes in degrees north, -90 to +90)
+        nc.lat.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[2]])
+        #getting the climate data
+        data<-ncdf4::ncvar_get(nc,'tasmax', start = c(1,1,1) , count = c(-1, -1 ,1))
+        #transpose the data
+        data <- raster::t(data)
+        #reorder the rows
+        data<-data[ nrow(data):1, ]
+        ncdf4::nc_close(nc)
+        ###save the daily climate data values in a raster
+        NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+        ###rotate the raster to obtain the longitudes extent -180 to 180
+        NEX<-raster::rotate(NEX)
+        #obtain cell numbers within the NEX-GDDP raster
+        #cell.no<-raster::cellFromPolygon(NEX, polys)
+        suppressWarnings(cell.no<-raster::cellFromPolygon(NEX, polys))
+        ##check cell.no to address small watershed
+        if(length(unlist(cell.no))==0)
+          {
+          #cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1]
+          suppressWarnings(cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1])
           }
-          #obtain lat/long values corresponding to watershed cells
-          cell.longlat<-raster::xyFromCell(NEX,unlist(cell.no))
-          cell.rowCol <- raster::rowColFromCell(NEX,unlist(cell.no))
-          study_area_records_NEX<-data.frame(NEX_ID=unlist(cell.no),cell.longlat,cell.rowCol)
-          sp::coordinates (study_area_records_NEX)<- ~x+y
-          rm(data,NEX)
-          
-        }
-        # creating a similarity table that connects IMERG and TRMM grids
-        # calculate euclidean distances to know how to connect TRMM grids with IMERG grids
-        for (i in 1 : nrow(study_area_records_IMERG))
+        #obtain lat/long values corresponding to watershed cells
+        cell.longlat<-raster::xyFromCell(NEX,unlist(cell.no))
+        cell.rowCol <- raster::rowColFromCell(NEX,unlist(cell.no))
+        study_area_records_NEX<-data.frame(NEX_ID=unlist(cell.no),cell.longlat,cell.rowCol)
+        sp::coordinates (study_area_records_NEX)<- ~x+y
+        rm(data,NEX)
+
+      }
+      # creating a similarity table that connects IMERG and TRMM grids
+      # calculate euclidean distances to know how to connect TRMM grids with IMERG grids
+      for (i in 1 : nrow(study_area_records_IMERG))
+      {
+        distVec <- sp::spDistsN1(study_area_records_NEX,study_area_records_IMERG[i,])
+        minDistVec[[i]] <- min(distVec)
+        closestSiteVec[[i]] <- which.min(distVec)
+      }
+
+      PointAssignIDs <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$NEX_ID,'numeric')
+      PointsAssignCol <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$col,'numeric')
+      PointsAssignRow <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$row,'numeric')
+      FinalTable = data.frame(sp::coordinates(study_area_records_IMERG),ID=study_area_records_IMERG$ID,row=study_area_records_IMERG$row,col=study_area_records_IMERG$col,Elevation=study_area_records_IMERG$Elevation,
+                              CloseNEXIndex=PointAssignIDs,Distance=unlist(minDistVec),NEXCol=PointsAssignCol,NEXRow=PointsAssignRow)
+      #### Begin writing hydrological model climate input tables
+      #### Get the hydrological model file names and then put the first record date
+      for(jj in 1:dim(FinalTable)[1])
+      {
+        if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
+        filenameSWAT[[jj]]<-paste(type, myvarNAME,FinalTable$ID[jj],sep='')
+        filenameSWAT_TXT[[jj]]<-paste(Dir,filenameSWAT[[jj]],'.txt',sep='')
+        #write the data beginning date once!
+        write(x=format(time_period[1],'%Y%m%d'),file=filenameSWAT_TXT[[jj]])
+      }
+      #### Write out the hydrological model grid information master table
+      OutHydrology<-data.frame(ID=FinalTable$ID,NAME=unlist(filenameSWAT),LAT=FinalTable$y,LONG=FinalTable$x,ELEVATION=FinalTable$Elevation)
+      utils::write.csv(OutHydrology,filenametableKEY,row.names = F,quote = F)
+      #### Start doing the work!
+      #### iterate over days to extract record from NEX-GDDP at IMERG grid locations established in the 'FinalTable' dataframe
+      if(type == 'pr')
+      {
+        for(kk in 1:length(time_period))
         {
-          distVec <- sp::spDistsN1(study_area_records_NEX,study_area_records_IMERG[i,])
-          minDistVec[[i]] <- min(distVec)
-          closestSiteVec[[i]] <- which.min(distVec)
-        }
-        
-        PointAssignIDs <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$NEX_ID,'numeric')
-        PointsAssignCol <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$col,'numeric')
-        PointsAssignRow <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$row,'numeric')
-        FinalTable = data.frame(sp::coordinates(study_area_records_IMERG),ID=study_area_records_IMERG$ID,row=study_area_records_IMERG$row,col=study_area_records_IMERG$col,Elevation=study_area_records_IMERG$Elevation,
-                                CloseNEXIndex=PointAssignIDs,Distance=unlist(minDistVec),NEXCol=PointsAssignCol,NEXRow=PointsAssignRow)
-        #### Begin writing hydrological model climate input tables
-        #### Get the hydrological model file names and then put the first record date
-        for(jj in 1:dim(FinalTable)[1])
-        {
-          if(dir.exists(Dir)==FALSE){dir.create(Dir,recursive = TRUE)}
-          filenameSWAT[[jj]]<-paste(type, myvarNAME,FinalTable$ID[jj],sep='')
-          filenameSWAT_TXT[[jj]]<-paste(Dir,filenameSWAT[[jj]],'.txt',sep='')
-          #write the data beginning date once!
-          write(x=format(time_period[1],'%Y%m%d'),file=filenameSWAT_TXT[[jj]])
-        }
-        #### Write out the hydrological model grid information master table
-        OutHydrology<-data.frame(ID=FinalTable$ID,NAME=unlist(filenameSWAT),LAT=FinalTable$y,LONG=FinalTable$x,ELEVATION=FinalTable$Elevation)
-        utils::write.csv(OutHydrology,filenametableKEY,row.names = F,quote = F)
-        #### Start doing the work!
-        #### iterate over days to extract record from NEX-GDDP at IMERG grid locations established in the 'FinalTable' dataframe
-        if(type == 'pr')
-        {
-          for(kk in 1:length(time_period))
-          {
-            timestart <- time_period[kk]
-            timeyear <- format(timestart,"%Y")
-            dayjuilan <- as.numeric(format(timestart,"%j"))
-            filename <- paste(paste(type,'day',model,slice,Variant,'gn',as.character(timeyear),sep = '_'),'.nc',sep="")
-            myurl <- paste(ftp,filename,sep = '')
+          timestart <- time_period[kk]
+          timeend <- timestart + 1
+          timeyear <- format(timestart,"%Y")
+          filename <- paste(type,'_day_',slice,'_',Variant,'_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
+          myurl <- paste(ftp,timeyear,'.nc?','var=',type,'&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',as.character(timestart),'T12%3A00%3A00Z&time_duration=P1D','&timeStride=1',sep = '')
+
             # downloading file
             if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
             if(file.exists(paste('./temp/',filename,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl, destfile = paste('./temp/',filename,sep= ''), mode = 'wb', extra = '-L')}
             # Reading the ncdf file
             test3<-file.info(paste('./temp/',filename,sep= ''))$size
-            stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test3 > 6.0e6)
+            stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test3 > 3.0e6)
             nc <- ncdf4::nc_open( paste('./temp/',filename,sep = '') )
-            data <- ncdf4::ncvar_get(nc,type, start = c(1,1,dayjuilan) , count = c(-1, -1 ,1))
+            data <- ncdf4::ncvar_get(nc,type, start = c(1,1,1) , count = c(-1, -1 ,1))
             #transpose the data
             data <- raster::t(data)
             #reorder the rows
@@ -248,36 +245,36 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
             cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*86400
             cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
             ### Looping through the NEX points and writing out the daily climate data in hydrology model format
-            for(jj in 1:dim(FinalTable)[1])
-            {
-              write(x=cell.values[jj],filenameSWAT_TXT[[jj]],append=T,ncolumns = 1)
-            }
-            
-            #empty memory and getting ready for the next day!
-            cell.values<-list()
-          }
-        }
-        else
-        {
-          for(jj in 1:length(time_period))
+          for(jj in 1:dim(FinalTable)[1])
           {
-            timestart <- time_period[jj]
-            dayjuilan <- as.numeric(format(timestart,"%j"))
-            timeyear <- format(timestart,"%Y")
-            typemin <- paste(type,'min',sep='')
-            typemax <- paste(type,'max',sep='')
-            filename_min <- paste(paste(typemin,'day',model,slice,Variant,'gn',as.character(timeyear),sep = '_'),'.nc',sep='')
-            filename_max <- paste(paste(typemax,'day',model,slice,Variant,'gn',as.character(timeyear),sep = '_'),'.nc',sep='')
-            myurl_min <- paste(ftp_min,filename_min, sep = '')
-            myurl_max <- paste(ftp_max,filename_max, sep = '')
+            write(x=cell.values[jj],filenameSWAT_TXT[[jj]],append=T,ncolumns = 1)
+          }
+
+          #empty memory and getting ready for the next day!
+          cell.values<-list()
+        }
+      }
+      else
+      {
+        for(jj in 1:length(time_period))
+        {
+          timestart <- time_period[jj]
+          timeend <- timestart + 1
+          timeyear <- format(timestart,"%Y")
+          typemin <- paste(type,'min',sep='')
+          typemax <- paste(type,'max',sep='')
+          filename_min <- paste(typemin,'_day_',slice,'_',Variant,'_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
+          filename_max <- paste(typemax,'_day_',slice,'_',Variant,'_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
+          myurl_min <- paste(ftp_min,timeyear,'.nc?','var=',type,'min','&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',as.character(timestart),'T12%3A00%3A00Z&time_duration=P1D','&timeStride=1',sep = '')
+          myurl_max <- paste(ftp_max,timeyear,'.nc?','var=',type,'max','&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',as.character(timestart),'T12%3A00%3A00Z&time_duration=P1D','&timeStride=1',sep = '')
             # downloading file
             if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
             if(file.exists(paste('./temp/',filename_min,sep= ''))==FALSE|file.exists(paste('./temp/',filename_max,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl_min, destfile = paste('./temp/',filename_min,sep= ''), mode = 'wb', extra = '-L');utils::download.file(quiet = T, method = 'curl', url = myurl_max, destfile = paste('./temp/',filename_max,sep= ''), mode = 'wb', extra = '-L')}
             # Reading the tmin ncdf file
             test4<-file.info(paste('./temp/',filename_min,sep= ''))$size
-            stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test4 > 6.0e6)
+            stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test4 > 3.0e6)
             nc_min <- ncdf4::nc_open( paste('./temp/',filename_min,sep = '') )
-            data_min <- ncdf4::ncvar_get(nc_min,typemin, start = c(1,1,dayjuilan) , count = c(-1, -1 ,1))
+            data_min <- ncdf4::ncvar_get(nc_min,typemin, start = c(1,1,1) , count = c(-1, -1 ,1))
             #transpose the data
             data_min <- raster::t(data_min)
             #reorder the rows
@@ -285,9 +282,9 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
             ncdf4::nc_close(nc_min)
             # Reading the tmax ncdf file
             test5<-file.info(paste('./temp/',filename_max,sep= ''))$size
-            stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test5 > 6.0e6)
+            stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test5 > 3.0e6)
             nc_max <- ncdf4::nc_open( paste('./temp/',filename_max,sep = '') )
-            data_max <- ncdf4::ncvar_get(nc_max,typemax, start = c(1,1,dayjuilan) , count = c(-1, -1 ,1))
+            data_max <- ncdf4::ncvar_get(nc_max,typemax, start = c(1,1,1) , count = c(-1, -1 ,1))
             #transpose the data
             data_max <- raster::t(data_max)
             #reorder the rows
@@ -304,45 +301,39 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
             cell.values_max<-as.vector(NEX_max)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
             cell.values_min[is.na(cell.values_min)] <- '-99.0' #filling missing data
             cell.values_max[is.na(cell.values_max)] <- '-99.0' #filling missing data
-            
-            ### Looping through the NEX points and writing out the daily climate data
-            for(k in 1:dim(FinalTable)[1])
-            {
-              cell.temp.values[[k]]<-paste(cell.values_max[k],cell.values_min[k],sep=',')
-              write(x=cell.temp.values[[k]],filenameSWAT_TXT[[k]],append=T,ncolumns = 1)
-            }
-            #empty memory and getting ready for the next day!
-            cell.temp.values<-list()
+
+          ### Looping through the NEX points and writing out the daily climate data
+          for(k in 1:dim(FinalTable)[1])
+          {
+            cell.temp.values[[k]]<-paste(cell.values_max[k],cell.values_min[k],sep=',')
+            write(x=cell.temp.values[[k]],filenameSWAT_TXT[[k]],append=T,ncolumns = 1)
           }
-          
+          #empty memory and getting ready for the next day!
+          cell.temp.values<-list()
         }
-        
-        
-        unlink(x='./temp', recursive = TRUE)
+
       }
-          
-                 else
-                      {
-            cat('Sorry!',paste(format(as.Date(start),'%b'),format(as.Date(start),'%Y'),sep=','),'is out of coverage for the NEX-GDDP-CMIP6 data products.','  \n')
-            cat('Please pick start and end dates following notes described at the function notes to access the NEX-GDDP-CMIP6 data products.','  \n')
-            cat('Thank you!','  \n')
-          }
-   
+
+
+      unlink(x='./temp', recursive = TRUE)
+    }
+
+    else
+    {
+    cat('Sorry!',paste(format(as.Date(start),'%b'),format(as.Date(start),'%Y'),sep=','),'is out of coverage for the NEX-GDDP-CMIP6 data products.','  \n')
+    cat('Please pick start and end dates following notes described at the function notes to access the NEX-GDDP-CMIP6 data products.','  \n')
+    cat('Thank you!','  \n')
+    }
                 }
-        else
-              {
+
+    else
+    {
       cat('Sorry!','  \n')
       cat('The NEX-GDDP DATASHARE server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.','  \n')
       cat('Thank you.','  \n')
-          }
+    }
 
-
-    
-
-
-  }
-
-
+}
   else
   {
     cat('Sorry!','  \n')

@@ -64,7 +64,7 @@ local machine:
 
 -   [Installing R software](https://www.r-project.org/)
 
--   [Installing Rstudio software](https://www.rstudio.com/) (OPTIONAL)
+-   [Installing Rstudio software](https://posit.co/) (OPTIONAL)
 
 -   *NASAaccess* R package needs a user registration access with
     [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a

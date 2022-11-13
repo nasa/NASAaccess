@@ -47,7 +47,7 @@ On a local machine the user should have installed the following programs as well
 
   + [Installing R software](https://www.r-project.org/)
   
-  +	[Installing Rstudio software](https://www.rstudio.com/) (OPTIONAL)
+  +	[Installing Rstudio software](https://posit.co/) (OPTIONAL)
   
   + *NASAaccess* R package needs a user registration access with [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a registration account(s) with [Earthdata](https://www.earthdata.nasa.gov/) login as well as well as authorizing [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) data access.  Please refer to https://disc.gsfc.nasa.gov/data-access for further details.
   

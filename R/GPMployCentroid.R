@@ -57,7 +57,7 @@ GPMpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM 
     watershed.elevation <- raster::raster(DEM)
 
     # Reading the study Watershed shapefile
-    polys <- rgdal::readOGR(dsn=watershed,verbose = F)
+    suppressWarnings(polys <- rgdal::readOGR(dsn=watershed,verbose = F))
 
     # Adding a generic column "GRIDCODE"
     polys@data$GRIDCODE <- seq(1:dim(polys@data)[1])

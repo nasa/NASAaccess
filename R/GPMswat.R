@@ -57,7 +57,7 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
     watershed.elevation <- raster::raster(DEM)
 
     # Reading the study Watershed shapefile
-    polys <- rgdal::readOGR(dsn=watershed,verbose = F)
+    suppressWarnings(polys <- rgdal::readOGR(dsn=watershed,verbose = F))
 
     # SWAT climate 'precipitation' master file name
     filenametableKEY<-paste(Dir,myvarTRMM,'Master.txt',sep='')

@@ -2,7 +2,7 @@
 title: "Getting started with GLDAS data"
 author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting started with GLDAS data}
   %\VignetteEngine{knitr::rmarkdown}
@@ -22,15 +22,15 @@ knitr::opts_chunk$set(
 
 library(raster)
 library(sf)
-library(ggplot2)
+
 #Reading input data
 dem_path <- system.file("extdata", "DEM_TX.tif", package = "NASAaccess")
 shape_path <- system.file("extdata", "basin.shp", package = "NASAaccess")
 
 
 
-dem <- raster(dem_path)
-shape <- st_read(shape_path)
+dem <- raster::raster(dem_path)
+shape <- sf::st_read(shape_path)
 
 
 ```
@@ -75,7 +75,7 @@ dim(GLDASwat.table)
 Now, let's see the location of the `GLDASwat` generated grid points
 
 ```{r}
-
+library(ggplot2)
 ggplot() + 
   geom_sf(data = shape, 
           fill = NA, 
@@ -123,6 +123,7 @@ GLDASpolyCentroid(Dir = "./GLDASpolyCentroid/",
 Now let's examine the `GLDASpolyCentroid` generated outputs
 
 ```{r}
+library(ggplot2)
 GLDASpolyCentroid.tempMaster <- system.file('extdata/GLDASpolyCentroid',
                               'temp_Master.txt', 
                                 package = 'NASAaccess')

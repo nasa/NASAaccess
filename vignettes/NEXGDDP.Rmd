@@ -2,7 +2,7 @@
 title: "Getting started with NEXGDDP-CMIP5 data"
 author: "Ibrahim N. Mohammed"
 date: '`r Sys.Date()`'
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 bibliography: "./bibliography/references.bib"
 biblio-style: "apalike"
 vignette: >
@@ -21,14 +21,14 @@ knitr::opts_chunk$set(
 
 library(raster)
 library(sf)
-library(ggplot2)
+
 #Reading input data
 dem_path <- system.file("extdata", "DEM_TX.tif", package = "NASAaccess")
 shape_path <- system.file("extdata", "basin.shp", package = "NASAaccess")
 
 
-dem <- raster(dem_path)
-shape <- st_read(shape_path)
+dem <- raster::raster(dem_path)
+shape <- sf::st_read(shape_path)
 ```
 
 

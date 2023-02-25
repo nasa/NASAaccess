@@ -58,7 +58,7 @@ GPM_NRT=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'LowerMekon
             watershed.elevation <- raster::raster(DEM)
 
             # Reading the study Watershed shapefile
-            polys <- rgdal::readOGR(dsn=watershed,verbose = F)
+            suppressWarnings(polys <- rgdal::readOGR(dsn=watershed,verbose = F))
 
             # weather 'precipitation' master file name
             filenametableKEY<-paste(Dir,'precipitation','Master.txt',sep='')

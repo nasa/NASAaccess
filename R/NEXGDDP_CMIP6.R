@@ -2,12 +2,12 @@
 #' Generate rainfall or air temperature as well as climate input stations file from NASA NEX-GDDP-CMIP6 remote sensing climate change data products needed to drive various hydrological models.
 #'
 #' This function downloads climate change data of rainfall and air temperature from \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP-CMIP6} \acronym{AMES} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that any hydrological model requires for rainfall or air temperature data input. The function also generates the climate stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected climatological grids that fall within the specified watershed. The \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP-CMIP6} data set is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 6 \acronym{CMIP6} and across two of the four "Tier 1" greenhouse gas emissions scenarios known as Shared Socioeconomic Pathways \acronym{SSPs}.
-#' @param Dir A directory name to store gridded rainfall and rain stations files.
+#' @param Dir A directory name to store gridded climate data and stations files.
 #' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
 #' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
-#' @param start Beginning date for gridded rainfall data.
-#' @param end Ending date for gridded rainfall data.
-#' @param model A climate modeling center and name from the the World Climate Research Programme \acronym{WCRP} global climate projections through the Coupled Model Intercomparison Project 6 \acronym{CMIP6} (e.g., \acronym{MIROC6} which is the sixth version of the Model for Interdisciplinary Research on Climate \acronym{MIROC} model).
+#' @param start Beginning date for gridded climate data.
+#' @param end Ending date for gridded climate data.
+#' @param model A climate modeling center and name from the World Climate Research Programme \acronym{WCRP} global climate projections through the Coupled Model Intercomparison Project 6 \acronym{CMIP6} (e.g., \acronym{MIROC6} which is the sixth version of the Model for Interdisciplinary Research on Climate \acronym{MIROC} model).
 #' @param type  A flux data type. It's value can be \acronym{'pr'} for precipitation or \acronym{'tas'} for air temperature.
 #' @param slice A scenario from the Shared Socioeconomic Pathways (SSPs). It's value can be \acronym{'ssp126'}, \acronym{'ssp245'}, \acronym{'ssp370'}, \acronym{'ssp585'}, or \acronym{'historical'}.
 #'
@@ -62,8 +62,8 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
   {
 
     url.IMERG.input <- 'https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/'
-    url.GDDP.input <- 'https://ds.nccs.nasa.gov/thredds2/ncss/AMES/NEX/GDDP-CMIP6/'
-    url.catalog.input <- paste('https://ds.nccs.nasa.gov/thredds2/catalog/AMES/NEX/GDDP-CMIP6/',model,slice,'catalog.html',sep="/")
+    url.GDDP.input <- 'https://ds.nccs.nasa.gov/thredds/ncss/AMES/NEX/GDDP-CMIP6/'
+    url.catalog.input <- paste('https://ds.nccs.nasa.gov/thredds/catalog/AMES/NEX/GDDP-CMIP6/',model,slice,'catalog.html',sep="/")
     myvarIMERG <- 'precipitationCal'
     myvarNAME <- 'climate'
     #check the DATASHARE NEX-GDDP availability
@@ -71,9 +71,9 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
     {
       #let's get the Variant (e.g., r1i1p1f1)
       rr <- readLines(url.catalog.input)
-      dump.address <- "/thredds2/folder.gif" ; my.pattern <- "[[:alnum:]]{8}"
+      dump.address <- "/thredds/folder.gif" ; my.pattern <- "[[:alnum:]]{8}"
       folderlines <- grep(dump.address,rr,value=TRUE)
-      Variant<- unique(as.vector(stringr::str_match_all(folderlines,my.pattern)[[2]]))[2]
+      Variant<- unique(as.vector(stringr::str_match_all(folderlines,my.pattern)[[2]]))
       rm(dump.address,folderlines,my.pattern,rr)
       if(type=='pr'){ftp <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'/',type,'_','day','_',model,'_',slice,'_',Variant,'_','gn','_',sep='')}
       if(type=='tas'){ftp_min <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'min','/',type,'min','_','day','_',model,'_',slice,'_',Variant,'_','gn','_',sep='');ftp_max <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'max','/',type,'max','_','day','_',model,'_',slice,'_',Variant,'_','gn','_',sep='')}
@@ -86,9 +86,9 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
       # Reading cell elevation data (DEM should be in geographic projection)
       watershed.elevation <- raster::raster(DEM)
       # Reading the study Watershed shapefile
-      polys <- rgdal::readOGR(dsn=watershed,verbose = F)
+      suppressWarnings(polys <- rgdal::readOGR(dsn=watershed,verbose = F))
       # To address missing parameters in projection strings
-      polys <- sp::spTransform(polys,CRSobj = c('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+      suppressWarnings(polys <- sp::spTransform(polys,CRSobj = c('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')))
       # Hydrological model climate master file name
       filenametableKEY<-paste(Dir,type, 'Grid_Master.txt',sep='')
       # Creating empty lists
@@ -146,7 +146,7 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
         # Using dummy date and file info for a file in the NEX-GDDP-CMIP6 dataset
         # downloading one file
         if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
-	      utils::download.file(quiet = T, method = 'curl', url = 'https://ds.nccs.nasa.gov/thredds2/ncss/AMES/NEX/GDDP-CMIP6/ACCESS-CM2/ssp585/r1i1p1f1/tasmax/tasmax_day_ACCESS-CM2_ssp585_r1i1p1f1_gn_2015.nc?var=tasmax&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=2015-09-01T12%3A00%3A00Z&time_end=2015-09-02T12%3A00%3A00Z&timeStride=1', destfile = paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep= ''), mode = 'wb', extra = '-L')
+	      utils::download.file(quiet = T, method = 'curl', url = 'https://ds.nccs.nasa.gov/thredds/ncss/AMES/NEX/GDDP-CMIP6/ACCESS-CM2/ssp585/r1i1p1f1/tasmax/tasmax_day_ACCESS-CM2_ssp585_r1i1p1f1_gn_2015.nc?var=tasmax&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=2015-09-01T12%3A00%3A00Z&time_end=2015-09-02T12%3A00%3A00Z&timeStride=1', destfile = paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep= ''), mode = 'wb', extra = '-L')
         test2<-file.info(paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep= ''))$size
         stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test2 > 6.0e6)
         #reading ncdf file

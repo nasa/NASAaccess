@@ -16,17 +16,17 @@ NEX_GDDP_CMIP5(
 )
 }
 \arguments{
-\item{Dir}{A directory name to store gridded rainfall and rain stations files.}
+\item{Dir}{A directory name to store gridded climate data and stations files.}
 
 \item{watershed}{A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').}
 
 \item{DEM}{A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').}
 
-\item{start}{Beginning date for gridded rainfall data.}
+\item{start}{Beginning date for gridded climate data.}
 
-\item{end}{Ending date for gridded rainfall data.}
+\item{end}{Ending date for gridded climate data.}
 
-\item{model}{A climate modeling center and name from the the World Climate Research Programme \acronym{WCRP} global climate projections through the Coupled Model Intercomparison Project 5 \acronym{CMIP5} (e.g., \acronym{IPSL-CM5A-MR} which is Institut Pierre-Simon Laplace \acronym{CM5A-MR} model).}
+\item{model}{A climate modeling center and name from the World Climate Research Programme \acronym{WCRP} global climate projections through the Coupled Model Intercomparison Project 5 \acronym{CMIP5} (e.g., \acronym{IPSL-CM5A-MR} which is Institut Pierre-Simon Laplace \acronym{CM5A-MR} model).}
 
 \item{type}{A flux data type. It's value can be \acronym{'pr'} for precipitation or \acronym{'tas'} for air temperature.}
 

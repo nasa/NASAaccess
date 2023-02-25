@@ -2,12 +2,12 @@
 #' Generate rainfall or air temperature as well as climate input stations file from NASA NEX-GDDP remote sensing climate change data products needed to drive various hydrological models.
 #'
 #' This function downloads climate change data of rainfall and air temperature from \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that any hydrological model requires for rainfall or air temperature data input. The function also generates the climate stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected climatological grids that fall within the specified watershed. The \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 5 \acronym{CMIP5} and across two of the four greenhouse gas emissions scenarios known as Representative Concentration Pathways \acronym{RCPs} (rcp45, rcp85).
-#' @param Dir A directory name to store gridded rainfall and rain stations files.
+#' @param Dir A directory name to store gridded climate data and stations files.
 #' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
 #' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
-#' @param start Beginning date for gridded rainfall data.
-#' @param end Ending date for gridded rainfall data.
-#' @param model A climate modeling center and name from the the World Climate Research Programme \acronym{WCRP} global climate projections through the Coupled Model Intercomparison Project 5 \acronym{CMIP5} (e.g., \acronym{IPSL-CM5A-MR} which is Institut Pierre-Simon Laplace \acronym{CM5A-MR} model).
+#' @param start Beginning date for gridded climate data.
+#' @param end Ending date for gridded climate data.
+#' @param model A climate modeling center and name from the World Climate Research Programme \acronym{WCRP} global climate projections through the Coupled Model Intercomparison Project 5 \acronym{CMIP5} (e.g., \acronym{IPSL-CM5A-MR} which is Institut Pierre-Simon Laplace \acronym{CM5A-MR} model).
 #' @param type  A flux data type. It's value can be \acronym{'pr'} for precipitation or \acronym{'tas'} for air temperature.
 #' @param slice A scenario from the Representative Concentration Pathways. It's value can be \acronym{'rcp45'} , \acronym{'rcp85'}, or \acronym{'historical'}.
 #'
@@ -58,21 +58,21 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
     #check the DATASHARE NEX-GDDP availability
     if(httr::status_code(GET(url.GDDP.input))==200)
     {
-      
+
       if(type=='pr'){ftp <- paste(url.GDDP.input,slice,'/','day','/','atmos','/',type,'/','r1i1p1','/','v1.0','/',sep='')}
       if(type=='tas'){ftp_min <- paste(url.GDDP.input,slice,'/','day','/','atmos','/',type,'min','/','r1i1p1','/','v1.0','/',sep='');ftp_max <- paste(url.GDDP.input,slice,'/','day','/','atmos','/',type,'max','/','r1i1p1','/','v1.0','/',sep='')}
       ####Before getting to work on this function do this check on start and end dates
       if (as.Date(start) >= as.Date('1950-01-01') &  as.Date(end) <= as.Date('2100-12-31') & slice == 'rcp85' | slice == 'rcp45' | slice == 'historical')
       {
-        
+
         # Constructing time series based on start and end input days!
         time_period <- seq.Date(from = as.Date(start), to = as.Date(end), by = 'day')
         # Reading cell elevation data (DEM should be in geographic projection)
         watershed.elevation <- raster::raster(DEM)
         # Reading the study Watershed shapefile
-        polys <- rgdal::readOGR(dsn=watershed,verbose = F)
+        suppressWarnings(polys <- rgdal::readOGR(dsn=watershed,verbose = F))
         # To address missing parameters in projection strings
-        polys <- sp::spTransform(polys,CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+        suppressWarnings(polys <- sp::spTransform(polys,CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')))
         # Grid climate master file name
         filenametableKEY<-paste(Dir,type, 'Grid_Master.txt',sep='')
         # Creating empty lists
@@ -131,12 +131,12 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
           # downloading one file
           if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
           type.start<-ifelse(isTRUE(type=="pr")==TRUE,type,paste(type,'min',sep=''))
-          
-          
+
+
           filename.start <- paste(paste(type.start,'day','BCSD',slice,'r1i1p1',model,format(time_period[1],"%Y"),sep = '_'),'.nc',sep="")
           myurl <- paste(ifelse(isTRUE(type=="pr")==TRUE,ftp,ftp_min),filename.start,sep = '')
           utils::download.file(quiet = T, method = 'curl', url = myurl, destfile = paste('./temp/',filename.start,sep= ''), mode = 'wb', extra = '-L')
-        
+
           test2<-file.info(paste('./temp/',filename.start,sep= ''))$size
           stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test2 > 7.0e6)
           #reading ncdf file
@@ -184,7 +184,7 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
           minDistVec[[i]] <- min(distVec)
           closestSiteVec[[i]] <- which.min(distVec)
         }
-        
+
         PointAssignIDs <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$NEX_ID,'numeric')
         PointsAssignCol <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$col,'numeric')
         PointsAssignRow <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$row,'numeric')
@@ -212,7 +212,7 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
             timestart <- time_period[kk]
             if(format(timestart,"%m-%d") != "02-29")
             {
-              #Here I want to have a Julian date for a fixed non-leap year. The NEX-GDPP data has 365 days for every year! 
+              #Here I want to have a Julian date for a fixed non-leap year. The NEX-GDPP data has 365 days for every year!
               dayjuilan <- as.numeric(format(as.Date(paste('2063',format(timestart,'%m'),format(timestart,'%d'),sep="-")),"%j"))
               filename <- paste(type,'_day_BCSD_',slice,'_r1i1p1_',model,'_',format(timestart,"%Y"),'.nc',sep = '')
               myurl <- paste(ftp,filename,sep = '')
@@ -237,20 +237,20 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
               cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*86400
               cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
             }
-            
+
             else
             {
               ###the date is Feb 29th and NEX-GDDP has no value for it
               cell.values <- rep('-99.0',dim(FinalTable)[1])
-              
+
             }
-            
+
             ### Looping through the NEX points and writing out the daily climate data
             for(jj in 1:dim(FinalTable)[1])
             {
               write(x=cell.values[jj],filenameSWAT_TXT[[jj]],append=T,ncolumns = 1)
             }
-            
+
             #empty memory and getting ready for the next day!
             cell.values<-list()
           }
@@ -262,7 +262,7 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
             timestart <- time_period[jj]
             if(format(timestart,"%m-%d") != "02-29")
             {
-              #Here I want to have a Julian date for a fixed non-leap year. The NEX-GDPP data has 365 days for every year! 
+              #Here I want to have a Julian date for a fixed non-leap year. The NEX-GDPP data has 365 days for every year!
               dayjuilan <- as.numeric(format(as.Date(paste('2063',format(timestart,'%m'),format(timestart,'%d'),sep="-")),"%j"))
               typemin <- paste(type,'min',sep='')
               typemax <- paste(type,'max',sep='')
@@ -310,7 +310,7 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
               ###the date is Feb 29th and NEX-GDDP has no value for it
               cell.values_min <- rep('-99.0', dim(FinalTable)[1]) #filling missing data
               cell.values_max <- rep('-99.0', dim(FinalTable)[1]) #filling missing data
-              
+
             }
             ### Looping through the NEX points and writing out the daily climate data
             for(k in 1:dim(FinalTable)[1])
@@ -321,13 +321,13 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
             #empty memory and getting ready for the next day!
             cell.temp.values<-list()
           }
-          
+
         }
-        
-        
+
+
         unlink(x='./temp', recursive = TRUE)
       }
-      
+
       else
       {
         cat('Sorry!',paste(format(as.Date(start),'%b'),format(as.Date(start),'%Y'),sep=','),'is out of coverage for the NEX-GDDP data products.','  \n')
@@ -335,14 +335,14 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
         cat('Thank you!','  \n')
       }
     }
-    
+
       else
       {
         cat('Sorry!','  \n')
         cat('The NEX-GDDP DATASHARE server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.','  \n')
         cat('Thank you.','  \n')
       }
-    
+
 
 
   }

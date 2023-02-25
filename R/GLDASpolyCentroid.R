@@ -52,7 +52,7 @@ GLDASpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DE
     watershed.elevation <- raster::raster(DEM)
 
     # Reading the study Watershed shapefile
-    polys <- rgdal::readOGR(dsn=watershed,verbose = F)
+    suppressWarnings(polys <- rgdal::readOGR(dsn=watershed,verbose = F))
 
     # SWAT climate 'air temperature' master file name
     filenametableKEY<-paste(Dir,'temp_Master.txt',sep='')

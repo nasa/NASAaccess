@@ -1,3 +1,7 @@
+# NASAaccess 3.4.0
+
+* Adding automated script for .netrc file creation
+
 # NASAaccess 3.3.1
 
 * Adding NASAaccess Tethys webpage. Fixing CMIP6 server access.

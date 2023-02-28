@@ -57,6 +57,12 @@
 NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'LowerMekong_dem.tif', start = '2060-12-1', end = '2060-12-3', model = 'MIROC6', type = 'pr',slice = 'ssp245')
 {
 
+  if(file.exists('~/.netrc')==FALSE||file.exists('~/_netrc')==FALSE)
+  {
+    source(system.file("scripts", "netrc.R",
+                       package = "NASAaccess"))
+  }
+
   #if there is no logging information then update the netrc file with NEX-GDDP info
   if(file.exists('~/.netrc')==TRUE||file.exists('~/_netrc')==TRUE)
   {

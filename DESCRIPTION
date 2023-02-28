@@ -1,6 +1,6 @@
 Package: NASAaccess
-Version: 3.3.1
-Date: 2023-02-16
+Version: 3.4.0
+Date: 2023-02-28
 Type: Package
 Title: Downloading and Reformatting Tool for NASA Earth Observation Data Products
 Authors@R: c(person("Ibrahim", "Mohammed", role = c("aut", "cre"), 
@@ -17,7 +17,6 @@ Imports: ncdf4, stats, shapefiles, rgeos, maptools, httr, stringr, rgdal, XML, s
 License: file LICENSE
 Encoding: UTF-8
 Language: en-US
-LazyData: true
 RoxygenNote: 7.2.3
 Suggests: 
     markdown,
@@ -25,5 +24,6 @@ Suggests:
     knitr,
     ggmap,
     sf,
-    ggplot2
+    ggplot2,
+    getPass
 VignetteBuilder: knitr

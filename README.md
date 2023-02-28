@@ -81,29 +81,6 @@ local machine:
   [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to
   <https://disc.gsfc.nasa.gov/data-access> for further details.
 
-- After registration with [Earthdata](https://www.earthdata.nasa.gov/)
-  *NASAaccess* software package users should create a reference file
-  (*netrc*) with [Earthdata](https://www.earthdata.nasa.gov/)
-  credentials stored in it to streamline the retrieval access to
-  [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
-  servers.
-
-  - Creating the *.netrc* file at the user machine *Home* directory and
-    storing the user
-    [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
-    [GES DISC](https://disc.gsfc.nasa.gov/) logging information in it is
-    needed to execute the *NASAaccess* package commands. Accessing data
-    at NASA servers is further explained at
-    [Here](https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget).
-
-  - For Windows users the
-    [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
-    [GES DISC](https://disc.gsfc.nasa.gov/) logging information should
-    be saved in a file **\_netrc** beside the **.netrc** file and stored
-    in *Home* directory. In many Winodws machines *HOME* directory is
-    the user personal ‘Documents’ folder (i.e.,
-    C:\Users\yourname\Documents).
-
 - Installing [*curl*](https://curl.se/) software . Since Mac users have
   [*curl*](https://curl.se/) as part of macOS build, Windows users
   should make sure that their local machines build have
@@ -129,8 +106,23 @@ been installed and browse the help pages of the various functions of
 
 ### **Conda Package**
 
-To install *NASAaccess* package in a conda environment run the
-following:
+- After registration with [Earthdata](https://www.earthdata.nasa.gov/)
+  *NASAaccess* software package users should create a reference file
+  (*.netrc*) with [Earthdata](https://www.earthdata.nasa.gov/)
+  credentials stored in it to streamline the retrieval access to
+  [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
+  servers.
+
+  - Creating the *.netrc* file at the user machine *Home* directory and
+    storing the user
+    [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
+    [GES DISC](https://disc.gsfc.nasa.gov/) logging information in it is
+    needed to execute the *NASAaccess* package commands. Accessing data
+    from NASA servers is further explained at
+    [Here](https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget).
+
+- To install *NASAaccess* package in a conda environment run the
+  following:
 
 ``` python
 conda install -c conda-forge r-nasaaccess
@@ -143,8 +135,6 @@ single machines and local servers can be found at
 [readthedocs](https://nasaaccess.readthedocs.io/en/latest/nasaaccess_tethys.html).
 
 ## **Is there a walk through examples for NASAaccess software?**
-
-Yes!
 
 Software users are encouraged to visit
 (<https://imohamme.github.io/NASAaccess/>) to learn more on *NASAaccess*

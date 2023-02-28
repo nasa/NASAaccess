@@ -36,6 +36,12 @@
 
 GLDASpolyCentroid=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'LowerMekong_dem.tif', start = '2015-12-1', end = '2015-12-3')
 {
+  if(file.exists('~/.netrc')==FALSE||file.exists('~/_netrc')==FALSE)
+  {
+    source(system.file("scripts", "netrc.R",
+                       package = "NASAaccess"))
+  }
+
   if(file.exists('~/.netrc')==TRUE||file.exists('~/_netrc')==TRUE)
   {
     if(length(grep("urs.earthdata.nasa.gov", readLines('~/.netrc')))==!0||length(grep("urs.earthdata.nasa.gov", readLines('~/_netrc')))==!0)

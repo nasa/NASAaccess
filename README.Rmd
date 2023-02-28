@@ -71,7 +71,7 @@ Within the Rstudio help tab the user can verify that the package has been instal
 
 ### **Conda Package**
 
--   After registration with [Earthdata](https://www.earthdata.nasa.gov/) *NASAaccess* software package users should create a reference file (*.netrc*) with [Earthdata](https://www.earthdata.nasa.gov/) credentials stored in it to streamline the retrieval access to [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") servers.
+-   After registration with [Earthdata](https://www.earthdata.nasa.gov/) *NASAaccess* software package users should create a reference file (*.netrc*) with [Earthdata](https://www.earthdata.nasa.gov/) credentials stored in it to streamline the retrieval access from [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") servers.
 
     -   Creating the *.netrc* file at the user machine *Home* directory and storing the user [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) logging information in it is needed to execute the *NASAaccess* package commands. Accessing data from NASA servers is further explained at [Here](https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget).
     

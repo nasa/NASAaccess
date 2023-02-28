@@ -109,7 +109,7 @@ been installed and browse the help pages of the various functions of
 - After registration with [Earthdata](https://www.earthdata.nasa.gov/)
   *NASAaccess* software package users should create a reference file
   (*.netrc*) with [Earthdata](https://www.earthdata.nasa.gov/)
-  credentials stored in it to streamline the retrieval access to
+  credentials stored in it to streamline the retrieval access from
   [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
   servers.
 

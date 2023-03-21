@@ -39,6 +39,7 @@ needed to drive various hydrological models (e.g.,
 [SWAT](https://swat.tamu.edu/ "Soil & Water Assessment Tool"),
 [VIC](https://github.com/UW-Hydro/VIC "Variable Infiltration Capacity"),
 [RHESSys](https://github.com/RHESSys/RHESSys "The Regional Hydro-Ecological Simulation System"),
+[DHSVM](https://www.pnnl.gov/projects/distributed-hydrology-soil-vegetation-model "Distributed Hydrology Soil Vegetation Model")
 …etc.). The *NASAaccess* Tethys web-based application can be used for
 accessing, reformatting, and visualizing climate and earth observation
 remote sensing gridded time series data as well.
@@ -148,7 +149,7 @@ citation(package = 'NASAaccess')
 #> To cite package 'NASAaccess' in publications use:
 #> 
 #>   Mohammed I (2023). _NASAaccess: Downloading and Reformatting Tool for
-#>   NASA Earth Observation Data Products_. R package version 3.3.1,
+#>   NASA Earth Observation Data Products_. R package version 3.4.1,
 #>   <https://github.com/nasa/NASAaccess>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -159,7 +160,7 @@ citation(package = 'NASAaccess')
 #>     year = {2023},
 #>     institution = {National Aeronautics and Space Administration, Goddard Space Flight Center},
 #>     address = {Greenbelt, Maryland},
-#>     note = {R package version 3.3.1},
+#>     note = {R package version 3.4.1},
 #>     url = {https://github.com/nasa/NASAaccess},
 #>   }
 ```

@@ -1,3 +1,7 @@
+# NASAaccess 3.4.1
+
+* no need for _netrc file creation in windows
+
 # NASAaccess 3.4.0
 
 * Adding automated script for .netrc file creation

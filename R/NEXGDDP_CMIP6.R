@@ -57,14 +57,14 @@
 NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'LowerMekong_dem.tif', start = '2060-12-1', end = '2060-12-3', model = 'MIROC6', type = 'pr',slice = 'ssp245')
 {
 
-  if(file.exists('~/.netrc')==FALSE||file.exists('~/_netrc')==FALSE)
+  if(file.exists('~/.netrc')==FALSE)
   {
     source(system.file("scripts", "netrc.R",
                        package = "NASAaccess"))
   }
 
   #if there is no logging information then update the netrc file with NEX-GDDP info
-  if(file.exists('~/.netrc')==TRUE||file.exists('~/_netrc')==TRUE)
+  if(file.exists('~/.netrc')==TRUE)
   {
 
     url.IMERG.input <- 'https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/'
@@ -343,9 +343,8 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
   else
   {
     cat('Sorry!','  \n')
-    cat('You need to create one/two file(s) named ".netrc" , "_netrc" and ".urs_cookies" at your home Directory. The "_netrc" file only needed for Windows users.','  \n')
+    cat('You need to create two files named ".netrc" and ".urs_cookies" at your home Directory.','  \n')
     cat('Instructions on creating the ".netrc" and the ".urs_cookies" files can be accessed at https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget','  \n')
-    cat('For Windows users follow instructions on creating the "_netrc" file at https://github.com/imohamme/NASAaccess/wiki/Curl-installation-on-Windows','  \n')
     cat('Thank you.','  \n')
   }
 

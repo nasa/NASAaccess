@@ -1,6 +1,6 @@
 Package: NASAaccess
-Version: 3.4.0
-Date: 2023-02-28
+Version: 3.4.1
+Date: 2023-03-21
 Type: Package
 Title: Downloading and Reformatting Tool for NASA Earth Observation Data Products
 Authors@R: c(person("Ibrahim", "Mohammed", role = c("aut", "cre"), 

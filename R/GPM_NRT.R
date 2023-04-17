@@ -27,7 +27,7 @@
 #' #Lower Mekong basin example
 #' \dontrun{GPM_NRT(Dir = "./INPUT/", watershed = "LowerMekong.shp",
 #' DEM = "LowerMekong_dem.tif", start = "2022-6-1", end = "2022-6-10")}
-#' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods
+#' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods getPass
 #' @importFrom stats na.exclude
 #' @importFrom raster raster cellFromPolygon xyFromCell rowColFromCell extract
 #' @export

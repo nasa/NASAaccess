@@ -1,5 +1,5 @@
 ###code to save user credentials into netrc file
-library(getPass)
+#' @import getPass
 
 
 repeat {

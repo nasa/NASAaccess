@@ -39,7 +39,7 @@
 #' \dontrun{NEX_GDDP_CMIP5(Dir = "./INPUT/", watershed = "LowerMekong.shp",
 #' DEM = "LowerMekong_dem.tif", start = "2060-12-1", end = "2060-12-3",
 #' model = 'IPSL-CM5A-MR', type = 'pr', slice = 'rcp85')}
-#' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods
+#' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods getPass
 #' @importFrom stats na.exclude
 #' @importFrom raster raster cellFromPolygon xyFromCell rowColFromCell extract
 #' @export
@@ -139,7 +139,7 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
 
           filename.start <- paste(paste(type.start,'day','BCSD',slice,'r1i1p1',model,format(time_period[1],"%Y"),sep = '_'),'.nc',sep="")
           myurl <- paste(ifelse(isTRUE(type=="pr")==TRUE,ftp,ftp_min),filename.start,sep = '')
-          utils::download.file(quiet = T, method = 'curl', url = myurl, destfile = paste('./temp/',filename.start,sep= ''), mode = 'wb', extra = '-L')
+          utils::download.file(quiet = T, method = 'curl', url = myurl, destfile = paste('./temp/',filename.start,sep= ''), mode = 'wb', extra = '-k')
 
           test2<-file.info(paste('./temp/',filename.start,sep= ''))$size
           stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test2 > 7.0e6)
@@ -222,7 +222,7 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
               myurl <- paste(ftp,filename,sep = '')
               # downloading file
               if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
-              if(file.exists(paste('./temp/',filename,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl, destfile = paste('./temp/',filename,sep= ''), mode = 'wb', extra = '-L')}
+              if(file.exists(paste('./temp/',filename,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl, destfile = paste('./temp/',filename,sep= ''), mode = 'wb', extra = '-k')}
               # Reading the ncdf file
               test3<-file.info(paste('./temp/',filename,sep= ''))$size
               stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test3 > 6.0e6)
@@ -276,7 +276,7 @@ NEX_GDDP_CMIP5=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
               myurl_max <- paste(ftp_max,filename_max,sep = '')
               # downloading file
               if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
-              if(file.exists(paste('./temp/',filename_min,sep= ''))==FALSE|file.exists(paste('./temp/',filename_max,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl_min, destfile = paste('./temp/',filename_min,sep= ''), mode = 'wb', extra = '-L');utils::download.file(quiet = T, method = 'curl', url = myurl_max, destfile = paste('./temp/',filename_max,sep= ''), mode = 'wb', extra = '-L')}
+              if(file.exists(paste('./temp/',filename_min,sep= ''))==FALSE|file.exists(paste('./temp/',filename_max,sep= ''))==FALSE){utils::download.file(quiet = T, method = 'curl', url = myurl_min, destfile = paste('./temp/',filename_min,sep= ''), mode = 'wb', extra = '-k');utils::download.file(quiet = T, method = 'curl', url = myurl_max, destfile = paste('./temp/',filename_max,sep= ''), mode = 'wb', extra = '-k')}
               # Reading the tasmin ncdf file
               test4<-file.info(paste('./temp/',filename_min,sep= ''))$size
               stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test4 > 6.0e6)

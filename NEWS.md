@@ -1,3 +1,6 @@
+# NASAaccess 3.4.2
+* Adding getPass library in Imports. Addressing curl Certificate Verification for NEX-GDDP.
+
 # NASAaccess 3.4.1
 
 * no need for _netrc file creation in windows

@@ -27,7 +27,7 @@
 #' #Lower Mekong basin example
 #' \dontrun{GPMpolyCentroid(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
 #' DEM = "LowerMekong_dem.tif", start = "2015-12-1", end = "2015-12-3")}
-#' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods
+#' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods getPass
 #' @importFrom stats na.exclude
 #' @importFrom raster raster cellFromPolygon xyFromCell rowColFromCell extract
 #' @importFrom rgeos gCentroid

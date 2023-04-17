@@ -39,7 +39,6 @@ needed to drive various hydrological models (e.g.,
 [SWAT](https://swat.tamu.edu/ "Soil & Water Assessment Tool"),
 [VIC](https://github.com/UW-Hydro/VIC "Variable Infiltration Capacity"),
 [RHESSys](https://github.com/RHESSys/RHESSys "The Regional Hydro-Ecological Simulation System"),
-[DHSVM](https://www.pnnl.gov/projects/distributed-hydrology-soil-vegetation-model "Distributed Hydrology Soil Vegetation Model")
 …etc.). The *NASAaccess* Tethys web-based application can be used for
 accessing, reformatting, and visualizing climate and earth observation
 remote sensing gridded time series data as well.
@@ -82,15 +81,15 @@ local machine:
   [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to
   <https://disc.gsfc.nasa.gov/data-access> for further details.
 
-- Installing [*curl*](https://curl.se/) software . Since Mac users have
+- [*curl*](https://curl.se/) software . Since Mac users have
   [*curl*](https://curl.se/) as part of macOS build, Windows users
   should make sure that their local machines build have
   [*curl*](https://curl.se/) installed properly.
 
-- Checking if you can run [*curl*](https://curl.se/) from your command
-  prompt. Type `curl --help` and you should see the help pages for the
-  [*curl*](https://curl.se/) program once everything is defined
-  correctly.
+  - Checking if you can run [*curl*](https://curl.se/) from your command
+    prompt. Type `curl --help` and you should see the help pages for the
+    [*curl*](https://curl.se/) program once everything is defined
+    correctly.
 
 - Within Rstudio or R terminal run the following commands to install
   *NASAaccess*:
@@ -103,24 +102,38 @@ local machine:
 
 Within the Rstudio help tab the user can verify that the package has
 been installed and browse the help pages of the various functions of
-*NASAaccess*.
+*NASAaccess*. The [GES DISC](https://disc.gsfc.nasa.gov/) user
+registration access logging information will be processed by masking
+(i.e., not displaying the lieteral typed text as input) on most but not
+all platforms. Without providing [GES DISC](https://disc.gsfc.nasa.gov/)
+user registration access logging information, the user will receive
+‘*You need to provide your Earthdata GES DISC login to proceed…*’
+message.
 
 ### **Conda Package**
 
-- After registration with [Earthdata](https://www.earthdata.nasa.gov/)
-  *NASAaccess* software package users should create a reference file
-  (*.netrc*) with [Earthdata](https://www.earthdata.nasa.gov/)
-  credentials stored in it to streamline the retrieval access from
+- *NASAaccess* conda package needs a user registration access with
+  [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a
+  registration account(s) with
+  [Earthdata](https://www.earthdata.nasa.gov/) login as well as well as
+  authorizing
   [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
-  servers.
+  [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to
+  <https://disc.gsfc.nasa.gov/data-access> for further details.
 
   - Creating the *.netrc* file at the user machine *Home* directory and
     storing the user
     [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
     [GES DISC](https://disc.gsfc.nasa.gov/) logging information in it is
-    needed to execute the *NASAaccess* package commands. Accessing data
-    from NASA servers is further explained at
+    done automatically to execute the *NASAaccess* package commands.
+    Accessing data from NASA servers is further explained at
     [Here](https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget).
+    The [GES DISC](https://disc.gsfc.nasa.gov/) user registration access
+    logging information will be processed by masking in the terminal on
+    any major OS. Without providing [GES
+    DISC](https://disc.gsfc.nasa.gov/) user registration access logging
+    information, the user will receive ‘*You need to provide your
+    Earthdata GES DISC login to proceed…*’ message.
 
 - To install *NASAaccess* package in a conda environment run the
   following:
@@ -149,7 +162,7 @@ citation(package = 'NASAaccess')
 #> To cite package 'NASAaccess' in publications use:
 #> 
 #>   Mohammed I (2023). _NASAaccess: Downloading and Reformatting Tool for
-#>   NASA Earth Observation Data Products_. R package version 3.4.1,
+#>   NASA Earth Observation Data Products_. R package version 3.4.2,
 #>   <https://github.com/nasa/NASAaccess>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -160,7 +173,7 @@ citation(package = 'NASAaccess')
 #>     year = {2023},
 #>     institution = {National Aeronautics and Space Administration, Goddard Space Flight Center},
 #>     address = {Greenbelt, Maryland},
-#>     note = {R package version 3.4.1},
+#>     note = {R package version 3.4.2},
 #>     url = {https://github.com/nasa/NASAaccess},
 #>   }
 ```

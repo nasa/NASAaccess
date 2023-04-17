@@ -1,6 +1,6 @@
 Package: NASAaccess
-Version: 3.4.1
-Date: 2023-03-21
+Version: 3.4.2
+Date: 2023-04-14
 Type: Package
 Title: Downloading and Reformatting Tool for NASA Earth Observation Data Products
 Authors@R: c(person("Ibrahim", "Mohammed", role = c("aut", "cre"), 
@@ -13,7 +13,7 @@ Description: A tool to generate gridded ascii tables and station files needed by
               Creating the ".netrc" file at the user machine 'Home' directory and storing the NASA GES DISC user logging information in it is needed to execute the package commands.   
 URL: https://github.com/nasa/NASAaccess
 BugReports: https://github.com/nasa/NASAaccess/issues
-Imports: ncdf4, stats, shapefiles, rgeos, maptools, httr, stringr, rgdal, XML, sp, utils, raster, methods
+Imports: ncdf4, stats, shapefiles, rgeos, maptools, httr, stringr, rgdal, XML, sp, utils, raster, methods, getPass
 License: file LICENSE
 Encoding: UTF-8
 Language: en-US
@@ -25,5 +25,5 @@ Suggests:
     ggmap,
     sf,
     ggplot2,
-    getPass
+    codetools
 VignetteBuilder: knitr

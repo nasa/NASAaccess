@@ -29,7 +29,7 @@ knitr::opts_chunk$set(
 
 ## **What is NASAaccess?**
 
-*NASAaccess* is a software application in the form of a [R](https://www.r-project.org/about.html) package, a [conda](https://docs.conda.io/en/latest/) package, and a [Tethys](https://www.tethysplatform.org/) web application. *NASAaccess* software can generate gridded ascii tables of climate [CMIP5](https://pcmdi.llnl.gov/mips/cmip5/ "Coupled Model Intercomparison Project Phase 5"), [CMIP6](https://pcmdi.llnl.gov/CMIP6/ "Coupled Model Intercomparison Project Phase 6"), and earth observation remote sensing data ([GPM](https://gpm.nasa.gov/data/directory "Global Precipitation Measurement"), [TRMM](https://gpm.nasa.gov/missions/trmm "Tropical Rainfall Measuring Mission"), [GLDAS](https://ldas.gsfc.nasa.gov/gldas "Global Land Data Assimilation System")) needed to drive various hydrological models (e.g., [SWAT](https://swat.tamu.edu/ "Soil & Water Assessment Tool"), [VIC](https://github.com/UW-Hydro/VIC "Variable Infiltration Capacity"), [RHESSys](https://github.com/RHESSys/RHESSys "The Regional Hydro-Ecological Simulation System"), [DHSVM](https://www.pnnl.gov/projects/distributed-hydrology-soil-vegetation-model "Distributed Hydrology Soil Vegetation Model") ...etc.). The *NASAaccess* Tethys web-based application can be used for accessing, reformatting, and visualizing climate and earth observation remote sensing gridded time series data as well.
+*NASAaccess* is a software application in the form of a [R](https://www.r-project.org/about.html) package, a [conda](https://docs.conda.io/en/latest/) package, and a [Tethys](https://www.tethysplatform.org/) web application. *NASAaccess* software can generate gridded ascii tables of climate [CMIP5](https://pcmdi.llnl.gov/mips/cmip5/ "Coupled Model Intercomparison Project Phase 5"), [CMIP6](https://pcmdi.llnl.gov/CMIP6/ "Coupled Model Intercomparison Project Phase 6"), and earth observation remote sensing data ([GPM](https://gpm.nasa.gov/data/directory "Global Precipitation Measurement"), [TRMM](https://gpm.nasa.gov/missions/trmm "Tropical Rainfall Measuring Mission"), [GLDAS](https://ldas.gsfc.nasa.gov/gldas "Global Land Data Assimilation System")) needed to drive various hydrological models (e.g., [SWAT](https://swat.tamu.edu/ "Soil & Water Assessment Tool"), [VIC](https://github.com/UW-Hydro/VIC "Variable Infiltration Capacity"), [RHESSys](https://github.com/RHESSys/RHESSys "The Regional Hydro-Ecological Simulation System"), ...etc.). The *NASAaccess* Tethys web-based application can be used for accessing, reformatting, and visualizing climate and earth observation remote sensing gridded time series data as well.
 
 ## **Where to find the NASAaccess software?**
 
@@ -55,9 +55,9 @@ On a local machine the user should have installed the following programs as well
 
 -   *NASAaccess* R package needs a user registration access with [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a registration account(s) with [Earthdata](https://www.earthdata.nasa.gov/) login as well as well as authorizing [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to <https://disc.gsfc.nasa.gov/data-access> for further details.
 
--   Installing [*curl*](https://curl.se/) software . Since Mac users have [*curl*](https://curl.se/) as part of macOS build, Windows users should make sure that their local machines build have [*curl*](https://curl.se/) installed properly.
+-   [*curl*](https://curl.se/) software . Since Mac users have [*curl*](https://curl.se/) as part of macOS build, Windows users should make sure that their local machines build have [*curl*](https://curl.se/) installed properly.
 
--   Checking if you can run [*curl*](https://curl.se/) from your command prompt. Type `curl --help` and you should see the help pages for the [*curl*](https://curl.se/) program once everything is defined correctly.
+      -   Checking if you can run [*curl*](https://curl.se/) from your command prompt. Type `curl --help` and you should see the help pages for the [*curl*](https://curl.se/) program once everything is defined correctly.
 
 -   Within Rstudio or R terminal run the following commands to install *NASAaccess*:
 
@@ -67,13 +67,12 @@ On a local machine the user should have installed the following programs as well
 
     -   `library(NASAaccess)`
 
-Within the Rstudio help tab the user can verify that the package has been installed and browse the help pages of the various functions of *NASAaccess*.
+Within the Rstudio help tab the user can verify that the package has been installed and browse the help pages of the various functions of *NASAaccess*. The [GES DISC](https://disc.gsfc.nasa.gov/) user registration access logging information will be processed by masking (i.e., not displaying the lieteral typed text as input) on most but not all platforms. Without providing [GES DISC](https://disc.gsfc.nasa.gov/) user registration access logging information, the user will receive '*You need to provide your Earthdata GES DISC login to proceed...*' message.
 
 ### **Conda Package**
+-   *NASAaccess* conda package needs a user registration access with [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a registration account(s) with [Earthdata](https://www.earthdata.nasa.gov/) login as well as well as authorizing [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to <https://disc.gsfc.nasa.gov/data-access> for further details.
 
--   After registration with [Earthdata](https://www.earthdata.nasa.gov/) *NASAaccess* software package users should create a reference file (*.netrc*) with [Earthdata](https://www.earthdata.nasa.gov/) credentials stored in it to streamline the retrieval access from [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") servers.
-
-    -   Creating the *.netrc* file at the user machine *Home* directory and storing the user [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) logging information in it is needed to execute the *NASAaccess* package commands. Accessing data from NASA servers is further explained at [Here](https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget).
+    -   Creating the *.netrc* file at the user machine *Home* directory and storing the user [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) logging information in it is done automatically to execute the *NASAaccess* package commands. Accessing data from NASA servers is further explained at [Here](https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget). The [GES DISC](https://disc.gsfc.nasa.gov/) user registration access logging information will be processed by masking in the terminal on any major OS. Without providing [GES DISC](https://disc.gsfc.nasa.gov/) user registration access logging information, the user will receive '*You need to provide your Earthdata GES DISC login to proceed...*' message.
     
     
 -   To install *NASAaccess* package in a conda environment run the following:

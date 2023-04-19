@@ -1,16 +1,13 @@
 Package: NASAaccess
-Version: 3.4.2
-Date: 2023-04-14
+Version: 3.4.3
+Date: 2023-04-19
 Type: Package
 Title: Downloading and Reformatting Tool for NASA Earth Observation Data Products
 Authors@R: c(person("Ibrahim", "Mohammed", role = c("aut", "cre"), 
             comment = c(ORCID = "0000-0002-6542-319X"), email = "ibrahim.mohammed@nasa.gov"))
 Maintainer: Ibrahim Mohammed <ibrahim.mohammed@nasa.gov>
 Depends: R (>= 4.0)
-Description: A tool to generate gridded ascii tables and station files needed by hydrological models for weather and climate inputs. The package assumes that users have already set up a registration account(s) with Earthdata login as well as authorizing NASA GES DISC data access. 
-              Please refer to  <https://disc.gsfc.nasa.gov/data-access> for further details. The package relies on 'curl' <https://curl.se/> commands and library to access NASA remote sensing servers.  
-              Users should make sure that their local machines have 'curl' installed properly.  Instructions on creating the ".netrc" and ".urs_cookies" files can be accessed at <https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget>. 
-              Creating the ".netrc" file at the user machine 'Home' directory and storing the NASA GES DISC user logging information in it is needed to execute the package commands.   
+Description: The package assumes that users have already set up a registration account(s) with Earthdata login as well as authorizing NASA GES DISC data access. Please refer to  <https://disc.gsfc.nasa.gov/data-access> for further details. Creating the '.netrc' file at the user machine Home directory and storing the user NASA GES DISC logging information in it is done automatically to execute the NASAaccess package commands. The GES DISC user registration access logging information will be processed by masking in the terminal on any major OS. Without providing GES DISC user registration access logging information, the user will receive 'You need to provide your Earthdata GES DISC login to proceed…' message.
 URL: https://github.com/nasa/NASAaccess
 BugReports: https://github.com/nasa/NASAaccess/issues
 Imports: ncdf4, stats, shapefiles, rgeos, maptools, httr, stringr, rgdal, XML, sp, utils, raster, methods, getPass

@@ -1,26 +1,26 @@
 Package: NASAaccess
-Version: 3.4.3
-Date: 2023-04-19
+Version: 4.0.0
+Date: 2024-01-11
 Type: Package
 Title: Downloading and Reformatting Tool for NASA Earth Observation Data Products
 Authors@R: c(person("Ibrahim", "Mohammed", role = c("aut", "cre"), 
             comment = c(ORCID = "0000-0002-6542-319X"), email = "ibrahim.mohammed@nasa.gov"))
 Maintainer: Ibrahim Mohammed <ibrahim.mohammed@nasa.gov>
 Depends: R (>= 4.0)
-Description: The package assumes that users have already set up a registration account(s) with Earthdata login as well as authorizing NASA GES DISC data access. Please refer to  <https://disc.gsfc.nasa.gov/data-access> for further details. Creating the '.netrc' file at the user machine Home directory and storing the user NASA GES DISC logging information in it is done automatically to execute the NASAaccess package commands. The GES DISC user registration access logging information will be processed by masking in the terminal on any major OS. Without providing GES DISC user registration access logging information, the user will receive 'You need to provide your Earthdata GES DISC login to proceed…' message.
+Description: Users need to set up a registration account(s) with Earthdata login as well as authorizing NASA GES DISC data access to generate gridded ascii tables of climate and earth observation remote sensing data. Please refer to  <https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access> for further details. Creating the '.netrc' file at the user machine Home directory and storing the user NASA GES DISC logging information in it is done automatically to execute the NASAaccess package commands. The GES DISC user registration access logging information will be processed by masking in the terminal on any major OS. Without providing GES DISC user registration access logging information, the user will receive 'You need to provide your Earthdata GES DISC login to proceed…' message.
 URL: https://github.com/nasa/NASAaccess
 BugReports: https://github.com/nasa/NASAaccess/issues
-Imports: ncdf4, stats, shapefiles, rgeos, maptools, httr, stringr, rgdal, XML, sp, utils, raster, methods, getPass
+Imports: ncdf4, stats, httr, stringr, XML, utils, methods, getPass, terra
 License: file LICENSE
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
 Suggests: 
     markdown,
     rmarkdown,
     knitr,
-    ggmap,
-    sf,
     ggplot2,
-    codetools
+    codetools,
+    leaflet,
+    tidyterra
 VignetteBuilder: knitr

@@ -2,7 +2,7 @@
 % Please edit documentation in R/GLDASpolyCentroid.R
 \name{GLDASpolyCentroid}
 \alias{GLDASpolyCentroid}
-\title{Generate air temperature input files as well as air temperature stations file from NASA GLDAS remote sensing products.}
+\title{Air temperature data from NASA GLDAS on centroid}
 \usage{
 GLDASpolyCentroid(
   Dir = "./SWAT_INPUT/",
@@ -15,9 +15,9 @@ GLDASpolyCentroid(
 \arguments{
 \item{Dir}{A directory name to store gridded air temperature and air temperature stations files.}
 
-\item{watershed}{A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').}
+\item{watershed}{A study watershed shapefile spatially describing polygon(s) in a geographic projection crs='+proj=longlat +datum=WGS84'.}
 
-\item{DEM}{A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').}
+\item{DEM}{A study watershed digital elevation model raster in a geographic projection crs='+proj=longlat +datum=WGS84'.}
 
 \item{start}{Beginning date for gridded air temperature data.}
 
@@ -31,13 +31,13 @@ a scalar of maximum and minimum air temperature gridded data values at a pseudo 
 This function downloads remote sensing data of \acronym{GLDAS} from \acronym{NASA} \acronym{GSFC} servers, extracts air temperature data from grids falling within a specified sub-basin(s) watershed shapefile, and assigns a pseudo air temperature gauge located at the centroid of the sub-basin(s) watershed a weighted-average daily minimum and maximum air temperature data.  The function generates tables in a format that \acronym{SWAT} or other rainfall-runoff hydrological model requires for minimum and maximum air temperatures data input. The function also generates the air temperature stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected grids that pseudo grids that correspond to the centroids of the watershed sub-basins.
 }
 \details{
-A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{GLDAS} remote sensing data products at (\url{https://hydro1.gesdisc.eosdis.nasa.gov/data/GLDAS/GLDAS_NOAH025_3H.2.1/}).  The function uses variable name ('Tair_f_inst') for air temperature in \acronym{GLDAS} data products. Units for gridded air temperature data are degrees in 'K'. The \command{GLDASpolyCentroid} function outputs gridded air temperature (maximum and minimum) data in degrees 'C'.
+A user should visit \url{https://disc.gsfc.nasa.gov/information/documents} Data Access document to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{GLDAS} remote sensing data products at (\url{https://hydro1.gesdisc.eosdis.nasa.gov/data/GLDAS/GLDAS_NOAH025_3H.2.1/}).  The function uses variable name ('Tair_f_inst') for air temperature in \acronym{GLDAS} data products. Units for gridded air temperature data are degrees in 'K'. The \command{GLDASpolyCentroid} function outputs gridded air temperature (maximum and minimum) data in degrees 'C'.
 
 The goal of the Global Land Data Assimilation System \acronym{GLDAS} is to ingest satellite and ground-based observational data products, using advanced land surface modeling and data assimilation techniques, in order to generate optimal fields of land surface states and fluxes (Rodell et al., 2004). \acronym{GLDAS} data set used in this function is the \acronym{GLDAS} Noah Land Surface Model L4 3 hourly 0.25 x 0.25 degree V2.1. The full suite of \acronym{GLDAS} data sets are available at \url{https://hydro1.gesdisc.eosdis.nasa.gov/dods/}.  The \command{GLDASpolyCentroid} finds the minimum and maximum air temperatures for each day at each grid within the study watershed by searching for minima and maxima over the three hours air temperature data values available for each day and grid.
 
-The \command{GLDASpolyCentroid} function relies on 'curl' tool to transfer data from \acronym{NASA} servers to a user machine, using HTTPS supported protocol.  The 'curl' command embedded in this function to fetch \acronym{GLDAS} netcdf daily global files is designed to work seamlessly given that appropriate logging information are stored in the ".netrc" file and the cookies file ".urs_cookies" as explained in registering with the Earth Observing System Data and Information System. It is imperative to say here that a user machine should have 'curl' installed as a prerequisite to run \command{GLDASpolyCentroid}.
+The \command{GLDASpolyCentroid} function relies on "curl" tool to transfer data from \acronym{NASA} servers to a user machine, using HTTPS supported protocol.  The "curl" command embedded in this function to fetch \acronym{GLDAS} netcdf daily global files is designed to work seamlessly given that appropriate logging information are stored in the ".netrc" file and the cookies file ".urs_cookies" as explained in registering with the Earth Observing System Data and Information System. It is imperative to say here that a user machine should have "curl" installed as a prerequisite to run \command{GLDASpolyCentroid}.
 
-The \acronym{GLDAS} V2.1 simulation started on January 1, 2000 using the conditions from the \acronym{GLDAS} V2.0 simulation. The \acronym{GLDAS} V2.1 simulation was forced with National Oceanic and Atmospheric Administration \acronym{NOAA}, Global Data Assimilation System \acronym{GDAS} atmospheric analysis fields (Derber et al., 1991), the disaggregated Global Precipitation Climatology Project \acronym{GPCP} precipitation fields (Adler et al., 2003), and the Air Force Weather Agency’s AGRicultural METeorological modeling system \acronym{AGRMET} radiation fields which became available for March 1, 2001 onward.
+The \acronym{GLDAS} V2.1 simulation started on January 1, 2000 using the conditions from the \acronym{GLDAS} V2.0 simulation. The \acronym{GLDAS} V2.1 simulation was forced with National Oceanic and Atmospheric Administration \acronym{NOAA}, Global Data Assimilation System \acronym{GDAS} atmospheric analysis fields (Derber et al., 1991), the disaggregated Global Precipitation Climatology Project \acronym{GPCP} precipitation fields (Adler et al., 2003), and the Air Force Weather Agency's AGRicultural METeorological modeling system \acronym{AGRMET} radiation fields which became available for March 1, 2001 onward.
 }
 \note{
 \command{start} should be equal to or greater than 2000-Jan-01.
@@ -48,10 +48,10 @@ The \acronym{GLDAS} V2.1 simulation started on January 1, 2000 using the conditi
 DEM = "LowerMekong_dem.tif", start = "2015-12-1", end = "2015-12-3")}
 }
 \references{
-Derber, J. C., D. F. Parrish, and S. J. Lord (1991), The New Global Operational Analysis System at the National Meteorological Center, Weather Forecast, 6, 538-547, \cr
-doi:10.1175/1520-0434(1991)006<0538:tngoas>2.0.co;2.
+Adler, R. F., G. J. Huffman, A. Chang, R. Ferraro, P.-P. Xie, J. Janowiak, B. Rudolf, U. Schneider, S. Curtis, D. Bolvin, A. Gruber, J. Susskind, P. Arkin, and
+ E. Nelkin (2003), The Version-2 Global Precipitation Climatology Project (GPCP) Monthly Precipitation Analysis (1979–Present), J. Hydrometeorol., 4, 1147-1167, doi:10.1175/1525-7541(2003)004<1147:tvgpcp>2.0.co;2.
 
-Adler, R. F., G. J. Huffman, A. Chang, R. Ferraro, P.-P. Xie, J. Janowiak, B. Rudolf, U. Schneider, S. Curtis, D. Bolvin, A. Gruber, J. Susskind, P. Arkin, and E. Nelkin (2003), The Version-2 Global Precipitation Climatology Project (GPCP) Monthly Precipitation Analysis (1979–Present), J. Hydrometeorol., 4, 1147-1167, doi:10.1175/1525-7541(2003)004<1147:tvgpcp>2.0.co;2.
+Derber, J. C., D. F. Parrish, and S. J. Lord (1991), The New Global Operational Analysis System at the National Meteorological Center, Weather Forecast, 6, 538-547, doi:10.1175/1520-0434(1991)006<0538:tngoas>2.0.co;2.
 
 Rodell, M., P. R. Houser, U. Jambor, J. Gottschalck, K. Mitchell, C.-J. Meng, K. Arsenault, B. Cosgrove, J. Radakovich, M. Bosilovich, J. K. Entin*, J. P. Walker, D. Lohmann, and D. Toll (2004), The Global Land Data Assimilation System, B. Am. Meteorol. Soc., 85, 381-394, doi:10.1175/bams-85-3-381.
 }

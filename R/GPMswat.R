@@ -1,13 +1,13 @@
-###3/11/19
-#' Generate SWAT rainfall input files as well as rain stations file from NASA GPM remote sensing products.
+###8/1/24
+#' SWAT rainfall data from NASA GPM
 #'
 #' This function downloads rainfall remote sensing data of \acronym{TRMM} and \acronym{IMERG} from \acronym{NASA} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that \acronym{SWAT} requires for rainfall data input. The function also generates the rainfall stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected grids that fall within the specified watershed.
 #' @param Dir A directory name to store gridded rainfall and rain stations files.
-#' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
-#' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
+#' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection crs='+proj=longlat +datum=WGS84'.
+#' @param DEM A study watershed digital elevation model raster in a geographic projection crs='+proj=longlat +datum=WGS84'.
 #' @param start Beginning date for gridded rainfall data.
 #' @param end Ending date for gridded rainfall data.
-#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server address for \acronym{TRMM} remote sensing data products (\url{https://disc2.gesdisc.eosdis.nasa.gov/data/TRMM_RT/TRMM_3B42RT_Daily.7/}).  The function uses variable name ('precipitationCal') for rainfall in \acronym{IMERG} data products and variable name ('precipitation') for \acronym{TRMM} rainfall data products. Units for gridded rainfall data are 'mm'.
+#' @details A user should visit \url{https://disc.gsfc.nasa.gov/information/documents} Data Access document to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} Goddard Space Flight Center server address for \acronym{TRMM} remote sensing data products (\url{https://disc2.gesdisc.eosdis.nasa.gov/data/TRMM_RT/TRMM_3B42RT_Daily.7/}).  The function uses variable name ('precipitationCal') for rainfall in \acronym{IMERG} data products and variable name ('precipitation') for \acronym{TRMM} rainfall data products. Units for gridded rainfall data are 'mm'.
 #'
 #' \acronym{IMERG} dataset is the GPM Level 3 \acronym{IMERG} *Final* Daily 0.1 x 0.1 deg (GPM_3IMERGDF) derived from the half-hourly GPM_3IMERGHH. The derived result represents the final estimate of the daily accumulated precipitation. The dataset is produced at the \acronym{NASA} Goddard Earth Sciences (GES) Data and Information Services Center (DISC) by simply summing the valid precipitation retrievals for the day in GPM_3IMERGHH and giving the result in (mm) \url{https://gpm.nasa.gov/data/directory}.
 #'
@@ -27,9 +27,8 @@
 #' #Lower Mekong basin example
 #' \dontrun{GPMswat(Dir = "./SWAT_INPUT/", watershed = "LowerMekong.shp",
 #' DEM = "LowerMekong_dem.tif", start = "2015-12-1", end = "2015-12-3")}
-#' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods getPass
+#' @import ncdf4 httr stringr utils XML methods getPass
 #' @importFrom stats na.exclude
-#' @importFrom raster raster cellFromPolygon xyFromCell rowColFromCell extract
 #' @export
 
 
@@ -60,10 +59,10 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
     time_period <- seq.Date(from = as.Date(start), to = as.Date(end), by = 'day')
 
     # Reading cell elevation data (DEM should be in geographic projection)
-    watershed.elevation <- raster::raster(DEM)
+    watershed.elevation <- terra::rast(DEM)
 
     # Reading the study Watershed shapefile
-    suppressWarnings(polys <- rgdal::readOGR(dsn=watershed,verbose = F))
+    polys <- terra::vect(watershed)
 
     # SWAT climate 'precipitation' master file name
     filenametableKEY<-paste(Dir,myvarTRMM,'Master.txt',sep='')
@@ -103,27 +102,45 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
       nc.long.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[1]])
       ####getting the x values (latitudes in degrees north)
       nc.lat.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[2]])
-      #extract data
-      data<-ncdf4::ncvar_get(nc,myvarIMERG)
-      #reorder the rows
-      data<-data[ nrow(data):1, ]
+      # create a raster
+      IMERG<-terra::rast(nrows=length(nc.lat.IMERG),
+                         ncols=length(nc.long.IMERG),
+                         xmin=nc.long.IMERG[1],
+                         xmax=nc.long.IMERG[NROW(nc.long.IMERG)],
+                         ymin=nc.lat.IMERG[1],
+                         ymax=nc.lat.IMERG[NROW(nc.lat.IMERG)],
+                         crs='+proj=longlat +datum=WGS84')
+      #fill raster with dummy values
+
+      values(IMERG) <- 1:ncell(IMERG)
+
       ncdf4::nc_close(nc)
-      ###save the daily climate data values in a raster
-      IMERG<-raster::raster(x=as.matrix(data),xmn=nc.long.IMERG[1],xmx=nc.long.IMERG[NROW(nc.long.IMERG)],ymn=nc.lat.IMERG[1],ymx=nc.lat.IMERG[NROW(nc.lat.IMERG)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+      # Convert raster to points
+      IMERG.points <- terra::as.points(IMERG, na.rm = TRUE)
+
+      # Intersect to keep only points on the shape
+      IMERG.points <- IMERG.points[polys]
+
+
       #obtain cell numbers within the IMERG raster
-      cell.no<-raster::cellFromPolygon(IMERG, polys)
+      cell.no <- terra::cells(IMERG, IMERG.points)[,2]
       #obtain lat/long values corresponding to watershed cells
-      cell.longlat<-raster::xyFromCell(IMERG,unlist(cell.no))
-      cell.rowCol <- raster::rowColFromCell(IMERG,unlist(cell.no))
-      points_elevation<-raster::extract(x=watershed.elevation,y=cell.longlat,method='simple')
-      study_area_records_IMERG<-data.frame(ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation)
-      sp::coordinates (study_area_records_IMERG)<- ~x+y
-      rm(data,IMERG)
+      cell.longlat<-terra::xyFromCell(IMERG,cell.no)
+
+      cell.rowCol <- terra::rowColFromCell(IMERG,cell.no)
+
+      points_elevation<-terra::extract(x=watershed.elevation,y=cell.longlat,method='simple')
+
+      #FinalTable.IMERG<-data.frame(IMERG_ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation[,])
+      FinalTable.IMERG<-data.frame(IMERG_ID=unlist(cell.no),cell.rowCol,Elevation=points_elevation[,])
+      FinalTable.IMERG.vect<-vect(crs='+proj=longlat +datum=WGS84',cell.longlat,
+                                  atts=FinalTable.IMERG)
+      rm(IMERG)
       unlink(x='./temp', recursive = TRUE)
     }
 
     # The TRMM data grid information
-    # Use the same dummy date defined above since TRMM has data up to present with less accurancy. The recomendation is to use IMERG data from 2014-03-12 and onward!
+    # Use the same dummy date defined above since TRMM has data up to present with less accuracy. The recommendation is to use IMERG data from 2014-03-12 and onward!
     # update my url with TRMM information
     myurl = paste(paste(url.TRMM.input,year,mon,sep = '/'),'/',sep = '')
 
@@ -146,42 +163,61 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
       nc.long.TRMM<-ncdf4::ncvar_get(nc,nc$dim[[1]])
       ####getting the x values (latitudes in degrees north)
       nc.lat.TRMM<-ncdf4::ncvar_get(nc,nc$dim[[2]])
+      # create a raster
+      TRMM<-terra::rast(nrows=length(nc.lat.TRMM),
+                         ncols=length(nc.long.TRMM),
+                         xmin=nc.long.TRMM[1],
+                         xmax=nc.long.TRMM[NROW(nc.long.TRMM)],
+                         ymin=nc.lat.TRMM[1],
+                         ymax=nc.lat.TRMM[NROW(nc.lat.TRMM)],
+                         crs='+proj=longlat +datum=WGS84')
+      #fill raster with dummy values
+
+      values(TRMM) <- 1:ncell(TRMM)
       #gettig the climate data
       data<-ncdf4::ncvar_get(nc,myvarTRMM)
-      #reorder the rows
-      data<-data[ nrow(data):1, ]
+
       ncdf4::nc_close(nc)
-      ###save the daily climate data values in a raster
-      TRMM<-raster::raster(x=as.matrix(data),xmn=nc.long.TRMM[1],xmx=nc.long.TRMM[NROW(nc.long.TRMM)],ymn=nc.lat.TRMM[1],ymx=nc.lat.TRMM[NROW(nc.lat.TRMM)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+      # Convert raster to points
+      TRMM.points <- terra::as.points(TRMM, na.rm = TRUE)
+
+      # Intersect to keep only points on the shape
+      TRMM.points <- TRMM.points[polys]
+
       #obtain cell numbers within the TRMM raster
-      cell.no<-raster::cellFromPolygon(TRMM, polys)
+      cell.no <- terra::cells(TRMM, TRMM.points)[,2]
       #obtain lat/long values corresponding to watershed cells
-      cell.longlat<-raster::xyFromCell(TRMM,unlist(cell.no))
-      cell.rowCol <- raster::rowColFromCell(TRMM,unlist(cell.no))
-      cell.values<-as.vector(TRMM)[unlist(cell.no)]
-      study_area_records_TRMM<-data.frame(TRMM_ID=unlist(cell.no),cell.longlat,cell.rowCol)
-      sp::coordinates (study_area_records_TRMM)<- ~x+y
-      rm(data,TRMM)
+      cell.longlat<-terra::xyFromCell(TRMM,cell.no)
+
+
+      cell.rowCol <- terra::rowColFromCell(TRMM,cell.no)
+
+      #FinalTable.TRMM<-data.frame(TRMM_ID=unlist(cell.no),cell.longlat,cell.rowCol)
+      FinalTable.TRMM<-data.frame(TRMM_ID=unlist(cell.no),cell.rowCol)
+      FinalTable.TRMM.vect<-vect(crs='+proj=longlat +datum=WGS84',cell.longlat,
+                                 atts=FinalTable.TRMM)
+      #study_area_records_TRMM<-data.frame(TRMM_ID=unlist(cell.no),cell.longlat,cell.rowCol)
+      #sp::coordinates (study_area_records_TRMM)<- ~x+y
+      rm(TRMM)
       unlink(x='./temp', recursive = TRUE)
     }
 
 
     # creating a similarity table that connects IMERG and TRMM grids
     # calculate euclidean distances to know how to connect TRMM grids with IMERG grids
-    for (i in 1 : nrow(study_area_records_IMERG))
+    for (i in 1 : nrow(FinalTable.IMERG))
     {
-      distVec <- sp::spDistsN1(study_area_records_TRMM,study_area_records_IMERG[i,])
+      distVec <- terra::distance(FinalTable.TRMM.vect,FinalTable.IMERG.vect[i,])
       minDistVec[[i]] <- min(distVec)
       closestSiteVec[[i]] <- which.min(distVec)
     }
 
-    PointAssignIDs <- methods::as(study_area_records_TRMM[unlist(closestSiteVec),]$TRMM_ID,'numeric')
-    PointsAssignCol <- methods::as(study_area_records_TRMM[unlist(closestSiteVec),]$col,'numeric')
-    PointsAssignRow <- methods::as(study_area_records_TRMM[unlist(closestSiteVec),]$row,'numeric')
+    PointAssignIDs <- methods::as(FinalTable.TRMM[unlist(closestSiteVec),]$TRMM_ID,'numeric')
+    PointsAssignCol <- methods::as(FinalTable.TRMM[unlist(closestSiteVec),]$X2,'numeric')
+    PointsAssignRow <- methods::as(FinalTable.TRMM[unlist(closestSiteVec),]$X1,'numeric')
 
-    FinalTable = data.frame(sp::coordinates(study_area_records_IMERG),ID=study_area_records_IMERG$ID,row=study_area_records_IMERG$row,col=study_area_records_IMERG$col,Elevation=study_area_records_IMERG$Elevation,
+    FinalTable = data.frame(x=crds(FinalTable.IMERG.vect)[,1],y=crds(FinalTable.IMERG.vect)[,2],ID=FinalTable.IMERG$IMERG_ID,row=FinalTable.IMERG$X1,col=FinalTable.IMERG$X2,Elevation=FinalTable.IMERG$Elevation,
                             CloseTRMMIndex=PointAssignIDs,Distance=unlist(minDistVec),TRMMCol=PointsAssignCol,TRMMRow=PointsAssignRow)
-
     #### Begin writing SWAT climate input tables
     #### Get the SWAT file names and then put the first record date
     for(jj in 1:dim(FinalTable)[1])
@@ -234,14 +270,27 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
           utils::download.file(quiet = T,method='curl',url=paste(myurl,filenames[ll],sep = ''),destfile = paste('./temp/',filenames[ll],sep = ''), mode = 'wb', extra = '-n -c ~/.urs_cookies -b ~/.urs_cookies -L')
           # Reading the ncdf file
           nc<-ncdf4::nc_open( paste('./temp/',filenames[ll],sep = '') )
-          data<-ncdf4::ncvar_get(nc,myvarTRMM)
+          if(ll==1)
+          {
+            TRMM<-terra::rast(nrows=length(nc.lat.TRMM),
+                               ncols=length(nc.long.TRMM),
+                               xmin=nc.long.TRMM[1],
+                               xmax=nc.long.TRMM[NROW(nc.long.TRMM)],
+                               ymin=nc.lat.TRMM[1],
+                               ymax=nc.lat.TRMM[NROW(nc.lat.TRMM)],
+                               crs='+proj=longlat +datum=WGS84')
+          }
+          ###save the daily weather data values in a raster
+          values(TRMM) <- ncdf4::ncvar_get(nc,myvarTRMM)
           # Reorder the rows
-          data<-data[ nrow(data):1, ]
+          TRMM <- terra::flip(TRMM,direction="v")
+
+
           ncdf4::nc_close(nc)
-          ### Save the daily climate data values in a raster
-          TRMM<-raster::raster(x=as.matrix(data),xmn=nc.long.TRMM[1],xmx=nc.long.TRMM[NROW(nc.long.TRMM)],ymn=nc.lat.TRMM[1],ymx=nc.lat.TRMM[NROW(nc.lat.TRMM)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+
           ### Obtaining daily climate values at TRMM grids near the IMERG grids that has been defined and explained earlier
-          cell.values<-as.vector(TRMM)[FinalTable$CloseTRMMIndex]
+
+          cell.values<-extract(TRMM,FinalTable$CloseTRMMIndex)[,]
           cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
           ### Looping through the TRMM points and writing out the daily climate data in SWAT format
           for(jj in 1:dim(FinalTable)[1])
@@ -276,19 +325,27 @@ GPMswat=function(Dir='./SWAT_INPUT/', watershed ='LowerMekong.shp', DEM = 'Lower
             utils::download.file(quiet = T,method='curl',url=paste(myurl,filenames[ll],sep = ''),destfile = paste('./temp/',filenames[ll],sep = ''), mode = 'wb', extra = '-n -c ~/.urs_cookies -b ~/.urs_cookies -L')
             # Reading the ncdf file
             nc<-ncdf4::nc_open( paste('./temp/',filenames[ll],sep = '') )
-            data<-ncdf4::ncvar_get(nc,myvarIMERG)
+            if(ll==1)
+            {
+              IMERG<-terra::rast(nrows=length(nc.lat.IMERG),
+                                 ncols=length(nc.long.IMERG),
+                                 xmin=nc.long.IMERG[1],
+                                 xmax=nc.long.IMERG[NROW(nc.long.IMERG)],
+                                 ymin=nc.lat.IMERG[1],
+                                 ymax=nc.lat.IMERG[NROW(nc.lat.IMERG)],
+                                 crs='+proj=longlat +datum=WGS84')
+            }
+            ###save the daily weather data values in a raster
+            values(IMERG) <- ncdf4::ncvar_get(nc,myvarIMERG)
             # Reorder the rows
-            data<-data[ nrow(data):1, ]
+            IMERG <- terra::flip(IMERG,direction="v")
+
             ncdf4::nc_close(nc)
-            ###save the daily climate data values in a raster
-            IMERG<-raster::raster(x=as.matrix(data),xmn=nc.long.IMERG[1],xmx=nc.long.IMERG[NROW(nc.long.IMERG)],ymn=nc.lat.IMERG[1],ymx=nc.lat.IMERG[NROW(nc.lat.IMERG)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
 
             #obtain daily climate values at cells bounded with the study watershed (extract values from a raster)
-            cell.values<-as.vector(IMERG)[FinalTable$ID]
+            cell.values<-extract(IMERG,FinalTable$ID)[,]
             cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
 
-            #This will get me the mean precipiation averaged over the watershed (this is not a weighted mean)
-            #v <- extract(IMERG, polys,weights=T,cellnumbers=T,df=T,normalizeWeights=T,sp=T,fun='mean')
 
             #loop through the grid points to write out the daily climate data in a SWAT format
             for(jj in 1:dim(FinalTable)[1])

@@ -16,21 +16,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-
-library(raster)
-library(sf)
-
-#Reading input data
-dem_path <- system.file("extdata", "DEM_TX.tif", package = "NASAaccess")
-shape_path <- system.file("extdata", "basin.shp", package = "NASAaccess")
-
-
-dem <- raster::raster(dem_path)
-shape <- sf::st_read(shape_path)
 ```
-
-
-
 
 _NASAaccess_ has a handy tool to access, extract, and reformat climate change data of rainfall and air temperature from [NASA Earth Exchange Global Daily Downscaled Projections NEX-GDDP-CMIP6 AMES servers](https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6) for grids within a specified watershed. 
 
@@ -40,19 +26,33 @@ The Bias-Correction Spatial Disaggregation BCSD method used in generating the [N
 
 ## Basic use
 
-Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.pdf) functions for more information.
+Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](GPM.html) functions for more information.
+
 
 ```{r, eval=FALSE, echo=TRUE}
+#Reading input data
+
+dem_path <- system.file("extdata",
+                        "DEM_TX.tif",
+                        package = "NASAaccess")
+
+shape_path <- system.file("extdata",
+                          "basin.shp", 
+                          package = "NASAaccess")
+
+#CMIP6  example for air temperature
+
 library(NASAaccess)
 
-NEX_GDDP_CMIP6(Dir = "./NEX_GDDP_CMIP6/", 
+NEX_GDDP_CMIP6(
+               Dir = "./NEX_GDDP_CMIP6/", 
                watershed = shape_path,
-              dem_path,  
-              start = "2060-12-1", 
-              end = "2060-12-3",
-              model = 'ACCESS-CM2', 
-              type = 'tas', 
-              slice = 'ssp245')
+               DEM = dem_path,  
+               start = "2060-12-1", 
+               end = "2060-12-3",
+               model = 'ACCESS-CM2', 
+               type = 'tas', 
+               slice = 'ssp245')
 ```
 
 Let's examine the air temperature station file

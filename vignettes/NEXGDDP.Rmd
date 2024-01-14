@@ -18,17 +18,6 @@ knitr::opts_chunk$set(
   fig.height = 7,
   comment = "#>"
 )
-
-library(raster)
-library(sf)
-
-#Reading input data
-dem_path <- system.file("extdata", "DEM_TX.tif", package = "NASAaccess")
-shape_path <- system.file("extdata", "basin.shp", package = "NASAaccess")
-
-
-dem <- raster::raster(dem_path)
-shape <- sf::st_read(shape_path)
 ```
 
 
@@ -40,19 +29,29 @@ The Bias-Correction Spatial Disaggregation BCSD method used in generating the [N
 
 ## Basic use
 
-Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.pdf) functions for more information.
+Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](GPM.html) functions for more information.
 
 ```{r, eval=FALSE, echo=TRUE}
+#Reading input data
+dem_path <- system.file("extdata",
+                        "DEM_TX.tif", 
+                         package = "NASAaccess")
+
+shape_path <- system.file("extdata", 
+                          "basin.shp", 
+                           package = "NASAaccess")
+
+
 library(NASAaccess)
 
 NEX_GDDP_CMIP5(Dir = "./NEX_GDDP_CMIP5/", 
-             watershed = shape_path,
-              dem_path, 
+              watershed = shape_path,
+              DEM = dem_path, 
               start = "2060-12-1", 
               end = "2060-12-3",
               model = 'IPSL-CM5A-MR', 
-             type = 'pr', 
-             slice = 'rcp85')
+              type = 'pr', 
+              slice = 'rcp85')
 ```
 
 Let's examine the precipitation station file

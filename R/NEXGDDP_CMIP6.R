@@ -1,24 +1,24 @@
-###11/11/22
-#' Generate rainfall or air temperature as well as climate input stations file from NASA NEX-GDDP-CMIP6 remote sensing climate change data products needed to drive various hydrological models.
+###1/10/24
+#' CMIP6 climate data from NASA NEX-GDDP
 #'
 #' This function downloads climate change data of rainfall and air temperature from \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP-CMIP6} \acronym{AMES} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that any hydrological model requires for rainfall or air temperature data input. The function also generates the climate stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected climatological grids that fall within the specified watershed. The \acronym{NASA} Earth Exchange Global Daily Downscaled Projections \acronym{NEX-GDDP-CMIP6} data set is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 6 \acronym{CMIP6} and across two of the four "Tier 1" greenhouse gas emissions scenarios known as Shared Socioeconomic Pathways \acronym{SSPs}.
 #' @param Dir A directory name to store gridded climate data and stations files.
-#' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
-#' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs').
+#' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'.
+#' @param DEM A study watershed digital elevation model raster in a geographic projection crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'.
 #' @param start Beginning date for gridded climate data.
 #' @param end Ending date for gridded climate data.
 #' @param model A climate modeling center and name from the World Climate Research Programme \acronym{WCRP} global climate projections through the Coupled Model Intercomparison Project 6 \acronym{CMIP6} (e.g., \acronym{MIROC6} which is the sixth version of the Model for Interdisciplinary Research on Climate \acronym{MIROC} model).
 #' @param type  A flux data type. It's value can be \acronym{'pr'} for precipitation or \acronym{'tas'} for air temperature.
 #' @param slice A scenario from the Shared Socioeconomic Pathways (SSPs). It's value can be \acronym{'ssp126'}, \acronym{'ssp245'}, \acronym{'ssp370'}, \acronym{'ssp585'}, or \acronym{'historical'}.
 #'
-#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfully work with this function.
+#' @details A user should visit \url{https://disc.gsfc.nasa.gov/information/documents} Data Access document to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} \acronym{GESDISC} Data Access to successfully work with this function.
 #' The function accesses \acronym{NASA} Goddard Space Flight Center server for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/}), and \acronym{NASA} AMES Research Center server for \acronym{NEX-GDDP-CMIP6}
 #' climate change data products at \url{https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6}.  The function uses variable name ('pr') for rainfall in \acronym{NEX-GDDP-CMIP6} data products and variable name ('tas') for \acronym{NEX-GDDP-CMIP6} minimum ('tasmin') and maximum ('tasmax')
 #' air temperature data products. The \command{NEX_GDDP_CMIP6} function outputs gridded rainfall data in 'mm' and gridded air temperature (maximum and minimum) data in degrees 'C'.
 #'
 #' \acronym{NEX-GDDP-CMIP6} dataset is comprised of downscaled climate scenarios for the globe that are derived from the General Circulation Model \acronym{GCM} runs conducted under the Coupled Model Intercomparison Project Phase 6 \acronym{CMIP6} (Eyring et al. 2016)
 #' and across the four "Tier 1" greenhouse gas emissions scenarios known as Shared Socioeconomic Pathways \acronym{SSPs} (O'Neil et al. 2016; Meinshausen et al. 2020). The \acronym{CMIP6} \acronym{GCM} runs were developed in support of the Sixth Assessment Report
-#' of the Intergovernmental Panel on Climate Change \acronym{IPCC AR6}. This data set includes downscaled projections from the 35 models and scenarios for which daily scenarios were produced and distributed under \acronym{CMIP6}. Please visit \acronym{NCCS} Dataportal - Datashare \url{https://ds.nccs.nasa.gov/thredds2/catalog/AMES/NEX/GDDP-CMIP6/catalog.html} to ensure that the requested model and greenhouse gas emissions scenario (\acronym{SSPs}) is available on the server before you execute your run.
+#' of the Intergovernmental Panel on Climate Change \acronym{IPCC AR6}. This data set includes downscaled projections from the 35 models and scenarios for which daily scenarios were produced and distributed under \acronym{CMIP6}. Please visit \acronym{NCCS} Dataportal - Datashare technical note \url{https://www.nccs.nasa.gov/sites/default/files/NEX-GDDP-CMIP6-Tech_Note.pdf} to ensure that the requested model and greenhouse gas emissions scenario (\acronym{SSPs}) is available on the server before you execute your run.
 #' The Bias-Correction Spatial Disaggregation \acronym{BCSD} method used in generating the \acronym{NEX-GDDP-CMIP6} data set is a statistical downscaling algorithm specifically developed to address the current limitations of the global \acronym{GCM} outputs
 #' (Wood et al. 2002; Wood et al. 2004; Maurer et al. 2008; Thrasher et al. 2012).  The \acronym{NEX-GDDP-CMIP6} climate projections is downscaled at a spatial resolution of 0.25 degrees x 0.25 degrees (approximately 25 km x 25 km).
 #' The \command{NEX_GDDP_CMIP6} downscales the \acronym{NEX-GDDP-CMIP6} data to grid points of 0.1 degrees x 0.1 degrees following nearest point methods described by Mohammed et al. (2018).
@@ -48,9 +48,8 @@
 #' \dontrun{NEX_GDDP_CMIP6(Dir = "./INPUT/", watershed = "LowerMekong.shp",
 #' DEM = "LowerMekong_dem.tif", start = "2060-12-1", end = "2060-12-3",
 #' model = 'MIROC6', type = 'pr', slice = 'ssp245')}
-#' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods getPass
+#' @import ncdf4 httr stringr utils XML methods getPass
 #' @importFrom stats na.exclude
-#' @importFrom raster raster cellFromPolygon xyFromCell rowColFromCell extract
 #' @export
 
 
@@ -68,7 +67,7 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
   {
 
     url.IMERG.input <- 'https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDF.06/'
-    url.GDDP.input <- 'https://ds.nccs.nasa.gov/thredds/ncss/AMES/NEX/GDDP-CMIP6/'
+    url.GDDP.input <- 'https://ds.nccs.nasa.gov/thredds/ncss/grid/AMES/NEX/GDDP-CMIP6/'
     url.catalog.input <- paste('https://ds.nccs.nasa.gov/thredds/catalog/AMES/NEX/GDDP-CMIP6/',model,slice,'catalog.html',sep="/")
     myvarIMERG <- 'precipitationCal'
     myvarNAME <- 'climate'
@@ -76,13 +75,44 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
     if(httr::status_code(GET(url.catalog.input))==200)
     {
       #let's get the Variant (e.g., r1i1p1f1)
-      rr <- readLines(url.catalog.input)
+      rr <- suppressWarnings(readLines(url.catalog.input))
       dump.address <- "/thredds/folder.gif" ; my.pattern <- "[[:alnum:]]{8}"
       folderlines <- grep(dump.address,rr,value=TRUE)
-      Variant<- unique(as.vector(stringr::str_match_all(folderlines,my.pattern)[[2]]))
+      #addressing new website layout
+      if(length(folderlines)==0)
+      {
+        dump.address <- c("catalog.html")
+        folderlines <- grep(dump.address,rr,value=TRUE)
+
+      }
+      Variant<- terra::unique(as.vector(stringr::str_match_all(folderlines,my.pattern)[[2]]))
       rm(dump.address,folderlines,my.pattern,rr)
-      if(type=='pr'){ftp <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'/',type,'_','day','_',model,'_',slice,'_',Variant,'_','gn','_',sep='')}
-      if(type=='tas'){ftp_min <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'min','/',type,'min','_','day','_',model,'_',slice,'_',Variant,'_','gn','_',sep='');ftp_max <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'max','/',type,'max','_','day','_',model,'_',slice,'_',Variant,'_','gn','_',sep='')}
+
+      #evaluating id from server (e.g., gr or gn)
+      if(type == 'pr')
+      {
+        typeMOD <- type
+
+        }
+
+      if(type == 'tas')
+      {
+        typemin <- paste(type,'min',sep='')
+        typemax <- paste(type,'max',sep='')
+        typeMOD <- typemax
+        }
+
+      fttp<-paste('https://ds.nccs.nasa.gov/thredds/catalog/AMES/NEX/GDDP-CMIP6',model,slice,Variant,typeMOD,'catalog.html',sep='/')
+      r <- httr::GET(fttp)
+      filenames <- httr::content(r, "text")
+      filenames <- XML::readHTMLTable(XML::htmlParse(filenames))[[1]][,1]
+      my.pattern <- paste(Variant,'.+(.nc)',sep='')
+      filename.suffix <- unique(stats::na.exclude(stringr::str_extract(as.character(filenames),my.pattern)))[1]
+      suffix <- str_split(filename.suffix,'_')[[1]][2]
+      rm(r,filenames,my.pattern,filename.suffix)
+
+      if(type=='pr'){ftp <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'/',type,'_','day','_',model,'_',slice,'_',Variant,'_',suffix,'_',sep='')}
+      if(type=='tas'){ftp_min <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'min','/',type,'min','_','day','_',model,'_',slice,'_',Variant,'_',suffix,'_',sep='');ftp_max <- paste(url.GDDP.input,model,'/',slice,'/',Variant,'/',type,'max','/',type,'max','_','day','_',model,'_',slice,'_',Variant,'_',suffix,'_',sep='')}
       ####Before getting to work on this function do this check on start and end dates
        if (as.Date(start) >= as.Date('1950-01-01') &  as.Date(end) <= as.Date('2100-12-31') & slice == 'ssp126' | slice == 'ssp245' | slice == 'ssp370' | slice == 'ssp585' | slice == 'historical')
           {
@@ -90,11 +120,11 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
       # Constructing time series based on start and end input days!
       time_period <- seq.Date(from = as.Date(start), to = as.Date(end), by = 'day')
       # Reading cell elevation data (DEM should be in geographic projection)
-      watershed.elevation <- raster::raster(DEM)
+      watershed.elevation <- terra::rast(DEM)
       # Reading the study Watershed shapefile
-      suppressWarnings(polys <- rgdal::readOGR(dsn=watershed,verbose = F))
+      polys <- terra::vect(watershed)
       # To address missing parameters in projection strings
-      suppressWarnings(polys <- sp::spTransform(polys,CRSobj = c('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')))
+      polys <- terra::project(polys, '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
       # Hydrological model climate master file name
       filenametableKEY<-paste(Dir,type, 'Grid_Master.txt',sep='')
       # Creating empty lists
@@ -130,80 +160,102 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
         nc.long.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[1]])
         ####getting the x values (latitudes in degrees north)
         nc.lat.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[2]])
+        # create a raster
+        IMERG<-terra::rast(nrows=length(nc.lat.IMERG),
+                           ncols=length(nc.long.IMERG),
+                           xmin=nc.long.IMERG[1],
+                           xmax=nc.long.IMERG[NROW(nc.long.IMERG)],
+                           ymin=nc.lat.IMERG[1],
+                           ymax=nc.lat.IMERG[NROW(nc.lat.IMERG)],
+                           crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
         #extract data
-        data<-ncdf4::ncvar_get(nc,myvarIMERG)
+        values(IMERG) <- ncdf4::ncvar_get(nc,myvarIMERG)
         #reorder the rows
-        data<-data[ nrow(data):1, ]
+        IMERG <- terra::flip(IMERG,direction="v")
         ncdf4::nc_close(nc)
-        ###save the daily climate data values in a raster
-        IMERG<-raster::raster(x=as.matrix(data),xmn=nc.long.IMERG[1],xmx=nc.long.IMERG[NROW(nc.long.IMERG)],ymn=nc.lat.IMERG[1],ymx=nc.lat.IMERG[NROW(nc.lat.IMERG)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+        # Convert raster to points
+        IMERG.points <- terra::as.points(IMERG, na.rm = TRUE)
+        # Intersect to keep only points on the shape
+        IMERG.points <- IMERG.points[polys]
         #obtain cell numbers within the IMERG raster
-        #cell.no<-raster::cellFromPolygon(IMERG, polys)
-        suppressWarnings(cell.no<-raster::cellFromPolygon(IMERG, polys))
+        cell.no <- terra::cells(IMERG, IMERG.points)[,2]
+
         #obtain lat/long values corresponding to watershed cells
-        cell.longlat<-raster::xyFromCell(IMERG,unlist(cell.no))
-        cell.rowCol <- raster::rowColFromCell(IMERG,unlist(cell.no))
-        points_elevation<-raster::extract(x=watershed.elevation,y=cell.longlat,method='simple')
-        study_area_records_IMERG<-data.frame(ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation)
-        sp::coordinates (study_area_records_IMERG)<- ~x+y
-        rm(data,IMERG)
+        cell.longlat<-terra::xyFromCell(IMERG,cell.no)
+        cell.rowCol <- terra::rowColFromCell(IMERG,cell.no)
+        points_elevation<-terra::extract(x=watershed.elevation,y=cell.longlat,method='simple')
+        FinalTable.IMERG<-data.frame(IMERG_ID=unlist(cell.no),cell.rowCol,Elevation=points_elevation[,])
+        FinalTable.IMERG.vect<-vect(crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs',cell.longlat,
+                                    atts=FinalTable.IMERG)
+        rm(IMERG)
         # The NEX-GDDP-CMIP6 data grid information
         # Use the same dummy date defined above since NEX-GDDP-CMIP6 has data from 1950 to 2100.
         # Using dummy date and file info for a file in the NEX-GDDP-CMIP6 dataset
         # downloading one file
         if(dir.exists('./temp/')==FALSE){dir.create('./temp/')}
-	      utils::download.file(quiet = T, method = 'curl', url = 'https://ds.nccs.nasa.gov/thredds/ncss/AMES/NEX/GDDP-CMIP6/ACCESS-CM2/ssp585/r1i1p1f1/tasmax/tasmax_day_ACCESS-CM2_ssp585_r1i1p1f1_gn_2015.nc?var=tasmax&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=2015-09-01T12%3A00%3A00Z&time_end=2015-09-02T12%3A00%3A00Z&timeStride=1', destfile = paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep= ''), mode = 'wb', extra = '-k')
-        test2<-file.info(paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep= ''))$size
+	      utils::download.file(quiet = T, method = 'curl', url = 'https://ds.nccs.nasa.gov/thredds/ncss/grid/AMES/NEX/GDDP-CMIP6/ACCESS-CM2/ssp585/r1i1p1f1/tasmax/tasmax_day_ACCESS-CM2_ssp585_r1i1p1f1_gn_2015.nc?var=tasmax&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=2015-09-01T12%3A00%3A00Z&time_end=2015-09-02T12%3A00%3A00Z&timeStride=1', destfile = paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep= ''), mode = 'wb', extra = '-k')
+	      test2<-file.info(paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep= ''))$size
         stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test2 > 6.0e6)
         #reading ncdf file
         nc<-ncdf4::nc_open( paste('./temp/','tasmax_day_ssp585_r1i1p1f1_ACCESS-CM2_2015.nc',sep = '') )
         #since geographic info for all NEX files are the same
         ###evaluate these values at one time!
         ###getting the x values (longitudes in degrees east, 0 to +360) so it needed to be converted to -180 to 180)
-        nc.long.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[3]])
-        ####getting the y values (latitudes in degrees north, -90 to +90)
-        nc.lat.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[2]])
-        #getting the climate data
-        data<-ncdf4::ncvar_get(nc,'tasmax', start = c(1,1,1) , count = c(-1, -1 ,1))
-        #transpose the data
-        data <- raster::t(data)
+        nc.long.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[1]])
+        ####getting the y values (latitudes in degrees north, -60 to +90)
+        nc.lat.NEXGDDP<-ncdf4::ncvar_get(nc,nc$dim[[3]])
+        # create a raster
+        NEX<-terra::rast(nrows=length(nc.lat.NEXGDDP),
+                         ncols=length(nc.long.NEXGDDP),
+                         xmin=nc.long.NEXGDDP[1],
+                         xmax=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],
+                         ymin=nc.lat.NEXGDDP[1],
+                         ymax=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],
+                         crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+        ###transpose the data and save the daily climate data values in a raster
+        values(NEX) <- t(ncdf4::ncvar_get(nc,'tasmax', start = c(1,1,1) , count = c(-1, -1 ,1)))
+
         #reorder the rows
-        data<-data[ nrow(data):1, ]
-        ncdf4::nc_close(nc)
-        ###save the daily climate data values in a raster
-        NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
+        NEX <- terra::flip(NEX,direction="v")
         ###rotate the raster to obtain the longitudes extent -180 to 180
-        NEX<-raster::rotate(NEX)
+        NEX <- terra::rotate(NEX)
+        ncdf4::nc_close(nc)
+        # Convert raster to points
+        NEX.points <- terra::as.points(NEX, na.rm = TRUE)
+        # Intersect to keep only points on the shape
+        NEX.points <- NEX.points[polys]
         #obtain cell numbers within the NEX-GDDP raster
-        #cell.no<-raster::cellFromPolygon(NEX, polys)
-        suppressWarnings(cell.no<-raster::cellFromPolygon(NEX, polys))
+        cell.no <- terra::cells(NEX, NEX.points)[,2]
+
         ##check cell.no to address small watershed
         if(length(unlist(cell.no))==0)
           {
-          #cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1]
-          suppressWarnings(cell.no<-raster::cellFromPolygon(NEX, polys, weights = TRUE)[[1]][,"cell"][1])
+
+          cell.no<-terra::cells(NEX, polys, weights = TRUE)[,2]
           }
         #obtain lat/long values corresponding to watershed cells
-        cell.longlat<-raster::xyFromCell(NEX,unlist(cell.no))
-        cell.rowCol <- raster::rowColFromCell(NEX,unlist(cell.no))
-        study_area_records_NEX<-data.frame(NEX_ID=unlist(cell.no),cell.longlat,cell.rowCol)
-        sp::coordinates (study_area_records_NEX)<- ~x+y
-        rm(data,NEX)
+        cell.longlat<-terra::xyFromCell(NEX,cell.no)
+        cell.rowCol <- terra::rowColFromCell(NEX,cell.no)
+
+        FinalTable.NEX<-data.frame(NEX_ID=unlist(cell.no),cell.rowCol)
+        FinalTable.NEX.vect<-vect(crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs',cell.longlat,
+                                  atts=FinalTable.NEX)
+        rm(NEX)
 
       }
       # creating a similarity table that connects IMERG and TRMM grids
       # calculate euclidean distances to know how to connect TRMM grids with IMERG grids
-      for (i in 1 : nrow(study_area_records_IMERG))
+      for (i in 1 : nrow(FinalTable.IMERG))
       {
-        distVec <- sp::spDistsN1(study_area_records_NEX,study_area_records_IMERG[i,])
+        distVec <- terra::distance(FinalTable.NEX.vect,FinalTable.IMERG.vect[i,])
         minDistVec[[i]] <- min(distVec)
         closestSiteVec[[i]] <- which.min(distVec)
       }
 
-      PointAssignIDs <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$NEX_ID,'numeric')
-      PointsAssignCol <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$col,'numeric')
-      PointsAssignRow <- methods::as(study_area_records_NEX[unlist(closestSiteVec),]$row,'numeric')
-      FinalTable = data.frame(sp::coordinates(study_area_records_IMERG),ID=study_area_records_IMERG$ID,row=study_area_records_IMERG$row,col=study_area_records_IMERG$col,Elevation=study_area_records_IMERG$Elevation,
+      PointAssignIDs <- methods::as(FinalTable.NEX[unlist(closestSiteVec),]$NEX_ID,'numeric')
+      PointsAssignCol <- methods::as(FinalTable.NEX[unlist(closestSiteVec),]$X2,'numeric')
+      PointsAssignRow <- methods::as(FinalTable.NEX[unlist(closestSiteVec),]$X1,'numeric')
+      FinalTable = data.frame(x=crds(FinalTable.IMERG.vect)[,1],y=crds(FinalTable.IMERG.vect)[,2],ID=FinalTable.IMERG$IMERG_ID,row=FinalTable.IMERG$X1,col=FinalTable.IMERG$X2,Elevation=FinalTable.IMERG$Elevation,
                               CloseNEXIndex=PointAssignIDs,Distance=unlist(minDistVec),NEXCol=PointsAssignCol,NEXRow=PointsAssignRow)
       #### Begin writing hydrological model climate input tables
       #### Get the hydrological model file names and then put the first record date
@@ -237,18 +289,25 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
             test3<-file.info(paste('./temp/',filename,sep= ''))$size
             stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test3 > 3.0e6)
             nc <- ncdf4::nc_open( paste('./temp/',filename,sep = '') )
-            data <- ncdf4::ncvar_get(nc,type, start = c(1,1,1) , count = c(-1, -1 ,1))
-            #transpose the data
-            data <- raster::t(data)
+            # create a raster
+            NEX<-terra::rast(nrows=length(nc.lat.NEXGDDP),
+                             ncols=length(nc.long.NEXGDDP),
+                             xmin=nc.long.NEXGDDP[1],
+                             xmax=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],
+                             ymin=nc.lat.NEXGDDP[1],
+                             ymax=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],
+                             crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+
+            ###transpose the data and save the daily climate data values in a raster
+            values(NEX) <- t(ncdf4::ncvar_get(nc,type, start = c(1,1,1) , count = c(-1, -1 ,1)))
             #reorder the rows
-            data<-data[ nrow(data):1, ]
+            NEX <- terra::flip(NEX,direction="v")
+            ###rotate the raster to obtain the longitudes extent -180 to 180
+            NEX <- terra::rotate(NEX)
             ncdf4::nc_close(nc)
-            ###save the daily climate data values in a raster
-            NEX<-raster::raster(x=as.matrix(data),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
-            ###rotate to obtain the longitudes in -180 to 180
-            NEX<-raster::rotate(NEX)
+
             ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units from kg m^-2 s^-1 to mm day^-1 by multiplying with 86400 (60*60*24)
-            cell.values<-as.vector(NEX)[FinalTable$CloseNEXIndex]*86400
+            cell.values<-terra::extract(NEX,FinalTable$CloseNEXIndex)[,]*86400
             cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
             ### Looping through the NEX points and writing out the daily climate data in hydrology model format
           for(jj in 1:dim(FinalTable)[1])
@@ -267,8 +326,7 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
           timestart <- time_period[jj]
           timeend <- timestart + 1
           timeyear <- format(timestart,"%Y")
-          typemin <- paste(type,'min',sep='')
-          typemax <- paste(type,'max',sep='')
+
           filename_min <- paste(typemin,'_day_',slice,'_',Variant,'_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
           filename_max <- paste(typemax,'_day_',slice,'_',Variant,'_',model,'_',as.character(timestart),'_',as.character(timeend),'.nc',sep = '')
           myurl_min <- paste(ftp_min,timeyear,'.nc?','var=',type,'min','&disableLLSubset=on&disableProjSubset=on&horizStride=1&time_start=',as.character(timestart),'T12%3A00%3A00Z&time_duration=P1D','&timeStride=1',sep = '')
@@ -280,31 +338,52 @@ NEX_GDDP_CMIP6=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'Low
             test4<-file.info(paste('./temp/',filename_min,sep= ''))$size
             stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test4 > 3.0e6)
             nc_min <- ncdf4::nc_open( paste('./temp/',filename_min,sep = '') )
-            data_min <- ncdf4::ncvar_get(nc_min,typemin, start = c(1,1,1) , count = c(-1, -1 ,1))
-            #transpose the data
-            data_min <- raster::t(data_min)
+            # create a raster
+            NEX_min<-terra::rast(nrows=length(nc.lat.NEXGDDP),
+                                 ncols=length(nc.long.NEXGDDP),
+                                 xmin=nc.long.NEXGDDP[1],
+                                 xmax=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],
+                                 ymin=nc.lat.NEXGDDP[1],
+                                 ymax=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],
+                                 crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+
+            ###transpose the data and save the daily climate data values in a raster
+            values(NEX_min) <- t(ncdf4::ncvar_get(nc_min,typemin, start = c(1,1,1) , count = c(-1, -1 ,1)))
+
             #reorder the rows
-            data_min<-data_min[ nrow(data_min):1, ]
+            NEX_min <- terra::flip(NEX_min,direction="v")
+            ###rotate the raster to obtain the longitudes extent -180 to 180
+            NEX <- terra::rotate(NEX_min)
             ncdf4::nc_close(nc_min)
             # Reading the tmax ncdf file
             test5<-file.info(paste('./temp/',filename_max,sep= ''))$size
             stopifnot('The NEX GDDP server is temporarily unable to service your request due to maintenance downtime or capacity problems. Please try again later.' = test5 > 3.0e6)
             nc_max <- ncdf4::nc_open( paste('./temp/',filename_max,sep = '') )
-            data_max <- ncdf4::ncvar_get(nc_max,typemax, start = c(1,1,1) , count = c(-1, -1 ,1))
-            #transpose the data
-            data_max <- raster::t(data_max)
+            # create a raster
+            NEX_max<-terra::rast(nrows=length(nc.lat.NEXGDDP),
+                                 ncols=length(nc.long.NEXGDDP),
+                                 xmin=nc.long.NEXGDDP[1],
+                                 xmax=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],
+                                 ymin=nc.lat.NEXGDDP[1],
+                                 ymax=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],
+                                 crs='+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs')
+
+            ###transpose the data and save the daily climate data values in a raster
+            values(NEX_max) <- t(ncdf4::ncvar_get(nc_max,typemax, start = c(1,1,1) , count = c(-1, -1 ,1)))
+
+
             #reorder the rows
-            data_max<-data_max[ nrow(data_max):1, ]
+            NEX_max <- terra::flip(NEX_max,direction="v")
+            ###rotate the raster to obtain the longitudes extent -180 to 180
+            NEX <- terra::rotate(NEX_max)
             ncdf4::nc_close(nc_max)
-            ###save the daily climate data values in a raster
-            NEX_min<-raster::raster(x=as.matrix(data_min),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
-            NEX_max<-raster::raster(x=as.matrix(data_max),xmn=nc.long.NEXGDDP[1],xmx=nc.long.NEXGDDP[NROW(nc.long.NEXGDDP)],ymn=nc.lat.NEXGDDP[1],ymx=nc.lat.NEXGDDP[NROW(nc.lat.NEXGDDP)],crs=sp::CRS('+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'))
-            ###rotate to obtain the longitudes in -180 to 180
-            NEX_min<-raster::rotate(NEX_min)
-            NEX_max<-raster::rotate(NEX_max)
+
             ### Obtaining daily climate values at NEX grids near the IMERG grids that has been defined and explained earlier, convert units to C by substracting 273.16
-            cell.values_min<-as.vector(NEX_min)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
-            cell.values_max<-as.vector(NEX_max)[FinalTable$CloseNEXIndex] - 273.16 #convert to degree C
+
+            cell.values_min<-terra::extract(NEX_min,FinalTable$CloseNEXIndex)[,] - 273.16 #convert to degree C
+            cell.values_max<-terra::extract(NEX_max,FinalTable$CloseNEXIndex)[,] - 273.16 #convert to degree C
+
+
             cell.values_min[is.na(cell.values_min)] <- '-99.0' #filling missing data
             cell.values_max[is.na(cell.values_max)] <- '-99.0' #filling missing data
 

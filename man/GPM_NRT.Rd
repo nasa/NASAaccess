@@ -2,7 +2,7 @@
 % Please edit documentation in R/GPM_NRT.R
 \name{GPM_NRT}
 \alias{GPM_NRT}
-\title{Generate Near Real Time (NRT) rainfall from NASA GPM remote sensing products.}
+\title{NASA GPM Near Real Time rainfall data}
 \usage{
 GPM_NRT(
   Dir = "./INPUT/",
@@ -15,9 +15,9 @@ GPM_NRT(
 \arguments{
 \item{Dir}{A directory name to store gridded rainfall and rain stations files.}
 
-\item{watershed}{A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').}
+\item{watershed}{A study watershed shapefile spatially describing polygon(s) in a geographic projection crs='+proj=longlat +datum=WGS84'.}
 
-\item{DEM}{A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').}
+\item{DEM}{A study watershed digital elevation model raster in a geographic projection crs='+proj=longlat +datum=WGS84'.}
 
 \item{start}{Beginning date for gridded rainfall data.}
 
@@ -31,7 +31,7 @@ a scalar of rainfall gridded data values at each point within the study watershe
 This function downloads rainfall remote sensing data of \acronym{IMERG} from \acronym{NASA} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that any hydrological model requires for rainfall data input. The function also generates the rainfall stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected grids that fall within the specified watershed. The minimum latency for this function is one day.
 }
 \details{
-A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDE.06/}).  The function uses variable name ('precipitationCal') for rainfall in \acronym{IMERG} data products. Units for gridded rainfall data are 'mm'.
+A user should visit \url{https://disc.gsfc.nasa.gov/information/documents} Data Access document to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDE.06/}).  The function uses variable name ('precipitationCal') for rainfall in \acronym{IMERG} data products. Units for gridded rainfall data are 'mm'.
 
 \acronym{IMERG} dataset is the GPM Level 3 \acronym{IMERG} *Early* Daily 0.1 x 0.1 deg (GPM_3IMERGDE) derived from the half-hourly \acronym{GPM_3IMERGHHE}. The derived result represents the final estimate of the daily accumulated precipitation. The dataset is produced at the \acronym{NASA} Goddard Earth Sciences (GES) Data and Information Services Center (DISC) by simply summing the valid precipitation retrievals for the day in GPM_3IMERGHHE and giving the result in (mm) \url{https://gpm.nasa.gov/data/directory}.
 

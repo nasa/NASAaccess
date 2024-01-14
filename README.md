@@ -16,8 +16,7 @@ Badge](https://anaconda.org/conda-forge/r-nasaaccess/badges/platforms.svg)](http
 
 <!-- ![lifecycle](https://img.shields.io/badge/lifecycle-stable-sucess.svg?style=plastic&logo=appveyor)
 <!-- ![GitHub Downloads](https://img.shields.io/github/downloads/nasa/NASAaccess/total?style=plastic)
-
-<!-- badges: end -->
+&#10;<!-- badges: end -->
 
 [*Ibrahim N.
 Mohammed*](https://science.gsfc.nasa.gov/sed/bio/ibrahim.mohammed "Ibrahim N. Mohammed")
@@ -79,7 +78,8 @@ local machine:
   authorizing
   [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
   [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to
-  <https://disc.gsfc.nasa.gov/data-access> for further details.
+  <https://disc.gsfc.nasa.gov/information/documents> Data Access section
+  for further details.
 
 - [*curl*](https://curl.se/) software . Since Mac users have
   [*curl*](https://curl.se/) as part of macOS build, Windows users
@@ -119,7 +119,8 @@ message.
   authorizing
   [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration")
   [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to
-  <https://disc.gsfc.nasa.gov/data-access> for further details.
+  <https://disc.gsfc.nasa.gov/information/documents> Data Access section
+  for further details.
 
   - Creating the *.netrc* file at the user machine *Home* directory and
     storing the user
@@ -158,11 +159,10 @@ functionality and capabilities.
 
 ``` r
 citation(package = 'NASAaccess')
-#> 
 #> To cite package 'NASAaccess' in publications use:
 #> 
-#>   Mohammed I (2023). _NASAaccess: Downloading and Reformatting Tool for
-#>   NASA Earth Observation Data Products_. R package version 3.4.2,
+#>   Mohammed I (2024). _NASAaccess: Downloading and Reformatting Tool for
+#>   NASA Earth Observation Data Products_. R package version 4.0.0,
 #>   <https://github.com/nasa/NASAaccess>.
 #> 
 #> A BibTeX entry for LaTeX users is
@@ -170,10 +170,18 @@ citation(package = 'NASAaccess')
 #>   @Manual{,
 #>     title = {{NASAaccess}: Downloading and Reformatting Tool for NASA Earth Observation Data Products},
 #>     author = {Ibrahim Mohammed},
-#>     year = {2023},
+#>     year = {2024},
 #>     institution = {National Aeronautics and Space Administration, Goddard Space Flight Center},
 #>     address = {Greenbelt, Maryland},
-#>     note = {R package version 3.4.2},
+#>     note = {R package version 4.0.0},
 #>     url = {https://github.com/nasa/NASAaccess},
 #>   }
 ```
+
+## Reference
+
+Mohammed, I.N., Bustamante, E.G.R., Bolten, J.D., Nelson, E.J., 2023.
+Technical note: NASAaccess – a tool for access, reformatting, and
+visualization of remotely sensed earth observation and climate data.
+Hydrol. Earth Syst. Sci. 27, 3621-3642,
+<https://doi.org/10.5194/hess-27-3621-2023>

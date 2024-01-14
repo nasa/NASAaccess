@@ -53,7 +53,7 @@ On a local machine the user should have installed the following programs as well
 
 -   [Installing Rstudio software](https://posit.co/) (OPTIONAL)
 
--   *NASAaccess* R package needs a user registration access with [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a registration account(s) with [Earthdata](https://www.earthdata.nasa.gov/) login as well as well as authorizing [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to <https://disc.gsfc.nasa.gov/data-access> for further details.
+-   *NASAaccess* R package needs a user registration access with [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a registration account(s) with [Earthdata](https://www.earthdata.nasa.gov/) login as well as well as authorizing [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to <https://disc.gsfc.nasa.gov/information/documents> Data Access section for further details.
 
 -   [*curl*](https://curl.se/) software . Since Mac users have [*curl*](https://curl.se/) as part of macOS build, Windows users should make sure that their local machines build have [*curl*](https://curl.se/) installed properly.
 
@@ -70,7 +70,7 @@ On a local machine the user should have installed the following programs as well
 Within the Rstudio help tab the user can verify that the package has been installed and browse the help pages of the various functions of *NASAaccess*. The [GES DISC](https://disc.gsfc.nasa.gov/) user registration access logging information will be processed by masking (i.e., not displaying the lieteral typed text as input) on most but not all platforms. Without providing [GES DISC](https://disc.gsfc.nasa.gov/) user registration access logging information, the user will receive '*You need to provide your Earthdata GES DISC login to proceed...*' message.
 
 ### **Conda Package**
--   *NASAaccess* conda package needs a user registration access with [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a registration account(s) with [Earthdata](https://www.earthdata.nasa.gov/) login as well as well as authorizing [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to <https://disc.gsfc.nasa.gov/data-access> for further details.
+-   *NASAaccess* conda package needs a user registration access with [Earthdata](https://www.earthdata.nasa.gov/). Users should set up a registration account(s) with [Earthdata](https://www.earthdata.nasa.gov/) login as well as well as authorizing [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) data access. Please refer to <https://disc.gsfc.nasa.gov/information/documents> Data Access section for further details.
 
     -   Creating the *.netrc* file at the user machine *Home* directory and storing the user [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") [GES DISC](https://disc.gsfc.nasa.gov/) logging information in it is done automatically to execute the *NASAaccess* package commands. Accessing data from NASA servers is further explained at [Here](https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget). The [GES DISC](https://disc.gsfc.nasa.gov/) user registration access logging information will be processed by masking in the terminal on any major OS. Without providing [GES DISC](https://disc.gsfc.nasa.gov/) user registration access logging information, the user will receive '*You need to provide your Earthdata GES DISC login to proceed...*' message.
     
@@ -96,3 +96,6 @@ citation(package = 'NASAaccess')
 
 ```
 
+## Reference
+
+Mohammed, I.N., Bustamante, E.G.R., Bolten, J.D., Nelson, E.J., 2023. Technical note: NASAaccess – a tool for access, reformatting, and visualization of remotely sensed earth observation and climate data. Hydrol. Earth Syst. Sci. 27, 3621-3642, https://doi.org/10.5194/hess-27-3621-2023

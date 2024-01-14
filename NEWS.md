@@ -1,3 +1,10 @@
+# NASAaccess 4.0.0
+* Removing raster, rgeos, regal, maptools and transition to terra!
+* Fixing CMIP6 server access
+
+# NASAaccess 3.4.3
+* Adding DOI (10.5281/zenodo.8422392).
+
 # NASAaccess 3.4.3
 * Description edits.
 

@@ -19,18 +19,19 @@ knitr::opts_chunk$set(
 )
 
 
-
-library(raster)
-library(sf)
-
 #Reading input data
-dem_path <- system.file("extdata", "DEM_TX.tif", package = "NASAaccess")
-shape_path <- system.file("extdata", "basin.shp", package = "NASAaccess")
+dem_path <- system.file("extdata",
+                        "DEM_TX.tif", 
+                        package = "NASAaccess")
 
+shape_path <- system.file("extdata",
+                          "basin.shp",
+                          package = "NASAaccess")
 
+library(terra)
 
-dem <- raster::raster(dem_path)
-shape <- sf::st_read(shape_path)
+dem <- terra::rast(dem_path)
+shape <- terra::vect(shape_path)
 
 
 ```
@@ -43,9 +44,19 @@ Let's explore `GLDASpolyCentroid` and `GLDASswat` functions.
 
 ## Basic use
 
-Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](.\GPM.pdf) functions for more information.
+Let's use the example watersheds that we introduced with `GPMswat` and `GPMpolyCentroid`. Please visit _NASAaccess_ [GPM](GPM.html) functions for more information.
 
 ```{r, eval=FALSE, echo=TRUE}
+#Reading input data
+
+dem_path <- system.file("extdata",
+                        "DEM_TX.tif",
+                        package = "NASAaccess")
+
+shape_path <- system.file("extdata",
+                          "basin.shp", 
+                          package = "NASAaccess")
+
 library(NASAaccess)
 
 GLDASwat(Dir = "./GLDASwat/",
@@ -76,10 +87,11 @@ Now, let's see the location of the `GLDASwat` generated grid points
 
 ```{r}
 library(ggplot2)
-ggplot() + 
-  geom_sf(data = shape, 
-          fill = NA, 
-          colour = 'red') +
+library(tidyterra)
+ggplot(shape) + 
+  
+  geom_spatvector(color='red',fill=NA) +
+  
   geom_point(data=GLDASwat.table,aes(x=LONG,y=LAT))
 
 
@@ -124,6 +136,7 @@ Now let's examine the `GLDASpolyCentroid` generated outputs
 
 ```{r}
 library(ggplot2)
+library(tidyterra)
 GLDASpolyCentroid.tempMaster <- system.file('extdata/GLDASpolyCentroid',
                               'temp_Master.txt', 
                                 package = 'NASAaccess')
@@ -131,10 +144,10 @@ GLDASpolyCentroid.tempMaster <- system.file('extdata/GLDASpolyCentroid',
 GLDASpolyCentroid.table<-read.csv(GLDASpolyCentroid.tempMaster)
 
 #plot
-ggplot() + 
-  geom_sf(data = shape, 
-          fill = NA, 
-          colour = 'red') +
+ggplot(shape) + 
+  
+  geom_spatvector(color='red',fill=NA) +
+  
   geom_point(data=GLDASpolyCentroid.table,
              aes(x=LONG,y=LAT)) +
   coord_sf(xlim=c(-96,-95.2),ylim=c(29.7,30))

@@ -1,13 +1,13 @@
-###07/05/22
-#' Generate Near Real Time (NRT) rainfall from NASA GPM remote sensing products.
+###12/28/23
+#' NASA GPM Near Real Time rainfall data
 #'
 #' This function downloads rainfall remote sensing data of \acronym{IMERG} from \acronym{NASA} \acronym{GSFC} servers, extracts data from grids within a specified watershed shapefile, and then generates tables in a format that any hydrological model requires for rainfall data input. The function also generates the rainfall stations file input (file with columns: ID, File NAME, LAT, LONG, and ELEVATION) for those selected grids that fall within the specified watershed. The minimum latency for this function is one day.
 #' @param Dir A directory name to store gridded rainfall and rain stations files.
-#' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
-#' @param DEM A study watershed digital elevation model raster in a geographic projection sp::CRS('+proj=longlat +datum=WGS84').
+#' @param watershed A study watershed shapefile spatially describing polygon(s) in a geographic projection crs='+proj=longlat +datum=WGS84'.
+#' @param DEM A study watershed digital elevation model raster in a geographic projection crs='+proj=longlat +datum=WGS84'.
 #' @param start Beginning date for gridded rainfall data.
 #' @param end Ending date for gridded rainfall data.
-#' @details A user should visit \url{https://disc.gsfc.nasa.gov/data-access} to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDE.06/}).  The function uses variable name ('precipitationCal') for rainfall in \acronym{IMERG} data products. Units for gridded rainfall data are 'mm'.
+#' @details A user should visit \url{https://disc.gsfc.nasa.gov/information/documents} Data Access document to register with the Earth Observing System Data and Information System (\acronym{NASA Earthdata}) and then authorize \acronym{NASA} GESDISC Data Access to successfully work with this function. The function accesses \acronym{NASA} Goddard Space Flight Center server address for \acronym{IMERG} remote sensing data products at (\url{https://gpm1.gesdisc.eosdis.nasa.gov/data/GPM_L3/GPM_3IMERGDE.06/}).  The function uses variable name ('precipitationCal') for rainfall in \acronym{IMERG} data products. Units for gridded rainfall data are 'mm'.
 #'
 #' \acronym{IMERG} dataset is the GPM Level 3 \acronym{IMERG} *Early* Daily 0.1 x 0.1 deg (GPM_3IMERGDE) derived from the half-hourly \acronym{GPM_3IMERGHHE}. The derived result represents the final estimate of the daily accumulated precipitation. The dataset is produced at the \acronym{NASA} Goddard Earth Sciences (GES) Data and Information Services Center (DISC) by simply summing the valid precipitation retrievals for the day in GPM_3IMERGHHE and giving the result in (mm) \url{https://gpm.nasa.gov/data/directory}.
 #'
@@ -27,9 +27,8 @@
 #' #Lower Mekong basin example
 #' \dontrun{GPM_NRT(Dir = "./INPUT/", watershed = "LowerMekong.shp",
 #' DEM = "LowerMekong_dem.tif", start = "2022-6-1", end = "2022-6-10")}
-#' @import ncdf4 shapefiles rgeos maptools httr stringr rgdal XML utils sp methods getPass
+#' @import ncdf4 httr stringr utils XML methods getPass
 #' @importFrom stats na.exclude
-#' @importFrom raster raster cellFromPolygon xyFromCell rowColFromCell extract
 #' @export
 
 
@@ -63,10 +62,10 @@ GPM_NRT=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'LowerMekon
             time_period <- seq.Date(from = as.Date(start), to = as.Date(end), by = 'day')
 
             # Reading cell elevation data (DEM should be in geographic projection)
-            watershed.elevation <- raster::raster(DEM)
+            watershed.elevation <- terra::rast(DEM)
 
             # Reading the study Watershed shapefile
-            suppressWarnings(polys <- rgdal::readOGR(dsn=watershed,verbose = F))
+            polys <- terra::vect(watershed)
 
             # weather 'precipitation' master file name
             filenametableKEY<-paste(Dir,'precipitation','Master.txt',sep='')
@@ -106,26 +105,45 @@ GPM_NRT=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'LowerMekon
               nc.long.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[1]])
               ####getting the x values (latitudes in degrees north)
               nc.lat.IMERG<-ncdf4::ncvar_get(nc,nc$dim[[2]])
-              #extract data
-              data<-ncdf4::ncvar_get(nc,myvarIMERG)
-              #reorder the rows
-              data<-data[ nrow(data):1, ]
+              # create a raster
+              IMERG<-terra::rast(nrows=length(nc.lat.IMERG),
+                                 ncols=length(nc.long.IMERG),
+                                 xmin=nc.long.IMERG[1],
+                                 xmax=nc.long.IMERG[NROW(nc.long.IMERG)],
+                                 ymin=nc.lat.IMERG[1],
+                                 ymax=nc.lat.IMERG[NROW(nc.lat.IMERG)],
+                                 crs='+proj=longlat +datum=WGS84')
+
+              #fill raster with dummy values
+
+              values(IMERG) <- 1:ncell(IMERG)
+
               ncdf4::nc_close(nc)
-              ###save the daily weather data values in a raster
-              IMERG<-raster::raster(x=as.matrix(data),xmn=nc.long.IMERG[1],xmx=nc.long.IMERG[NROW(nc.long.IMERG)],ymn=nc.lat.IMERG[1],ymx=nc.lat.IMERG[NROW(nc.lat.IMERG)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+              # Convert raster to points
+              IMERG.points <- terra::as.points(IMERG, na.rm = TRUE)
+
+              # Intersect to keep only points on the shape
+              IMERG.points <- IMERG.points[polys]
               #obtain cell numbers within the IMERG raster
-              cell.no<-raster::cellFromPolygon(IMERG, polys)
+              cell.no <- terra::cells(IMERG, IMERG.points)[,2]
               #obtain lat/long values corresponding to watershed cells
-              cell.longlat<-raster::xyFromCell(IMERG,unlist(cell.no))
-              cell.rowCol <- raster::rowColFromCell(IMERG,unlist(cell.no))
-              points_elevation<-raster::extract(x=watershed.elevation,y=cell.longlat,method='simple')
-              study_area_records_IMERG<-data.frame(ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation)
-              sp::coordinates (study_area_records_IMERG)<- ~x+y
-              rm(data,IMERG)
+              cell.longlat<-terra::xyFromCell(IMERG,cell.no)
+
+
+              cell.rowCol <- terra::rowColFromCell(IMERG,cell.no)
+
+
+              points_elevation<-terra::extract(x=watershed.elevation,y=cell.longlat,method='simple')
+
+              FinalTable<-data.frame(ID=unlist(cell.no),cell.longlat,cell.rowCol,Elevation=points_elevation[,])
+
+
+
+              rm(IMERG)
 
             }
 
-            FinalTable = data.frame(sp::coordinates(study_area_records_IMERG),ID=study_area_records_IMERG$ID,row=study_area_records_IMERG$row,col=study_area_records_IMERG$col,Elevation=study_area_records_IMERG$Elevation)
+
 
             #### Begin writing weather input tables
             #### Get the file names and then put the first record date
@@ -173,15 +191,29 @@ GPM_NRT=function(Dir='./INPUT/', watershed ='LowerMekong.shp', DEM = 'LowerMekon
                     if(file.exists(paste('./temp/',filenames[ll],sep= ''))==FALSE){utils::download.file(quiet = T,method='curl',url=paste(myurl,filenames[ll],sep = ''),destfile = paste('./temp/',filenames[ll],sep = ''), mode = 'wb', extra = '-n -c ~/.urs_cookies -b ~/.urs_cookies -L')}
                     # Reading the ncdf file
                     nc<-ncdf4::nc_open( paste('./temp/',filenames[ll],sep = '') )
-                    data<-ncdf4::ncvar_get(nc,myvarIMERG)
-                    # Reorder the rows
-                    data<-data[ nrow(data):1, ]
-                    ncdf4::nc_close(nc)
+                    if(ll==1)
+                    {
+                      IMERG<-terra::rast(nrows=length(nc.lat.IMERG),
+                                         ncols=length(nc.long.IMERG),
+                                         xmin=nc.long.IMERG[1],
+                                         xmax=nc.long.IMERG[NROW(nc.long.IMERG)],
+                                         ymin=nc.lat.IMERG[1],
+                                         ymax=nc.lat.IMERG[NROW(nc.lat.IMERG)],
+                                         crs='+proj=longlat +datum=WGS84')
+                    }
+
                     ###save the daily weather data values in a raster
-                    IMERG<-raster::raster(x=as.matrix(data),xmn=nc.long.IMERG[1],xmx=nc.long.IMERG[NROW(nc.long.IMERG)],ymn=nc.lat.IMERG[1],ymx=nc.lat.IMERG[NROW(nc.lat.IMERG)],crs=sp::CRS('+proj=longlat +datum=WGS84'))
+                    values(IMERG) <- ncdf4::ncvar_get(nc,myvarIMERG)
+
+                    # Reorder the rows
+
+                    IMERG <- terra::flip(IMERG,direction="v")
+
+                    ncdf4::nc_close(nc)
 
                     #obtain daily weather values at cells bounded with the study watershed (extract values from a raster)
-                    cell.values<-as.vector(IMERG)[FinalTable$ID]
+
+                    cell.values<-extract(IMERG,FinalTable$ID)[,]
                     cell.values[is.na(cell.values)] <- '-99.0' #filling missing data
 
 

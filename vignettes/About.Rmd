@@ -17,10 +17,13 @@ knitr::opts_chunk$set(
 ```
 
 The _NASAaccess_ package is a simple and needed tool for accessing and processing remote sensing data.
-The _NASAaccess_ package has multiple functions that help the user to access and reformat hydrological data for easy ingest into various hydrological models. Since the package functions touch [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") data repositories to retrieve data, the user must set up a registration account with [Earthdata](https://urs.earthdata.nasa.gov/users/new) as well as authorizing [NASA GES DISC](https://disc.gsfc.nasa.gov/data-access) data access. The package user should make sure that his(her) local machines has [curl](https://curl.se/) installed properly. Further instructions on creating the ".netrc" and ".urs_cookies" files can be accessed at [*How To Access Data NASA data With cURL And Wget wiki page*](https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget). Creating the ".netrc" file at the user machine 'Home' directory and storing the [NASA GES DISC](https://disc.gsfc.nasa.gov/) user logging information in it is needed to execute the package commands.
+The _NASAaccess_ package has multiple functions that help the user to access and reformat hydrological data for easy ingest into various hydrological models. Since the package functions touch [NASA](https://www.nasa.gov/ "The National Aeronautics and Space Administration") data repositories to retrieve data, the user must set up a registration account with [Earthdata](https://urs.earthdata.nasa.gov/users/new) as well as authorizing [NASA GES DISC](https://disc.gsfc.nasa.gov/information/documents?title=Data%20Access) data access. The package user should make sure that his(her) local machines has [curl](https://curl.se/) installed properly. Further instructions on creating the ".netrc" and ".urs_cookies" files can be accessed at [*How To Access Data NASA data With cURL And Wget wiki page*](https://wiki.earthdata.nasa.gov/display/EL/How+To+Access+Data+With+cURL+And+Wget). Creating the ".netrc" file at the user machine 'Home' directory and storing the [NASA GES DISC](https://disc.gsfc.nasa.gov/) user logging information in it is needed to execute the package commands.
 
 Note: for Windows users the [NASA GES DISC](https://disc.gsfc.nasa.gov/) logging information should be saved in a file named "_netrc" beside the ".netrc" one.
 
+## Video Abstract
+
+[Video abstract for "Technical note: NASAaccess – A tool for access, reformatting, and visualization of remotely sensed earth observation and climate data"](https://doi.org/10.5446/63008).
 
 ## Index
 
@@ -30,9 +33,15 @@ Note: for Windows users the [NASA GES DISC](https://disc.gsfc.nasa.gov/) logging
 * [CMIP6 Climate](NEXGDDP-CMIP6.html)
 
 
+
 ## Built with
 
 ```{r}
 sessionInfo()
 
 ```
+
+
+## Reference
+
+Mohammed, I.N., Bustamante, E.G.R., Bolten, J.D., Nelson, E.J., 2023. Technical note: NASAaccess – a tool for access, reformatting, and visualization of remotely sensed earth observation and climate data. Hydrol. Earth Syst. Sci. 27, 3621-3642, https://doi.org/10.5194/hess-27-3621-2023
